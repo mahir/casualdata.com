@@ -10,15 +10,5 @@
 		
 		<!-- Change rodrigogalindez.json to yourusername.json -->
 		<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/socialbit.json?callback=twitterCallback2&amp;count=1"></script>
-
-		<script type="text/javascript">
-		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-		<script type="text/javascript">
-		try {
-		var pageTracker = _gat._getTracker("UA-657006-12");
-		pageTracker._trackPageview();
-		} catch(err) {}</script>
 </body>
 </html>

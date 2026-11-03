@@ -119,21 +119,6 @@ p {
 	margin: 90px 0 10px 0;
 }
 
-.tweet ul {
-	margin: 0;
-	padding: 0;
-}
-
-.tweet li {
-	margin: 0;
-	padding: 0 0 10px 0;
-	list-style: none;
-}
-
-.tweet img {
-	display: none;
-}
-
 .flickr_badge_image {
 	width: 70px;
 	overflow: hidden;
