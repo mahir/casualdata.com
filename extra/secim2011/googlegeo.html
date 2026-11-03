@@ -1,0 +1,198 @@
+<html>
+<head>
+  <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+  <script type='text/javascript'>
+   google.load('visualization', '1', {'packages': ['geochart']});
+   google.setOnLoadCallback(drawRegionsMap);
+
+    function drawRegionsMap() {
+      var data = new google.visualization.DataTable();
+      data.addRows(81);
+      data.addColumn('string', 'Cities');
+      data.addColumn('number', 'AKP');
+	data.setValue(0, 0, 'Adana');
+	data.setValue(1, 0, 'Adıyaman');
+	data.setValue(2, 0, 'Afyon');
+	data.setValue(3, 0, 'Ağrı');
+	data.setValue(4, 0, 'Amasya');
+	data.setValue(5, 0, 'Ankara');
+	data.setValue(6, 0, 'Antalya');
+	data.setValue(7, 0, 'Artvin');
+	data.setValue(8, 0, 'Aydın');
+	data.setValue(9, 0, 'Balıkesir');
+	data.setValue(10, 0, 'Bilecik');
+	data.setValue(11, 0, 'Bingöl');
+	data.setValue(12, 0, 'Bitlis');
+	data.setValue(13, 0, 'Bolu');
+	data.setValue(14, 0, 'Burdur');
+	data.setValue(15, 0, 'Bursa');
+	data.setValue(16, 0, 'Çanakkale');
+	data.setValue(17, 0, 'Çankırı');
+	data.setValue(18, 0, 'Çorum');
+	data.setValue(19, 0, 'Denizli');
+	data.setValue(20, 0, 'Diyarbakır');
+	data.setValue(21, 0, 'Edirne');
+	data.setValue(22, 0, 'Elazığ');
+	data.setValue(23, 0, 'Erzincan');
+	data.setValue(24, 0, 'Erzurum');
+	data.setValue(25, 0, 'Eskişehir');
+	data.setValue(26, 0, 'Gaziantep');
+	data.setValue(27, 0, 'Giresun');
+	data.setValue(28, 0, 'Gümüşhane');
+	data.setValue(29, 0, 'Hakkâri');
+	data.setValue(30, 0, 'Hatay');
+	data.setValue(31, 0, 'Isparta');
+	data.setValue(32, 0, 'Içel');
+	data.setValue(33, 0, 'Istanbul');
+	data.setValue(34, 0, 'Izmir');
+	data.setValue(35, 0, 'Kars');
+	data.setValue(36, 0, 'Kastamonu');
+	data.setValue(37, 0, 'Kayseri');
+	data.setValue(38, 0, 'Kırklareli');
+	data.setValue(39, 0, 'Kırşehir');
+	data.setValue(40, 0, 'Kocaeli');
+	data.setValue(41, 0, 'Konya');
+	data.setValue(42, 0, 'Kütahya');
+	data.setValue(43, 0, 'Malatya');
+	data.setValue(44, 0, 'Manisa');
+	data.setValue(45, 0, 'Kahramanmaraş');
+	data.setValue(46, 0, 'Mardin');
+	data.setValue(47, 0, 'Muğla');
+	data.setValue(48, 0, 'Muş');
+	data.setValue(49, 0, 'Nevşehir');
+	data.setValue(50, 0, 'Niğde');
+	data.setValue(51, 0, 'Ordu');
+	data.setValue(52, 0, 'Rize');
+	data.setValue(53, 0, 'Sakarya');
+	data.setValue(54, 0, 'Samsun');
+	data.setValue(55, 0, 'Siirt');
+	data.setValue(56, 0, 'Sinop');
+	data.setValue(57, 0, 'Sivas');
+	data.setValue(58, 0, 'Tekirdağ');
+	data.setValue(59, 0, 'Tokat');
+	data.setValue(60, 0, 'Trabzon');
+	data.setValue(61, 0, 'Tunceli');
+	data.setValue(62, 0, 'Şanlıurfa');
+	data.setValue(63, 0, 'Uşak');
+	data.setValue(64, 0, 'Van');
+	data.setValue(65, 0, 'Yozgat');
+	data.setValue(66, 0, 'Zonguldak');
+	data.setValue(67, 0, 'Aksaray');
+	data.setValue(68, 0, 'Bayburt');
+	data.setValue(69, 0, 'Karaman');
+	data.setValue(70, 0, 'Kırıkkale');
+	data.setValue(71, 0, 'Batman');
+	data.setValue(72, 0, 'Şırnak');
+	data.setValue(73, 0, 'Bartın');
+	data.setValue(74, 0, 'Ardahan');
+	data.setValue(75, 0, 'Iğdır');
+	data.setValue(76, 0, 'Yalova');
+	data.setValue(77, 0, 'Karabük');
+	data.setValue(78, 0, 'Kilis');
+	data.setValue(79, 0, 'Osmaniye');
+	data.setValue(80, 0, 'Düzce');
+	data.setValue(0, 1, 43);
+	data.setValue(1, 1, 80);
+	data.setValue(2, 1, 60);
+	data.setValue(3, 1, 75);
+	data.setValue(4, 1, 67);
+	data.setValue(5, 1, 55);
+	data.setValue(6, 1, 43);
+	data.setValue(7, 1, 50);
+	data.setValue(8, 1, 43);
+	data.setValue(9, 1, 50);
+	data.setValue(10, 1, 50);
+	data.setValue(11, 1, 67);
+	data.setValue(12, 1, 67);
+	data.setValue(13, 1, 67);
+	data.setValue(14, 1, 67);
+	data.setValue(15, 1, 61);
+	data.setValue(16, 1, 50);
+	data.setValue(17, 1, 100);
+	data.setValue(18, 1, 75);
+	data.setValue(19, 1, 57);
+	data.setValue(20, 1, 45);
+	data.setValue(21, 1, 33);
+	data.setValue(22, 1, 80);
+	data.setValue(23, 1, 50);
+	data.setValue(24, 1, 83);
+	data.setValue(25, 1, 50);
+	data.setValue(26, 1, 75);
+	data.setValue(27, 1, 75);
+	data.setValue(28, 1, 100);
+	data.setValue(29, 1, 0);
+	data.setValue(30, 1, 50);
+	data.setValue(31, 1, 50);
+	data.setValue(32, 1, 36);
+	data.setValue(33, 1, 53);
+	data.setValue(34, 1, 42);
+	data.setValue(35, 1, 67);
+	data.setValue(36, 1, 67);
+	data.setValue(37, 1, 78);
+	data.setValue(38, 1, 33);
+	data.setValue(39, 1, 100);
+	data.setValue(40, 1, 64);
+	data.setValue(41, 1, 79);
+	data.setValue(42, 1, 80);
+	data.setValue(43, 1, 83);
+	data.setValue(44, 1, 50);
+	data.setValue(45, 1, 75);
+	data.setValue(46, 1, 50);
+	data.setValue(47, 1, 33);
+	data.setValue(48, 1, 75);
+	data.setValue(49, 1, 100);
+	data.setValue(50, 1, 67);
+	data.setValue(51, 1, 83);
+	data.setValue(52, 1, 100);
+	data.setValue(53, 1, 71);
+	data.setValue(54, 1, 67);
+	data.setValue(55, 1, 67);
+	data.setValue(56, 1, 50);
+	data.setValue(57, 1, 80);
+	data.setValue(58, 1, 33);
+	data.setValue(59, 1, 60);
+	data.setValue(60, 1, 67);
+	data.setValue(61, 1, 0);
+	data.setValue(62, 1, 83);
+	data.setValue(63, 1, 67);
+	data.setValue(64, 1, 50);
+	data.setValue(65, 1, 75);
+	data.setValue(66, 1, 60);
+	data.setValue(67, 1, 100);
+	data.setValue(68, 1, 100);
+	data.setValue(69, 1, 100);
+	data.setValue(70, 1, 100);
+	data.setValue(71, 1, 50);
+	data.setValue(72, 1, 25);
+	data.setValue(73, 1, 50);
+	data.setValue(74, 1, 50);
+	data.setValue(75, 1, 0);
+	data.setValue(76, 1, 50);
+	data.setValue(77, 1, 100);
+	data.setValue(78, 1, 100);
+	data.setValue(79, 1, 50);
+	data.setValue(80, 1, 100);
+	
+      var options = {
+		region:'TR', 
+		resolution:'provinces', 
+		width: 800, 
+		height: 440,
+		backgroundColor:'#fff',
+		colors:['#fff',"#333"]
+		};
+
+      var container = document.getElementById('map_canvas');
+      var geochart = new google.visualization.GeoChart(container);
+      geochart.draw(data, options);
+  };
+  </script>
+</head>
+
+<body>
+	<h3>2011 Secim — AKP</h3>
+  <div id='map_canvas'></div>
+	
+</body>
+
+</html>

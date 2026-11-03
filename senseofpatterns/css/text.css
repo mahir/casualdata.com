@@ -1,0 +1,122 @@
+/*
+  960 Grid System ~ Text CSS.
+  Learn more ~ http://960.gs/
+
+  Licensed under GPL and MIT.
+*/
+
+/* `Basic HTML
+----------------------------------------------------------------------------------------------------*/
+
+body {
+  font: 13px/1.6 'Open Sans','Helvetica Neue', Arial, 'Liberation Sans', FreeSans, sans-serif;
+	padding: 30px 0;
+	color:#666;
+}
+
+pre,
+code {
+  font-family: 'DejaVu Sans Mono', Monaco, Consolas, monospace;
+}
+
+hr {
+  border: 0 #ccc solid;
+  border-top-width: 1px;
+  clear: both;
+  height: 0;
+}
+
+/* `Headings
+----------------------------------------------------------------------------------------------------*/
+
+h1 {
+  font-size: 25px;
+}
+
+h2 {
+  font-size: 23px;
+}
+
+h3 {
+  font-size: 21px;
+}
+
+h4 {
+  font-size: 19px;
+}
+
+h5 {
+  font-size: 17px;
+}
+
+h6 {
+	font: 16px/1.5 'Prata',serif;
+	display: block;
+	border-bottom:1px solid #ccc;
+	padding-bottom:5px;
+	margin:60px 0 20px 0;
+	text-align: center;
+}
+
+/* `Spacing
+----------------------------------------------------------------------------------------------------*/
+
+ol {
+  list-style: decimal;
+}
+
+ul {
+  list-style: disc;
+}
+
+li {
+  margin-left: 30px;
+}
+
+
+dl,
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+ol,
+ul,
+pre,
+table,
+address,
+fieldset,
+figure {
+  margin-bottom: 20px;
+}
+
+p {
+	margin-bottom: 10px;
+}
+
+a {
+	color: #ff0000;
+}
+
+a:hover {
+	color: #000;
+/*	text-decoration: none;*/
+}
+
+.introtext {
+	margin-top:30px;
+/*	font-size: 15px;
+*/	line-height: 1.8;
+}
+.footer {
+	padding:40px 0;
+	margin: 30px 0;
+	font-size: 11px;
+}
+
+.share {
+	margin:50px 0;
+	padding:20px;
+	text-align:center;
+}

@@ -1,0 +1,18 @@
+
+h1, h2, h3, h5, h5, h6 { font-weight: bold; } 
+
+body {
+	font: normal 14px/20px "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
+h3 { 
+	font-size: 16px;
+	}
+
+code {
+	font: 12px/20px Consolas, Monaco, 'Lucida Console', monospace  normal;
+}
+
+pre code {
+	font-size: 12px;
+}

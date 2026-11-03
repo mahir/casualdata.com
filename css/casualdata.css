@@ -1,0 +1,39 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	font: 12px/1.8 'Courier New', Monaco, Geneva, Arial, Helvetica, sans-serif;
+	background: #FFFFFF;
+	margin: 0;
+	padding: 0;
+	color: #000000;
+}
+a {
+	color:#FF3333;
+	text-decoration:none;
+}
+a:hover {
+	text-decoration:none;
+	border-bottom:#FF3333 dotted 1px;
+}
+a:visited {
+	color:#999999;
+	text-decoration:none;
+}
+#header {
+	margin: 50px 50px;
+}
+#content {
+font-size: 1.1em;
+	width: 450px;
+	margin: 0 0 0 50px;
+	padding: 10px 0;
+	/*border-top: 1px dotted #CCCCCC;*/
+}
+#footer {
+	font-size: 0.9em;
+	width: 450px;
+	border-top: 1px dotted #CCCCCC;
+	margin: 100px 0 50px 50px;
+	padding: 20px 0;
+}

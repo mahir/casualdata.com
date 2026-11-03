@@ -1,0 +1,19 @@
+.DS_Store
+
+# Credentials and customer data: never commit
+/socialbits/blog/wp-config.php
+/newsknitter/nk_preorder.txt
+
+# Third-party copyrighted books and papers (this repo is public)
+/socialbits/_data/books/
+/socialbits/_data/papers/
+/socialbits/_data/Turkey_ At the Threshold*.pdf
+
+# Large media, hosted as assets of the "media" GitHub Release instead
+# (GitHub Pages limits a site to 1 GB; some files also exceed the 100 MB per-file limit)
+*.mov
+*.mp4
+*.tif
+/newsknitter/video/nkdvd.zip
+/senseofpatterns/_data/sop-publication.zip
+/senseofpatterns/_data/sop-x1-nocropmarks.pdf

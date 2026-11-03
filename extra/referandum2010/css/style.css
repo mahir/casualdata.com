@@ -1,0 +1,46 @@
+body {
+	background: url(../gfx/bg.jpg);
+	color: #333;
+	font-family: Georgia;
+}
+
+.container_12 {
+	padding: 50px 0 250px 0;
+
+/*	border: 1px solid #000;*/
+}
+
+h1 {
+	font-family: HelveticaNeue;
+	margin: 80px 0 0 0;
+	padding: 0;
+}
+
+h2 {
+	font-family: HelveticaNeue;
+	font-size: 120%;
+	margin: -5px 0 40px 0;
+	padding: 0;
+	line-height: 1.3em;
+}
+
+.gray {
+	color: #999;
+}
+
+.small {
+	font-size: 85%;
+}
+
+.logo {
+	margin: 70px 0 0 0;
+}
+
+.logo img {
+	margin-right: 30px;
+	border: none;
+}
+
+img {
+	padding: 20px 0;
+} 
