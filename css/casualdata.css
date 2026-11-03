@@ -1,5 +1,8 @@
 @charset "UTF-8";
-/* CSS Document */
+
+:root {
+	--gutter: 50px;
+}
 
 body {
 	font: 12px/1.8 'Courier New', Monaco, Geneva, Arial, Helvetica, sans-serif;
@@ -8,32 +11,76 @@ body {
 	padding: 0;
 	color: #000000;
 }
+/* Originally #FF3333 and #999999; darkened (same OKLCH hue and chroma) to reach 4.5:1 on white */
 a {
-	color:#FF3333;
-	text-decoration:none;
-}
-a:hover {
-	text-decoration:none;
-	border-bottom:#FF3333 dotted 1px;
+	color: #EB1220;
+	text-decoration: none;
 }
 a:visited {
-	color:#999999;
-	text-decoration:none;
+	color: #767676;
+}
+a:hover {
+	border-bottom: #EB1220 dotted 1px;
 }
 #header {
-	margin: 50px 50px;
+	margin: 50px var(--gutter);
+}
+#header h1 {
+	margin: 0;
+}
+#header img {
+	display: block;
 }
 #content {
-font-size: 1.1em;
-	width: 450px;
-	margin: 0 0 0 50px;
+	font-size: 1.1em;
+	max-width: 450px;
+	margin: 0 var(--gutter);
 	padding: 10px 0;
-	/*border-top: 1px dotted #CCCCCC;*/
+}
+/* 404.html */
+#content h1 {
+	font: inherit;
+	margin: 1em 0 0;
+}
+#content h2 {
+	font: inherit;
+	margin: 0;
+	white-space: nowrap;
+	overflow: hidden;
+}
+#content ul {
+	list-style: none;
+	margin: 1em 0;
+	padding: 0;
+}
+/* Same gap the old <p><br><br><br></p> spacer made: 1em + three lines + 1em */
+.extras {
+	margin-top: 7.4em;
+}
+#content .extras ul {
+	margin-top: 0;
 }
 #footer {
 	font-size: 0.9em;
-	width: 450px;
+	max-width: 450px;
 	border-top: 1px dotted #CCCCCC;
-	margin: 100px 0 50px 50px;
+	margin: 100px var(--gutter) 50px;
 	padding: 20px 0;
+}
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+@media (max-width: 600px) {
+	:root {
+		--gutter: 20px;
+	}
 }
