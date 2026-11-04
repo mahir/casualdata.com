@@ -31,7 +31,14 @@ Pages use relative asset paths, so serve from the repo root and open `/<project>
 
 ## Layout
 
-`index.html` at the root is the landing page: a list of links to the projects, styled by `css/casualdata.css`. It has been modernized to HTML5 with no scripts. Its CSS reproduces the original 2014 layout to the pixel on desktop and reduces the gutters to 20px on phones, so keep both when you edit it. Each top-level folder is a **self-contained microsite** with its own copies of CSS, JS, graphics and images. Nothing is shared between projects, so a fix in one project's `js/` or `css/` does not reach the others.
+The site is being redesigned page by page into one minimal, modern shared frame: a white page, a quiet grid of the work, black and white type, and each project's own color only as a small accent. [PRODUCT.md](PRODUCT.md) records what the site is for and the user's binding decisions (keep the text as written; one shared frame; each project keeps its logo and color; minimal, with no gallery or exhibition metaphor, after the user rejected a gallery-themed version). The homepage and `404.html` are done; the project pages follow in homepage order.
+
+- **The shared frame is `css/casualdata.css`.** Redesigned pages link it, and the fonts, logo and favicon, by root-absolute paths (`/css/…`, `/fonts/…`, `/img/casualdata.svg`, `/favicon.svg`), so preview from the repo root. Project accent colors live there as classes (`.nk`, `.vm`, `.ns`, `.sb`, `.sop`) that set `--accent`; several of them are too light for text on white, so use them only for underlines and rules, never as text color.
+- **Fonts:** Host Grotesk for names and text, Fragment Mono for years, section labels and the footer. Both are self-hosted from `fonts/` as latin and latin-ext woff2 files (together they cover Turkish), under the SIL OFL (`fonts/OFL-*.txt`). The wordmark SVG is drawn from Archivo outlines and Archivo is not loaded as a web font; its license stays in `fonts/OFL-Archivo.txt`. The CSS fallback faces use metric overrides computed from the font files, so recompute them if a font file changes.
+- **Homepage images** in `img/works/` are 3:2 WebP crops of each project's press photos; the sense of patterns crop was rendered from the A1 print PDF in `senseofpatterns/_data/`. Each file embeds its origin (`impeccable embed-prompt --read <file>`).
+- **`.impeccable/`** holds the design workflow's local working files (direction contract, sketches, review captures). It is git-ignored on purpose: Pages would publish anything committed there.
+
+Each top-level folder is a **self-contained microsite** with its own copies of CSS, JS, graphics and images. Until a project page is redesigned, nothing is shared with it, so a fix in one project's `js/` or `css/` does not reach the others.
 
 | Folder | Year | Stack / notes |
 |---|---|---|

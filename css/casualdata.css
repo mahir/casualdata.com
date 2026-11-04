@@ -1,71 +1,117 @@
 @charset "UTF-8";
+/* {casualdata}: the shared frame for every page.
+   Minimal: a white page, a quiet grid of the work, black and white type,
+   and each project's own color only as a small accent. */
+
+/* Host Grotesk (text, variable weight 300–800) and Fragment Mono (years, labels and the footer, one weight),
+   both SIL Open Font License: see /fonts/OFL-HostGrotesk.txt and /fonts/OFL-FragmentMono.txt.
+   Each comes as a latin and a latin-ext file; together they cover Turkish. */
+@font-face {
+	font-family: "Host Grotesk";
+	src: url("/fonts/host-grotesk-latin.woff2") format("woff2");
+	font-weight: 300 800;
+	font-display: swap;
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: "Host Grotesk";
+	src: url("/fonts/host-grotesk-latin-ext.woff2") format("woff2");
+	font-weight: 300 800;
+	font-display: swap;
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+	font-family: "Fragment Mono";
+	src: url("/fonts/fragment-mono-latin.woff2") format("woff2");
+	font-weight: 400;
+	font-display: swap;
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: "Fragment Mono";
+	src: url("/fonts/fragment-mono-latin-ext.woff2") format("woff2");
+	font-weight: 400;
+	font-display: swap;
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Local fallbacks scaled to the web fonts' widths and heights, so text barely moves when the fonts arrive */
+@font-face {
+	font-family: "Host Grotesk fallback";
+	src: local("Arial");
+	size-adjust: 107.34%;
+	ascent-override: 94.56%;
+	descent-override: 29.35%;
+	line-gap-override: 0%;
+}
+@font-face {
+	font-family: "Fragment Mono fallback";
+	src: local("Courier New");
+	size-adjust: 102.98%;
+	ascent-override: 92.25%;
+	descent-override: 24.28%;
+	line-gap-override: 0%;
+}
 
 :root {
-	--gutter: 50px;
+	--paper: #FFFFFF;
+	--ink: #111111;
+	--ink-2: #6B6B6B;
+	--blank: #F4F4F4;
+	--font: "Host Grotesk", "Host Grotesk fallback", Arial, sans-serif;
+	--mono: "Fragment Mono", "Fragment Mono fallback", "Courier New", monospace;
+	--gutter: clamp(20px, 4vw, 56px);
+	--max: 1600px;
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+	--accent: var(--ink);
 }
 
+/* Each project's own color, sampled from its logo. Used only as an accent, never for text. */
+.nk { --accent: #B92025; }
+.vm { --accent: #A3A3A3; }
+.ns { --accent: #111111; }
+.sb { --accent: #EE3100; }
+.sop { --accent: #F6A6AA; }
+
+/* Base */
+
+html {
+	background: var(--paper);
+	color: var(--ink);
+	font: 400 100%/1.5 var(--font);
+	font-kerning: normal;
+	/* Fragment Mono has one weight; never let the browser fake a bold */
+	font-synthesis: none;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
 body {
-	font: 12px/1.8 'Courier New', Monaco, Geneva, Arial, Helvetica, sans-serif;
-	background: #FFFFFF;
-	margin: 0;
-	padding: 0;
-	color: #000000;
-}
-/* Originally #FF3333 and #999999; darkened (same OKLCH hue and chroma) to reach 4.5:1 on white */
-a {
-	color: #EB1220;
-	text-decoration: none;
-}
-a:visited {
-	color: #767676;
-}
-a:hover {
-	border-bottom: #EB1220 dotted 1px;
-}
-#header {
-	margin: 50px var(--gutter);
-}
-#header h1 {
 	margin: 0;
 }
-#header img {
+img {
 	display: block;
+	max-width: 100%;
+	height: auto;
 }
-#content {
-	font-size: 1.1em;
-	max-width: 450px;
-	margin: 0 var(--gutter);
-	padding: 10px 0;
-}
-/* 404.html */
-#content h1 {
-	font: inherit;
-	margin: 1em 0 0;
-}
-#content h2 {
-	font: inherit;
+h1, h2, h3, p, ul, ol, figure {
 	margin: 0;
-	white-space: nowrap;
-	overflow: hidden;
 }
-#content ul {
+:where(ul[role="list"]) {
 	list-style: none;
-	margin: 1em 0;
 	padding: 0;
 }
-/* Same gap the old <p><br><br><br></p> spacer made: 1em + three lines + 1em */
-.extras {
-	margin-top: 7.4em;
+a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.25em;
 }
-#content .extras ul {
-	margin-top: 0;
+:focus-visible {
+	outline: 2px solid var(--ink);
+	outline-offset: 4px;
 }
-#footer {
-	font-size: 0.9em;
-	max-width: 450px;
-	border-top: 1px dotted #CCCCCC;
-	margin: 100px var(--gutter) 50px;
-	padding: 20px 0;
+::selection {
+	background: var(--ink);
+	color: var(--paper);
 }
 .visually-hidden {
 	position: absolute;
@@ -74,13 +120,163 @@ a:hover {
 	margin: -1px;
 	padding: 0;
 	overflow: hidden;
-	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
 	white-space: nowrap;
 	border: 0;
 }
 
-@media (max-width: 600px) {
-	:root {
-		--gutter: 20px;
+/* Page frame */
+
+.site-head,
+main,
+.site-foot {
+	max-width: var(--max);
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+.site-head {
+	padding-top: clamp(28px, 3.5vw, 48px);
+}
+.wordmark {
+	display: block;
+	width: fit-content;
+	font-size: inherit;
+}
+.wordmark img {
+	width: auto;
+	height: clamp(20px, 2vw, 28px);
+}
+main {
+	padding-top: clamp(56px, 8vw, 112px);
+}
+.site-foot {
+	padding-top: clamp(96px, 12vw, 168px);
+	padding-bottom: clamp(28px, 3.5vw, 48px);
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
+}
+
+/* The grid of work: one 3:2 frame per project, name left and year right beneath it */
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: clamp(40px, 5vw, 72px) clamp(20px, 2.5vw, 40px);
+}
+.work > a,
+.work > div {
+	display: block;
+	text-decoration: none;
+}
+.work img {
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+	background: var(--blank);
+}
+.caption {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+	margin-top: 14px;
+	font-size: 17px;
+	line-height: 1.35;
+}
+.name {
+	font-weight: 500;
+	letter-spacing: -0.005em;
+	text-decoration: underline 3px transparent;
+	text-underline-offset: 0.35em;
+	transition: text-decoration-color 0.2s var(--ease-out);
+}
+/* Years, like every other piece of data on the page, are set in the mono */
+.year {
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
+	text-align: right;
+}
+/* The accent: pointing at or focusing a work underlines its name in the project's color */
+a:is(:hover, :focus-visible) .name {
+	text-decoration-color: var(--accent);
+}
+.work > a:focus-visible {
+	outline-offset: 8px;
+}
+
+/* Text lists: projects without a page, and the extras. One grid column wide, name left and year right */
+
+.text-list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	column-gap: clamp(20px, 2.5vw, 40px);
+}
+.text-list > li {
+	grid-column: 1;
+}
+.text-list a,
+.text-list .unlinked {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+	padding: 12px 0;
+	font-size: 17px;
+	line-height: 1.35;
+	text-decoration: none;
+}
+.grid + .text-list {
+	margin-top: clamp(40px, 5vw, 72px);
+}
+/* No page to open: the name stays grey so it does not read as a link */
+.unlinked .name {
+	color: var(--ink-2);
+}
+.extras {
+	margin-top: clamp(96px, 11vw, 160px);
+}
+.extras h2 {
+	font-family: var(--mono);
+	font-size: 14px;
+	font-weight: 400;
+	color: var(--ink-2);
+}
+.extras .text-list {
+	margin-top: 8px;
+}
+
+/* The not-found page */
+
+.notice h1 {
+	max-width: 24ch;
+	font-size: clamp(22px, 2.4vw, 32px);
+	font-weight: 500;
+	line-height: 1.2;
+}
+.notice p {
+	margin-top: 24px;
+	font-size: 17px;
+}
+
+/* Tablets: two columns. Phones: one. */
+
+@media (max-width: 1023px) {
+	.grid,
+	.text-list {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+@media (max-width: 599px) {
+	.grid,
+	.text-list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition: none !important;
 	}
 }

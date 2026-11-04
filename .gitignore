@@ -17,3 +17,7 @@
 /newsknitter/video/nkdvd.zip
 /senseofpatterns/_data/sop-publication.zip
 /senseofpatterns/_data/sop-x1-nocropmarks.pdf
+
+# Design workflow working files (direction contract, sketches, review captures).
+# Kept local: Pages would publish anything committed here next to the site.
+/.impeccable/
