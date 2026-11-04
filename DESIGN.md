@@ -142,7 +142,7 @@ The project accents, each sampled from the project's own logo and bound to it by
 
 **The Mono Is for the Record Rule.** Fragment Mono sets the record's data and labels: years, section labels, the footer line. Names and prose stay in Host Grotesk. The mono has one weight; `font-synthesis: none` keeps the browser from faking a bold, so never ask it for one.
 
-**The Text As Written Rule.** Names keep their original lower-case spelling and dates keep their original form ("2009–10", "2009 – Ongoing"). Type styling never changes case.
+**The Text As Written Rule.** Names keep their original lower-case spelling and dates keep the form the owner gave them ("2007", "2009"). Type styling never changes case.
 
 ## Layout
 
@@ -194,7 +194,7 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - **Motion:** only the underline color transitions; with reduced motion set, all transitions are off.
 
 ### Footer line
-- "All data is somehow casual, 2005–2014." in the label role (mono, grey), at the bottom of every page.
+- "All data is somehow casual, 2005–today." in the label role (mono, grey), at the bottom of every page.
 
 ### Notice page
 - The 404 pattern: the wordmark header, one headline sentence (max 24ch) in place of the grid, a prose link 24px below it, and the footer line.

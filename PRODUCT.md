@@ -14,7 +14,7 @@ Curators, press and researchers looking up casualdata's past projects. They want
 
 casualdata.com is the archive of casualdata's finished data-visualization art projects, 2007–2014. Nothing new gets added. Success means every project is easy to find, reads well on any screen, and keeps its record intact: description, exhibitions, credits, images and video.
 
-Projects, in the order the homepage lists them: newsknitter (2007), value machine (2008), newshaper (2009–10), social bits (2009–), sense of patterns (2011), olgusal (2014–, no page; its domain is gone). Extras / research: referandum (2010), tbmmtweets and secim2011 (`extra/tbmmtweets/`, `extra/secim2011/`; the last two were unlinked until the 2026 redesign).
+Projects, in the order the homepage lists them: newsknitter (2007), value machine (2008), newshaper (2009), social bits (2009), sense of patterns (2011). olgusal (2014–) has no page and its domain is gone, so it is left off the homepage for now (the user's decision on 2026-11-04). Extras / research: referandum (2010). tbmmtweets and secim2011 (`extra/tbmmtweets/`, `extra/secim2011/`) stay in the repo but are not linked from the homepage (the user's decision on 2026-11-04).
 
 ## Positioning
 
@@ -33,7 +33,7 @@ Every page must work on desktop and phone screens, since a visitor may arrive at
 ## Brand Commitments
 
 - The name is written `{casualdata}`. The logo is `img/casualdata.svg`, redrawn in 2026 at the user's request as a high-resolution wordmark (the original was a 102×15 PNG).
-- Footer line: "All data is somehow casual, 2005–2014."
+- Footer line: "All data is somehow casual, 2005–today." (the end year was "2014" until the user changed it on 2026-11-04)
 - Every page shares one casualdata layout and type system. Inside it, each project keeps its own logo and signature color.
 - Minimal and modern: a white page, a quiet image grid, mostly black and white, each project's color only as a small accent. No gallery or exhibition metaphor (the user's decision on 2026-11-03, after seeing a gallery-themed build).
 - The text is a historical record: keep it as written, fixing only typos and broken links.
