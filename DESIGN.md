@@ -227,14 +227,14 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 
 ### Project page head
 - The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default).
-- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(15px, 1.35vw, 20px), `--logo-baseline: 0.988`, so its slab title stays about as tall as newsknitter's lettering).
+- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(15px, 1.35vw, 20px), `--logo-baseline: 0.988`, so its slab title stays about as tall as newsknitter's lettering). Newshaper keeps the default height with `--logo-baseline: 0.579`, the baseline of NEWSHAPER below the raised hand; its logo is the outlines from the project's 2009 project sheet PDF, recoloured to ink.
 
 ### Banner
-- One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original). On phones a `<picture>` source may serve a taller crop of the same photograph.
+- One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original; newshaper: 3.4:1, the 2009 banner's framing cut again from the press original it was taken from). On phones a `<picture>` source may serve a taller crop of the same photograph.
 - The proportion may differ per project when the crop has to end cleanly on the photo's content (value machine: about 3.7:1, the top of the interface close-up, ending between two rows of the list). A project whose original header was a drawing still leads with a photograph; the drawing moves into the text (see Drawing and sign-off).
 
 ### Record row
-- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page; names that page set in capitals for effect are set in normal case (value machine, at the user's request).
+- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page; names that page set in capitals for effect are set in normal case (value machine, at the user's request). Credits & Thanks may move to the end, after the videos and photographs, when the original page put it before them (newshaper, at the user's request).
 - Running text (`.prose`): 66ch measure, paragraphs 0.9em apart.
 - Links in a row: ink with a 1px underline at rest; on hover and focus the underline turns the project's accent and 2px.
 
@@ -258,12 +258,16 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - On a press images page (`newsknitter/300dpi/`), each link points at the full-size press JPEG, so without the script it opens the file to save; the viewer shows the 2000px WebP preview and offers the JPEG and TIFF (see Photo viewer). The page's `h1` is the first row's label ("Hi-res Images"), and the project logo above it links back to the project page.
 - Large files are WebP, 2000px on the long side when a press original exists, otherwise the original page's size. Each carries a provenance sidecar.
 
+### Videos
+- `.videos`: the project's own video players (Vimeo iframes from the original page, with `dnt=1` added and `loading="lazy"`), each 16:9 on a blank (#F4F4F4) ground, side by side when each can be at least 22rem wide and stacked below that, with the column gutter (clamp(20px, 2.5vw, 40px)) between them, so they read as two players. Each iframe has a `title`.
+
 ### Drawing and sign-off
 - `.prose > .drawing`: a small drawing from the project's original page, set between paragraphs at the size it was drawn, 2em above and below (value machine's network drawing, 195×155).
 - `.prose > .sign-off`: a closing line quoted from the work, in the label role, 1.6em below the last paragraph (value machine's "THANKS FOR PURCHASING INFORMATION", as its receipts printed it).
 
 ### Files
 - `.files`: name left (title role), format and size right (label role, never wrapping), like a text-list row, with the accent underline on the name on hover and focus.
+- `.files-note`: one grey line in the body role, 16px under the list, for files offered elsewhere on the page (newshaper: "Open any photo above to download it as a 300 dpi JPEG.").
 
 ### Colophon
 - The project's own credit line from its original page, in the body role, grey, in the content column at the end of the record.
@@ -272,7 +276,7 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - `/js/lightbox.js`, loaded with `defer` on any page with a `[data-gallery]`. A `<dialog>` that fills the screen in paper: the photo contained in it, and one bar beneath with the count ("3 / 10", label role, grey) at the left and previous, next and close at the right as words in the label role, with a 2px accent underline on hover and focus.
 - Arrow keys and swipe step through the group and wrap; Esc or a click outside the photo closes; focus starts on close and returns to the opening link; the page stops scrolling while it is open. A photo that is still loading is hidden (opacity 0, 0.2s) rather than leaving the previous one on screen.
 - No captions: the alt text stays alt text. Without the script, each link opens its image file.
-- **Downloads (press images page):** a link may carry `data-preview` (a lighter image the viewer shows instead of the link's own file), `data-download` (a label such as "JPEG, 583 KB" that offers the link's own file) and `data-original` with `data-original-label` (a further file, such as the TIFF in the `media` Release). The viewer then lists them right after the count: "download" in grey, then each file as a link with a 1px ink underline that turns 2px and the accent on hover and focus. On phones the downloads take their own line above the count and the controls. Sizes are decimal (1 MB = 1,000,000 bytes), KB below 1 MB, one decimal place for MB.
+- **Downloads (press images page, or a project page whose press originals are on hand):** a link may carry `data-preview` (a lighter image the viewer shows instead of the link's own file), `data-download` (a label such as "JPEG, 583 KB" that offers the link's own file) and `data-original` with `data-original-label` (a further file, such as the TIFF in the `media` Release). The viewer then lists them right after the count: "download" in grey, then each file as a link with a 1px ink underline that turns 2px and the accent on hover and focus. On a project page (newshaper), the link keeps pointing at the 2000px WebP and `data-original` alone offers the 300 dpi JPEG. On phones the downloads take their own line above the count and the controls. Sizes are decimal (1 MB = 1,000,000 bytes), KB below 1 MB, one decimal place for MB.
 
 ## Do's and Don'ts
 
