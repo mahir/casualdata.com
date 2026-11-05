@@ -158,7 +158,7 @@ The project accents, each sampled from the project's own logo and bound to it by
 - **Headline** (500, clamp(22px, 2.4vw, 32px), 1.2, max 24ch): the one sentence heading on a notice page such as the 404.
 - **Body** (400, 17px, 1.5): running text, record entries, and prose links such as "back to all projects".
 - **Title** (500, 17px, 1.35, -0.005em): project and extra names in captions and text lists.
-- **Subhead** (500, 22px, 1.3, -0.01em): a heading inside running text on a project page (value machine's "Commons & Economy"), 1.5em below the paragraph before it.
+- **Subhead** (500, 22px, 1.3, -0.01em): a heading inside running text on a project page (value machine's "Commons & Economy"), 1.5em below the paragraph before it; also the name of each entry in an entries list (social bits' projects and members).
 - **Label** (Fragment Mono 400, 14px, 1.35, grey): years, right-aligned; section labels; on project pages the when-and-where of a dated entry, publisher and e-mail lines, file formats and sizes, and the photo viewer's count and controls; the footer line.
 
 ### Named Rules
@@ -227,14 +227,14 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 
 ### Project page head
 - The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default).
-- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(15px, 1.35vw, 20px), `--logo-baseline: 0.988`, so its slab title stays about as tall as newsknitter's lettering). Newshaper keeps the default height with `--logo-baseline: 0.579`, the baseline of NEWSHAPER below the raised hand; its logo is the outlines from the project's 2009 project sheet PDF, recoloured to ink.
+- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(15px, 1.35vw, 20px), `--logo-baseline: 0.988`, so its slab title stays about as tall as newsknitter's lettering). Newshaper keeps the default height with `--logo-baseline: 0.579`, the baseline of NEWSHAPER below the raised hand; its logo is the outlines from the project's 2009 project sheet PDF, recoloured to ink. Social bits sets `--logo-h: clamp(56px, 5.6vw, 80px)` and `--logo-baseline: 0.659`, since its square mark stands much taller than its lettering; the lettering stays 12.6–18px tall. Its logo rebuilds the 2010 web PNG as vector from the squares of the booklet's logo and DTL Nobel Bold outlines embedded in the booklet, in the logo's own orange.
 
 ### Banner
 - One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original; newshaper: 3.4:1, the 2009 banner's framing cut again from the press original it was taken from). On phones a `<picture>` source may serve a taller crop of the same photograph.
-- The proportion may differ per project when the crop has to end cleanly on the photo's content (value machine: about 3.7:1, the top of the interface close-up, ending between two rows of the list). A project whose original header was a drawing still leads with a photograph; the drawing moves into the text (see Drawing and sign-off).
+- The proportion may differ per project when the crop has to end cleanly on the photo's content (value machine: about 3.7:1, the top of the interface close-up, ending between two rows of the list). A project whose original header was a drawing still leads with a photograph; the drawing moves into the text (see Drawing and sign-off). A project whose original page had no banner and no photograph larger than 800px (social bits) has none: the rows follow the head.
 
 ### Record row
-- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page; names that page set in capitals for effect are set in normal case (value machine, at the user's request). Credits & Thanks may move to the end, after the videos and photographs, when the original page put it before them (newshaper, at the user's request).
+- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page; names that page set in capitals for effect are set in normal case (value machine, at the user's request). Credits & Thanks may move to the end, after the videos and photographs, when the original page put it before them (newshaper, at the user's request). A sidebar on the original page becomes record rows under its own labels, after the main column's sections (social bits). A project's second page (social bits' AMBER 2009 page) follows the press images page: the logo links back to the project page and the page title is the first row's label, as its `h1`.
 - Running text (`.prose`): 66ch measure, paragraphs 0.9em apart.
 - Links in a row: ink with a 1px underline at rest; on hover and focus the underline turns the project's accent and 2px.
 
@@ -257,6 +257,9 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - `.figure[data-gallery]`: a single photograph across the content, linked to its large file.
 - On a press images page (`newsknitter/300dpi/`), each link points at the full-size press JPEG, so without the script it opens the file to save; the viewer shows the 2000px WebP preview and offers the JPEG and TIFF (see Photo viewer). The page's `h1` is the first row's label ("Hi-res Images"), and the project logo above it links back to the project page.
 - Large files are WebP, 2000px on the long side when a press original exists, otherwise the original page's size. Each carries a provenance sidecar.
+
+### Entries
+- `.entries`: named blocks in a row's running text, such as an exhibition's projects or a group's members. Each `.entry` has its name as a subhead (`.entry-title`, balanced wrapping), an optional label-role line under it (who made it), an optional single photograph (`.figure[data-gallery]`, across the measure, 14px above and 16px below), then its paragraphs; a project with a Flickr album ends with a plain link such as "42 photos on Flickr". Entries are 40–56px apart. A project that was a closed accordion item on the original page is shown open.
 
 ### Videos
 - `.videos`: the project's own video players (Vimeo iframes from the original page, with `dnt=1` added and `loading="lazy"`), each 16:9 on a blank (#F4F4F4) ground, side by side when each can be at least 22rem wide and stacked below that, with the column gutter (clamp(20px, 2.5vw, 40px)) between them, so they read as two players. Each iframe has a `title`.
