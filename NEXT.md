@@ -7,21 +7,22 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 - **Name `{casual: data}`.** The name written as a key–value pair: "casual" is the key, "data" the value. The braces and the top dot of the colon are grey, the words are light, and the lower dot of the colon is red. `kit/wordmark.svg` (for the dark page) and `kit/wordmark-light.svg` are outlines of Host Grotesk 800, with braces at weight 600 and tracking at −0.05 em.
 - **Symbol `{●}`.** An object holding one value, the day's one thing: the 2005 `{casualdata}` braces with the dot in place of the letters. `kit/mark.svg` is the symbol and `kit/favicon.svg` the symbol on a black square. It stands in for the name where space is tight: the top bar under 400 px wide, the favicon, stamps.
 - The logo files are built by `python3 .impeccable/brand/build/build.py fonts/host-grotesk-latin.woff2 kit` (needs fontTools and brotli). That script lives only in local copies, since `.impeccable/` is not published.
-- **Three colors.** Page `#0E0E0E`, ink `#EDEBE6`, red `#FF3D1F`. Data is drawn in grey tones between page and ink.
+- **Day and night.** The page is white from 07:00 to 18:59 by the reader's own clock and black otherwise. `kit/theme.js` runs in `<head>` before the stylesheet, sets `data-theme` on `<html>`, checks again every minute and sends a `cd-theme` event so canvases redraw. `?theme=light` or `?theme=dark` forces one. Every page loads it.
+- **Three colors.** Day: page `#FFFFFF`, ink `#121212`. Night: page `#0E0E0E`, ink `#EDEBE6`. Red `#FF3D1F` in both. Data is drawn in grey tones between page and ink. Canvas code reads the colors from `CD.colors`, which follows the CSS tokens. The wordmark has a file per theme (`.wm-d` and `.wm-l` images, CSS shows one).
 - **The one red thing.** Each visualization uses red for exactly one idea: the point that matters (today, the reader's selection, the outlier). Red is never used for text.
 - **Type.** Host Grotesk 800 for titles and big numbers. IoskeleyMono (an Iosevka build, OFL-1.1, `fonts/OFL-IoskeleyMono.txt`) in caps for numbers, dates, axes and labels. Its regular and bold are subset to latin and latin-ext (Turkish included) as `fonts/ioskeley-mono-*.woff2`, about 22 KB each, from the v2.2.0 web release. Fragment Mono stays in `fonts/` for the archive pages.
-- **The ticket.** Every day carries a number and a date (`No.001 · Thu 5 Nov 2026`) in the top bar, and the same frame appears in every exported image.
+- **The date is the identity.** Days are never numbered. Each carries its date (`Thu 5 Nov 2026`) in the top bar and on its shared image.
 
 ## How a day works
 
-- URL: `casualdata.com/NNN/`, a three-digit folder at the root. The query string holds the reader's selection (for example `?d=200&lat=-34`), so a shared link opens the same view.
+- URL: `casualdata.com/YYYY-MM-DD/`, a folder named for the day's date at the root. The query string holds the reader's selection (for example `?d=200&lat=-34`), so a shared link opens the same view.
 - One screen: `body.cd-day` is a 100dvh grid made of a bar, a head (title, dek and live readout), the stage (a canvas) and a footer (source). Nothing scrolls.
-- Share sheet (`kit/cd.js`): copy the link, the native share sheet (with the image attached where supported), and PNG downloads at 1080×1350 (4:5) and 1600×900 (16:9). The kit draws the branded frame, and the day's code only supplies `CD.exporter = { draw(ctx, x, y, w, h, scale), readout() }`.
+- Share sheet (`kit/cd.js`): copy the link, the native share sheet (with the image attached where supported), and PNG downloads at 1080×1350 (4:5) and 1600×900 (16:9). The image holds only the visualization, the date and casualdata.com. The day's code supplies `CD.exporter = { draw(ctx, x, y, w, h, scale) }` and the kit adds the date line.
 - Register each day in `kit/days.js`. The menu and the front page read that list.
 
 ## Adding a day
 
-1. Copy `001/` to `002/` and change `data-day`, the title, dek, meta tags and `data-source`.
+1. Copy the latest day's folder to a folder named for the new date (for example `2026-11-06/`) and change `data-day`, the title, dek, meta tags and `data-source`.
 2. Write `viz.js`: draw into the stage canvas, make the drawing function reusable for export, and keep the reader's state in the URL.
 3. Add the day to `kit/days.js`.
 

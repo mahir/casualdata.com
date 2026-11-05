@@ -1,21 +1,55 @@
 // casualdata daily — shared chrome: menu, share sheet, PNG export.
-// A day page sets <body class="cd-day" data-day="N"> and calls
-//   CD.exporter = { draw(ctx, x, y, w, h, scale), readout() -> [big, small] }
-// The kit draws the branded frame around whatever draw() paints.
+// A day page sets <body class="cd-day" data-day="YYYY-MM-DD"> and calls
+//   CD.exporter = { draw(ctx, x, y, w, h, scale) }
+// The exported image is the visualization, the date and casualdata.com.
 (function () {
 	const days = window.CD_DAYS || [];
-	const n = Number(document.body.dataset.day || 0);
-	const day = days.find(d => d.n === n);
-	const pad3 = x => String(x).padStart(3, "0");
+	const id = document.body.dataset.day || "";
+	const day = days.find(d => d.date === id);
 	const fmtDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" }).replace(",", "");
 
-	const CD = window.CD = { day, days, pad3, fmtDate, exporter: null };
+	const shortDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+	const CD = window.CD = { day, days, fmtDate, shortDate, exporter: null };
 
-	const C = {
-		paper: "#0E0E0E", ink: "#EDEBE6", ink2: "#A8A59E", ink3: "#66635E", red: "#FF3D1F",
-		sans: '"Host Grotesk", Arial, sans-serif', mono: '"Ioskeley Mono", ui-monospace, Menlo, monospace'
+	// Canvas colors follow the CSS tokens, so they flip with the day/night theme.
+	// Pages redraw on the "cd-theme" event that kit/theme.js sends.
+	const C = { sans: '"Host Grotesk", Arial, sans-serif', mono: '"Ioskeley Mono", ui-monospace, Menlo, monospace' };
+	const readColors = () => {
+		const cs = getComputedStyle(document.documentElement);
+		const v = n => cs.getPropertyValue(n).trim();
+		Object.assign(C, { paper: v("--paper"), ink: v("--ink"), ink2: v("--ink-2"), ink3: v("--ink-3"), rule: v("--rule"), red: v("--red") });
+		C.dark = document.documentElement.dataset.theme === "dark";
 	};
+	readColors();
+	document.addEventListener("cd-theme", readColors);
 	CD.colors = C;
+	CD.wordmark = `<img class="wm wm-d" src="/kit/wordmark.svg" alt="casualdata"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="casualdata">`;
+
+	// The reading sits in the chart, next to the point it describes: an ink chip with
+	// the value on top and the context under it. (px, py) is the point; box = {x, y, w, h}
+	// keeps the chip inside the chart. It flips to the left of the point near the right edge.
+	// leftX, if given, is where the chip should end when it has to flip (e.g. the far end of a bar).
+	CD.label = (ctx, px, py, value, context, s, box, leftX = px) => {
+		const pad = 8 * s, gap = 12 * s;
+		ctx.save();
+		ctx.font = `600 ${17 * s}px ${C.sans}`; const vw = ctx.measureText(value).width;
+		ctx.font = `400 ${10.5 * s}px ${C.mono}`; const cw = ctx.measureText(context.toUpperCase()).width;
+		const w = Math.max(vw, cw) + pad * 2, h = 17 * s + 10.5 * s + pad * 2 + 5 * s;
+		let x = px + gap, y = py - h / 2;
+		if (x + w > box.x + box.w) x = leftX - gap - w;
+		if (x < box.x) {                                   // no room on either side: sit above (or below) the point
+			x = Math.min(Math.max(px - w, box.x), box.x + box.w - w);
+			y = py - h - gap; if (y < box.y) y = py + gap;
+		}
+		y = Math.min(Math.max(y, box.y), box.y + box.h - h);
+		ctx.fillStyle = C.ink; ctx.fillRect(x, y, w, h);
+		ctx.fillStyle = C.paper; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+		ctx.font = `600 ${17 * s}px ${C.sans}`; ctx.fillText(value, x + pad, y + pad + 14 * s);
+		ctx.font = `400 ${10.5 * s}px ${C.mono}`; ctx.fillText(context.toUpperCase(), x + pad, y + h - pad - 1 * s);
+		ctx.restore();
+	};
+	// A visually hidden live region that repeats the reading for screen readers.
+	CD.announce = text => { const el = document.getElementById("cd-live"); if (el && el.textContent !== text) el.textContent = text; };
 
 	// ---------- toast ----------
 	const toast = document.createElement("div");
@@ -28,14 +62,14 @@
 	function panel(id, title, body) {
 		const d = document.createElement("dialog");
 		d.className = "cd-panel"; d.id = id; d.setAttribute("aria-label", title);
-		d.innerHTML = `<div class="in"><div class="top"><a class="cd-mark" href="/next/"><img class="wm" src="/kit/wordmark.svg" alt="casualdata"></a><button class="cd-btn" data-close>Close</button></div>${body}</div>`;
+		d.innerHTML = `<div class="in"><div class="top"><a class="cd-mark" href="/next/">${CD.wordmark}</a><button class="cd-btn" data-close>Close</button></div>${body}</div>`;
 		d.addEventListener("click", e => { if (e.target === d || e.target.closest("[data-close]")) d.close(); });
 		document.body.append(d);
 		return d;
 	}
 
 	const dayItems = days.slice().reverse().map(d =>
-		`<li><a href="${d.path}"${d.n === n ? ' aria-current="page"' : ""}><span class="n">No.${pad3(d.n)}</span><span>${d.title}</span></a></li>`).join("");
+		`<li><a href="${d.path}"${d.date === id ? ' aria-current="page"' : ""}><span class="n">${shortDate(d.date)}</span><span>${d.title}</span></a></li>`).join("");
 
 	const menu = panel("cd-menu", "Menu", `
 		<section><h2>Daily</h2><ul class="cd-list">${dayItems}</ul></section>
@@ -87,80 +121,29 @@
 		if (t) document.getElementById(t.dataset.open).showModal();
 	});
 
-	const fileName = (kind = "") => `casualdata-${pad3(n)}${kind ? "-" + kind : ""}.png`;
+	const fileName = (kind = "") => `casualdata-${id || "today"}${kind ? "-" + kind : ""}.png`;
 
 	// ---------- PNG export ----------
-	const markImg = new Image(); markImg.src = "/kit/wordmark.svg";   // 5656 x 981
-
-	function wrap(ctx, text, maxW) {
-		const words = text.split(" "), lines = []; let line = "";
-		for (const w of words) {
-			const t = line ? line + " " + w : w;
-			if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
-		}
-		if (line) lines.push(line);
-		return lines;
-	}
-
 	async function render(W, H) {
 		await document.fonts.ready;
-		if (!markImg.complete) await new Promise(r => { markImg.onload = markImg.onerror = r; });
 		const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
 		const ctx = cv.getContext("2d");
 		const u = Math.min(W, H) / 1080;          // unit scale
-		const p = Math.round(64 * u);
+		const p = Math.round(56 * u);
 		ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H);
-		ctx.textBaseline = "alphabetic";
 
-		// top bar: mark left, number + date right, ink rule
-		const mh = 36 * u, mw = mh * 5656 / 981;
-		ctx.drawImage(markImg, p, p, mw, mh);
-		ctx.font = `400 ${18 * u}px ${C.mono}`; ctx.fillStyle = C.ink2; ctx.textAlign = "right";
-		ctx.fillText(day ? `NO.${pad3(day.n)} · ${fmtDate(day.date).toUpperCase()}` : "", W - p, p + mh * .82);
-		ctx.textAlign = "left";
-		let y = p + mh + 22 * u;
-		ctx.fillStyle = C.ink; ctx.fillRect(p, y, W - 2 * p, Math.max(1, 2 * u));
-		y += 40 * u;
-
-		// title
-		const wide = W > H * 1.3;
-		const ts = (wide ? 72 : 84) * u;
-		ctx.font = `800 ${ts}px ${C.sans}`; ctx.letterSpacing = `${-ts * .045}px`;
-		const [big, small] = CD.exporter ? CD.exporter.readout() : ["", ""];
-		const readW = wide ? 420 * u : 0;
-		const lines = wrap(ctx, day ? day.title : document.title, W - 2 * p - readW);
-		for (const l of lines) { y += ts * .92; ctx.fillText(l, p, y); }
-		ctx.letterSpacing = "0px";
-		// readout
-		const bs = (wide ? 72 : 64) * u;
-		if (wide) {
-			ctx.textAlign = "right"; ctx.font = `800 ${bs}px ${C.sans}`;
-			ctx.fillText(big, W - p, y - 30 * u);
-			ctx.font = `400 ${17 * u}px ${C.mono}`; ctx.fillStyle = C.ink2;
-			ctx.fillText(small.toUpperCase(), W - p, y);
-			ctx.textAlign = "left";
-		} else {
-			y += 26 * u + bs;
-			ctx.font = `800 ${bs}px ${C.sans}`; ctx.fillText(big, p, y);
-			const bw = ctx.measureText(big).width;
-			ctx.font = `400 ${18 * u}px ${C.mono}`; ctx.fillStyle = C.ink2;
-			ctx.fillText(small.toUpperCase(), p + bw + 18 * u, y);
-		}
-		y += 32 * u;
-
-		// footer
+		// one line at the foot: the date, and where it lives
 		const fy = H - p;
-		ctx.font = `400 ${17 * u}px ${C.mono}`; ctx.fillStyle = C.ink2;
-		const src = document.querySelector("[data-source]");
-		ctx.fillText(src ? src.dataset.source.toUpperCase() : "", p, fy);
+		ctx.textBaseline = "alphabetic";
+		ctx.font = `400 ${22 * u}px ${C.mono}`;
+		ctx.fillStyle = C.ink2;
+		ctx.fillText(day ? fmtDate(day.date).toUpperCase() : "", p, fy);
 		ctx.textAlign = "right"; ctx.fillStyle = C.ink;
-		ctx.fillText(("casualdata.com" + (day ? day.path.replace(/\/$/, "") : "")).toUpperCase(), W - p, fy);
+		ctx.fillText("CASUALDATA.COM", W - p, fy);
 		ctx.textAlign = "left";
 
-		// the visualization
-		const vy = y, vh = fy - 36 * u - vy;
-		if (CD.exporter) { ctx.save(); CD.exporter.draw(ctx, p, vy, W - 2 * p, vh, u); ctx.restore(); }
-
+		// everything else is the visualization
+		if (CD.exporter) { ctx.save(); CD.exporter.draw(ctx, p, p, W - 2 * p, fy - 44 * u - p, u); ctx.restore(); }
 		return new Promise(r => cv.toBlob(r, "image/png"));
 	}
 	CD.render = render;
