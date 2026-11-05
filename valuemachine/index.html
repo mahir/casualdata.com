@@ -1,80 +1,100 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!doctype html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Value Machine</title>
-<link href="css/vm.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="css/thickbox.css" type="text/css" media="screen" />
-<script type="text/javascript" src="js/jquery.js">
-</script>
-<script type="text/javascript" src="js/thickbox.js">
-</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Value Machine | { casualdata }</title>
+  <meta name="description" content="Value Machine is an interactive visualisation project which focuses on ‘conversations’ happening in the blogosphere and attempts to reveal the hypothetical economic values of these conversations.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/casualdata.css">
+  <script src="/js/lightbox.js" defer></script>
+  <script src="/js/photo-rows.js" defer></script>
 </head>
-<body class="oneColFixCtrHdr">
-<div id="container">
-  <div id="header"> <img src="gfx/banner_upd.gif" alt="Value Machine" />
-    <div id="bookmark"><a href="http://del.icio.us/post?url=http://casualdata.com/valuemachine/&amp;title=Value Machine" title="Bookmark at Del.icio.us!" rel="nofollow"><img src="gfx/delicious.png" width="17" height="16" /></a> <a href="http://digg.com/submit?phase=2&amp;url=http://casualdata.com/valuemachine/&amp;title=Value Machine" title="Digg it!" rel="nofollow"><img src="gfx/digg.png" width="17" height="16" /></a> <a href="http://www.stumbleupon.com/submit?url=http://casualdata.com/valuemachine/&amp;title=Value Machine" title="Submit to Stumbleupon!" rel="nofollow"><img src="gfx/su.png" width="17" height="16" /></a></div>
-    <!-- end #header -->
+<body class="vm">
+
+<header class="site-head">
+  <a class="wordmark" href="/"><img src="/img/casualdata.svg" alt="casualdata home" width="232" height="28"></a>
+</header>
+
+<main>
+  <div class="project-head" style="--logo-h: clamp(22px, 2.6vw, 34px); --logo-baseline: 0.967">
+    <h1 class="project-logo"><img src="gfx/valuemachine-title.svg" alt="Value Machine" width="403" height="34"></h1>
+    <p class="year">2008</p>
   </div>
-  <div id="leftContent">
-    <h2 class="red">PROJECT</h2>
-    <p> Value Machine is an interactive visualisation project which focuses on ‘conversations’ happening in the blogosphere and attempts to reveal the hypothetical economic values of these conversations. We produce, consume and share our knowledge with each other every day on blogs. Lately, this vast amount of exchange has begun to extend itself from the source of the information and spread out to different channels raising the question of ownership. Who does own the knowledge? Can we talk about a value system to quantify this knowledge? Can we monetise this knowledge? The aim of the project is to point out the new directions of conversations on the web and the new economy that establishes itself around these conversations. <br />
-      <br />
-      Value Machine consists of an application interface that discovers and analyses real-time activity of user defined conversations. Calculated values are sent to the printer which then prints out the results of the analysis for each conversation. The printed receipts are aimed to give the users the idea of the value that exists in cyber space. <br />
-      <br />
-      <span class="red">- Commons & Economy ++++++++++++++++++++</span><br />
-      We live in an era where the concept of copyright is slowly dying and creative commons are taking its place. The value of copyright is also moving to the shared domain of creative commons. Instead of one person or company, the intellectual properties are now started to be owned by groups and commons. The information is now created by communities (author plus feedback community) instead of only one author. This urges the global economy to redefine itself in a different way—maybe not right now but in the near future. Value Machine aims to develop a new mentality to calculate the value of intellectual goods. <br />
-      <br />
-      <span class="red">- Value & Virtual Worlds +++++++++++++++</span><br />
-      The products and goods are being valued depending on their physical conditions and qualities in real life. However, it is usually not easy to determine the fair value of a virtual property. Computing the production/consumption periods as well as the popularity of the items by considering the aspect of time might be the logical attempt to calculate these values. Value Machine questions whether there is a possible way to convert the virtual time/costs into real economical values. <br />
-      <br />
-      <span class="red">- Value in Time ++++++++++++++++++++++++</span><br />
-      The value is for sure uneven and depends on time. Most of the time when we quote the value of something, we talk about the recent numbers or meanings of the goods. Economical value is even more unreliable; as we know from stock markets, it may change in hours even in minutes depending on supply and demand. Such changes might happen more rapidly and totally uncontrolled in environments like web space, therefore, it is an important challenge to calculate the values of goods in real time. Value Machine aims to provide an index for these exchanges. <br />
+  <figure class="banner banner-drawing">
+    <img src="gfx/valuemachine-network.svg" width="390" height="310" alt="Drawing of documents linked to one another by news-feed connections">
+  </figure>
+
+  <div class="rows">
+    <section class="row" aria-labelledby="project">
+      <h2 id="project">PROJECT</h2>
+      <div class="row-body prose">
+        <p>Value Machine is an interactive visualisation project which focuses on ‘conversations’ happening in the blogosphere and attempts to reveal the hypothetical economic values of these conversations. We produce, consume and share our knowledge with each other every day on blogs. Lately, this vast amount of exchange has begun to extend itself from the source of the information and spread out to different channels raising the question of ownership. Who does own the knowledge? Can we talk about a value system to quantify this knowledge? Can we monetise this knowledge? The aim of the project is to point out the new directions of conversations on the web and the new economy that establishes itself around these conversations.</p>
+        <p>Value Machine consists of an application interface that discovers and analyses real-time activity of user defined conversations. Calculated values are sent to the printer which then prints out the results of the analysis for each conversation. The printed receipts are aimed to give the users the idea of the value that exists in cyber space.</p>
+        <h3 class="receipt-text">- Commons &amp; Economy ++++++++++++++++++++</h3>
+        <p>We live in an era where the concept of copyright is slowly dying and creative commons are taking its place. The value of copyright is also moving to the shared domain of creative commons. Instead of one person or company, the intellectual properties are now started to be owned by groups and commons. The information is now created by communities (author plus feedback community) instead of only one author. This urges the global economy to redefine itself in a different way—maybe not right now but in the near future. Value Machine aims to develop a new mentality to calculate the value of intellectual goods.</p>
+        <h3 class="receipt-text">- Value &amp; Virtual Worlds +++++++++++++++</h3>
+        <p>The products and goods are being valued depending on their physical conditions and qualities in real life. However, it is usually not easy to determine the fair value of a virtual property. Computing the production/consumption periods as well as the popularity of the items by considering the aspect of time might be the logical attempt to calculate these values. Value Machine questions whether there is a possible way to convert the virtual time/costs into real economical values.</p>
+        <h3 class="receipt-text">- Value in Time ++++++++++++++++++++++++</h3>
+        <p>The value is for sure uneven and depends on time. Most of the time when we quote the value of something, we talk about the recent numbers or meanings of the goods. Economical value is even more unreliable; as we know from stock markets, it may change in hours even in minutes depending on supply and demand. Such changes might happen more rapidly and totally uncontrolled in environments like web space, therefore, it is an important challenge to calculate the values of goods in real time. Value Machine aims to provide an index for these exchanges.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="exhibitions">
+      <h2 id="exhibitions">EXHIBITIONS</h2>
+      <div class="row-body">
+        <ul class="events" role="list">
+          <li><span class="when">September 2008, Linz</span><span>Exhibited at <a href="https://web.archive.org/web/20080917204148/http://www.aec.at/en/festival2008/">Ars Electronica 2008</a> Campus, Art on Move.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="images">
+      <h2 id="images">IMAGES</h2>
+      <div class="row-body photos" data-gallery style="--grow-max-wide: 1.6">
+        <a href="images/web/vm-01-2000.webp" style="--ar: 0.6663"><img src="images/web/vm-01-800.webp" width="533" height="800" loading="lazy" alt="A visitor typing at the Value Machine, its red interface on the screen"></a>
+        <a href="images/web/vm-02-2000.webp" style="--ar: 1.4981"><img src="images/web/vm-02-800.webp" width="800" height="534" loading="lazy" alt="The Value Machine screen listing blog conversations and their values, a visitor's shoulder in the foreground"></a>
+        <a href="images/web/vm-03-2000.webp" style="--ar: 0.6663"><img src="images/web/vm-03-800.webp" width="533" height="800" loading="lazy" alt="The Value Machine monitor with a printed receipt on the desk below it"></a>
+        <a href="images/web/vm-04-2000.webp" style="--ar: 0.6663"><img src="images/web/vm-04-800.webp" width="533" height="800" loading="lazy" alt="The Value Machine interface on the monitor above the keyboard"></a>
+        <a href="images/web/vm-05-2000.webp" style="--ar: 1.5009"><img src="images/web/vm-05-800.webp" width="800" height="533" loading="lazy" alt="Close-up of the interface: conversations listed with their values in dollars"></a>
+        <a href="images/web/vm-06-2000.webp" style="--ar: 0.78"><img src="images/web/vm-06-800.webp" width="624" height="800" loading="lazy" alt="Printed receipts piled on the desk beside the machine"></a>
+        <a href="images/web/vm-07-2000.webp" style="--ar: 0.6663"><img src="images/web/vm-07-800.webp" width="533" height="800" loading="lazy" alt="Value Machine receipts with printed charts, beside the monitor"></a>
+        <a href="images/web/vm-08-2000.webp" style="--ar: 1.5009"><img src="images/web/vm-08-800.webp" width="800" height="533" loading="lazy" alt="Close-up of printed receipts listing readability, feedback, trackback, popularity and energy values and a total"></a>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="credits">
+      <h2 id="credits">CREDITS &amp; THANKS:</h2>
+      <div class="row-body prose">
+        <p class="meta">valuemachine [at] casualdata.com</p>
+        <div class="people">
+          <p class="person-name">Mahir M. Yavuz, MFA</p>
+          <p class="person-name">Ilteris Ö. Kaplan, MPS</p>
+        </div>
+        <p>The data is gathered from <a href="https://www.google.com/">google</a>, <a href="https://web.archive.org/web/20080914032712/http://technorati.com/">technorati</a> and several blog websites. All visualizations are made with <a href="https://www.java.com/">Java</a> and <a href="https://processing.org/">Processing</a> software.</p>
+        <p>Thanks to Travis Kirton for helping to produce our VM box.</p>
+      </div>
+    </section>
+
+    <div class="row">
+      <p class="receipt-text receipt">************************************<br>
+        THANKS FOR PURCHASING INFORMATION<br>
+        ************************************</p>
+    </div>
+
+    <div class="row">
+      <p class="colophon">Ilteris Ö. Kaplan &amp; Mahir M. Yavuz ©&nbsp;2008<br>
+        Last modified on 15 September 2008</p>
+    </div>
   </div>
-  <div id="rightContent">
-    <h2 class="red">EXHIBITIONS</h2>
-    <p><strong>September 2008, Linz,</strong><br />
-      Exhibited at <a href="http://www.aec.at/en/festival2008/program/project.asp?iProjectID=14495">Ars Electronica 2008</a> Campus, Art on Move.</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <h2 class="red">IMAGES</h2>
-    <div class="gallery">
-    <a href="images/vm-opt-01.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-01.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-02.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-02.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-03.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-03.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-04.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-04.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-05.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-05.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-06.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-06.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-07.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-07.jpg" width="100" height="100" /></a> 
-    <a href="images/vm-opt-08.jpg" title="" class="thickbox" rel="vm"><img src="images/thumbs/vm-opt-08.jpg" width="100" height="100" /></a> 
-	</div>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <h2 class="red">CREDITS & THANKS:</h2>
-    <p>valuemachine [at] casualdata.com</p>
-    <p>&nbsp;</p>
-    <p><strong>Mahir M. Yavuz, MFA</strong><br />
-      <!--PhD Candidate, Kunstuniversität Linz, Interface Cultures<br />-->
-    <p><strong>Ilteris Ö. Kaplan, MPS</strong><br />
-    </p>
-    <p>&nbsp;</p>
-    <p>The data is gathered from <a href="http://google.com">google</a>, <a href="http://technorati.com">technorati</a> and several blog websites. All visualizations are made with <a href="http://java.com">Java</a> and <a href="http://processing.org">Processing</a> software. </p>
-    <p>&nbsp;</p>
-    <p>Thanks to Travis Kirton for helping to produce our VM box.</p>
-    <p></p>
-    <p>&nbsp;</p>
-  </div>
-  <div id="bottomContent">************************************<br />
-    THANKS FOR PURCHASING INFORMATION<br />
-    ************************************<br />
-  </div>
-  <div id="footer">
-    <p>Ilteris Ö. Kaplan &amp; Mahir M. Yavuz	  &copy; 2008<br />
-      Last modified on 15 September 2008</p>
-    <!-- end #footer -->
-  </div>
-  <!-- end #container -->
-</div>
+</main>
+
+<footer class="site-foot">
+  <p>All data is somehow casual, 2005–today.</p>
+</footer>
+
 </body>
 </html>

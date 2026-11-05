@@ -219,10 +219,12 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - The 404 pattern: the wordmark header, one headline sentence (max 24ch) in place of the grid, a prose link 24px below it, and the footer line.
 
 ### Project page head
-- The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default; set it per logo).
+- The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default).
+- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(22px, 2.6vw, 34px), `--logo-baseline: 0.967`).
 
 ### Banner
 - One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original). On phones a `<picture>` source may serve a taller crop of the same photograph.
+- When the original header was a drawing rather than a photograph, `.banner-drawing` shows it at twice its drawn size (at most 390px wide), with no placeholder fill, starting on the record's content column on desktop and at the left edge below 1024px (value machine's network drawing).
 
 ### Record row
 - A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page.
@@ -242,9 +244,15 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - `.people`: one block per person: the name as a 500-weight link, the affiliation in the body role, the e-mail in the label role. Two side by side above 599px.
 
 ### Photo rows
-- `.photos[data-gallery]`: links to the large file, each with `--ar` set to the photo's width ÷ height, holding a lazy-loaded 800px WebP with width, height and alt text. Rows are justified by flex-grow in proportion to `--ar` from a target height `--row` (clamp(120px, 13vw, 200px); 100px on phones), 8px apart, never cropped. Growth is capped at `--grow-max` (1.4; 2.4 on phones, where narrow rows need more), just above what a full row needs, so a nearly full last row still fills the width and a short one stays visibly partial at about the height of the rows above. Cursor zoom-in; no hover effect on the photo.
+- `.photos[data-gallery]`: links to the large file, each with `--ar` set to the photo's width ÷ height, holding a lazy-loaded 800px WebP with width, height and alt text, 8px apart, never cropped. The target row height is `--row` (clamp(120px, 13vw, 200px); 100px on phones).
+- `/js/photo-rows.js` (loaded with `defer` wherever `.photos` appears) sets the rows: a photo joins a row while that brings the row's height closer to `--row`, and each row is sized to fill the width exactly. The last row fills the width too if that makes it at most 15% taller than the row above; otherwise it keeps the row above's height and stays visibly partial (measured from 320px to 1700px: no middle row ends short, no last row is taller than the one above, and a partial last row leaves at least a fifth of the width empty).
+- Without the script, the CSS fallback justifies rows by flex-grow in proportion to `--ar`. Growth is capped at `--grow-max` (1.4; 2.4 on phones, where narrow rows need more), just above what a full row needs, so a nearly full last row still fills the width and a short one stays visibly partial at about the height of the rows above. A gallery whose own photos need more (mostly portraits) sets `--grow-max-wide` on itself after measuring every width from 600px to 1700px; value machine uses 1.6. Phones keep 2.4 regardless. Cursor zoom-in; no hover effect on the photo.
 - `.figure[data-gallery]`: a single photograph across the content, linked to its large file.
 - Large files are WebP, 2000px on the long side when a press original exists, otherwise the original page's size. Each carries a provenance sidecar.
+
+### Receipt lines
+- `.receipt-text`: lines that reproduce a receipt or printout from the work, kept as written (value machine's "- Commons & Economy ++++…" subheads and the closing "THANKS FOR PURCHASING INFORMATION" between rows of asterisks). Label role, grey, at min(14px, 3.5vw) so a 40-character line fits a 320px phone; the runs of "+" and "*" align because the face is monospaced.
+- As subheads inside running text they sit 1.8em below the paragraph before; the closing block (`.receipt`) is as wide as its longest line, with the lines centred on each other.
 
 ### Files
 - `.files`: name left (title role), format and size right (label role, never wrapping), like a text-list row, with the accent underline on the name on hover and focus.
@@ -268,7 +276,7 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - **Do** keep text lists one grid column wide at every breakpoint, with names of entries that have no page in grey.
 - **Do** keep every text color at 4.5:1 or better on white: ink or grey only.
 - **Do** keep a project page's sections, text and order as on its original page; add only what the user approved (such as a downloads list of the project's own documents).
-- **Do** mark every group of photos with `data-gallery`, give each link `--ar` and each image width, height and alt text, and load `/js/lightbox.js` on that page.
+- **Do** mark every group of photos with `data-gallery`, give each link `--ar` and each image width, height and alt text, and load `/js/lightbox.js` and `/js/photo-rows.js` on that page.
 
 ### Don't:
 - **Don't** use a project accent as text color, background, border or fill; it is an underline color only.

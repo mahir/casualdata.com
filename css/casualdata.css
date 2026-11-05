@@ -289,6 +289,17 @@ a:is(:hover, :focus-visible) .name {
 	width: 100%;
 	background: var(--blank);
 }
+/* A drawing as the banner (value machine): at twice its drawn size, starting on the record's content column */
+.banner-drawing {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	column-gap: clamp(20px, 2.5vw, 40px);
+}
+.banner-drawing img {
+	grid-column: 2 / -1;
+	width: min(100%, 390px);
+	background: none;
+}
 .rows {
 	margin-top: clamp(56px, 8vw, 112px);
 }
@@ -401,6 +412,9 @@ a:is(:hover, :focus-visible) .name {
 .person-name {
 	font-weight: 500;
 }
+.meta + .people {
+	margin-top: 12px;
+}
 
 /* Photographs in justified rows: each link grows in proportion to its aspect ratio (--ar), so every
    photo in a row has the same height and none is cropped. Growth is capped (--grow-max) just above what
@@ -408,7 +422,8 @@ a:is(:hover, :focus-visible) .name {
    and a short one stays visibly partial at about the height of the rows above it. */
 .photos {
 	--row: clamp(120px, 13vw, 200px);
-	--grow-max: 1.4;
+	/* A gallery whose rows need more (measured) sets --grow-max-wide on itself; phones always use 2.4 */
+	--grow-max: var(--grow-max-wide, 1.4);
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
@@ -452,6 +467,23 @@ a:is(:hover, :focus-visible) .name {
 	grid-column: 2 / -1;
 	font-size: 17px;
 	color: var(--ink-2);
+}
+
+/* Lines that reproduce a receipt from the work, as written: the mono, sized so a 40-character line fits a phone */
+.receipt-text {
+	font-family: var(--mono);
+	font-size: min(14px, 3.5vw);
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--ink-2);
+}
+.prose > .receipt-text {
+	margin: 1.8em 0 0.3em;
+}
+.receipt {
+	grid-column: 2 / -1;
+	width: fit-content;
+	text-align: center;
 }
 
 /* The photo viewer opened by /js/lightbox.js: the photo on the white page, controls in the mono below it */
@@ -521,8 +553,13 @@ html:has(.viewer[open]) {
 		margin-bottom: 12px;
 		line-height: 1.35;
 	}
+	.banner-drawing {
+		grid-template-columns: minmax(0, 1fr);
+	}
 	.row-body,
-	.colophon {
+	.colophon,
+	.receipt,
+	.banner-drawing img {
 		grid-column: 1;
 	}
 }
