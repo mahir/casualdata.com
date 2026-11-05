@@ -260,6 +260,295 @@ a:is(:hover, :focus-visible) .name {
 	font-size: 17px;
 }
 
+/* Project pages: the project's own logo with its year, a banner photograph, then the record as
+   label-and-content rows (label in the first grid column, content across the other two) */
+
+.project-head {
+	--logo-h: clamp(36px, 4vw, 56px);
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+}
+.project-logo {
+	line-height: 0;
+}
+.project-logo img {
+	width: auto;
+	height: var(--logo-h);
+}
+/* The year sits on the baseline of the logo's lettering (60% down a newsknitter-style logo) */
+.project-head .year {
+	margin-top: calc(var(--logo-h) * var(--logo-baseline, 0.6) - 12px);
+	line-height: 1;
+}
+.banner {
+	margin-top: clamp(24px, 3vw, 40px);
+}
+.banner img {
+	width: 100%;
+	background: var(--blank);
+}
+.rows {
+	margin-top: clamp(56px, 8vw, 112px);
+}
+.row {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	column-gap: clamp(20px, 2.5vw, 40px);
+}
+.row + .row {
+	margin-top: clamp(56px, 7vw, 96px);
+}
+.row > h2 {
+	grid-column: 1;
+	font-family: var(--mono);
+	font-size: 14px;
+	font-weight: 400;
+	/* The prose line height, so the label sits on the first line of its content */
+	line-height: 25.5px;
+	color: var(--ink-2);
+}
+.row-body {
+	grid-column: 2 / -1;
+	min-width: 0;
+	font-size: 17px;
+	line-height: 1.5;
+}
+
+/* Running text and the links inside the record: an ink underline that turns to the project's color */
+.prose {
+	max-width: 66ch;
+}
+.prose > p + p {
+	margin-top: 0.9em;
+}
+.row-body a {
+	transition: text-decoration-color 0.2s var(--ease-out);
+}
+.row-body a:is(:hover, :focus-visible) {
+	text-decoration-color: var(--accent);
+	text-decoration-thickness: 2px;
+}
+.meta {
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
+}
+
+/* Dated entries: when and where on the left in the mono, what happened on the right */
+.events > li {
+	display: grid;
+	grid-template-columns: 240px minmax(0, 1fr);
+	column-gap: 24px;
+	padding: 6px 0;
+}
+.events > li:first-child {
+	padding-top: 0;
+}
+.events .when {
+	font-family: var(--mono);
+	font-size: 14px;
+	line-height: 25.5px;
+	color: var(--ink-2);
+}
+
+/* Publications: a small cover beside the title, authors and publisher */
+.books {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 32px clamp(20px, 2.5vw, 40px);
+}
+.book {
+	display: grid;
+	grid-template-columns: 96px minmax(0, 1fr);
+	gap: 20px;
+	align-items: start;
+}
+.book img {
+	width: 96px;
+	height: 96px;
+	background: var(--blank);
+}
+.book-title {
+	font-weight: 500;
+}
+
+/* A plain list of names that are links, in as many columns as fit */
+.link-list {
+	columns: 3 9.5rem;
+	column-gap: clamp(20px, 2.5vw, 40px);
+}
+.link-list > li {
+	break-inside: avoid;
+	padding: 3px 0;
+}
+.row-body .link-list a {
+	text-decoration: underline 3px transparent;
+	text-underline-offset: 0.35em;
+}
+.row-body .link-list a:is(:hover, :focus-visible) {
+	text-decoration-color: var(--accent);
+	text-decoration-thickness: 3px;
+}
+
+.people {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 24px clamp(20px, 2.5vw, 40px);
+	margin-bottom: 32px;
+}
+.person-name {
+	font-weight: 500;
+}
+
+/* Photographs in justified rows: each link grows in proportion to its aspect ratio (--ar), so every
+   photo in a row has the same height and none is cropped. Growth is capped (--grow-max) just above what
+   a full row needs (measured from 320px to 1700px wide), so a nearly full last row still fills the width
+   and a short one stays visibly partial at about the height of the rows above it. */
+.photos {
+	--row: clamp(120px, 13vw, 200px);
+	--grow-max: 1.4;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+.photos > a {
+	flex: var(--ar) 1 calc(var(--ar) * var(--row));
+	max-width: calc(var(--ar) * var(--row) * var(--grow-max));
+	cursor: zoom-in;
+}
+.photos img,
+.figure img {
+	width: 100%;
+	background: var(--blank);
+}
+.figure > a {
+	display: block;
+	cursor: zoom-in;
+}
+
+/* Files to download: name left, format and size right, like a text-list row */
+.files {
+	max-width: 40rem;
+}
+.files a {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+	padding: 6px 0;
+	text-decoration: none;
+}
+.files .meta {
+	flex: none;
+	white-space: nowrap;
+}
+.files > li:first-child a {
+	padding-top: 0;
+}
+
+.colophon {
+	grid-column: 2 / -1;
+	font-size: 17px;
+	color: var(--ink-2);
+}
+
+/* The photo viewer opened by /js/lightbox.js: the photo on the white page, controls in the mono below it */
+.viewer[open] {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-rows: minmax(0, 1fr) auto;
+	width: 100vw;
+	height: 100dvh;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	padding: var(--gutter) var(--gutter) 0;
+	border: 0;
+	background: var(--paper);
+	color: var(--ink);
+}
+.viewer::backdrop {
+	background: var(--paper);
+}
+.viewer-img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	transition: opacity 0.2s var(--ease-out);
+}
+/* While the next photo loads, the previous one is hidden rather than left on screen */
+.viewer-img.is-loading {
+	opacity: 0;
+}
+.viewer-bar {
+	display: flex;
+	align-items: center;
+	gap: 0 24px;
+	padding-bottom: env(safe-area-inset-bottom);
+	font-family: var(--mono);
+	font-size: 14px;
+}
+.viewer-count {
+	margin-right: auto;
+	color: var(--ink-2);
+	font-variant-numeric: tabular-nums;
+}
+.viewer button {
+	padding: 14px 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+	text-decoration: underline 2px transparent;
+	text-underline-offset: 0.4em;
+	transition: text-decoration-color 0.2s var(--ease-out);
+}
+.viewer button:is(:hover, :focus-visible) {
+	text-decoration-color: var(--accent);
+}
+html:has(.viewer[open]) {
+	overflow: hidden;
+}
+
+@media (max-width: 1023px) {
+	.row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.row > h2 {
+		margin-bottom: 12px;
+		line-height: 1.35;
+	}
+	.row-body,
+	.colophon {
+		grid-column: 1;
+	}
+}
+@media (max-width: 599px) {
+	.events > li {
+		grid-template-columns: minmax(0, 1fr);
+		padding: 8px 0;
+	}
+	.books,
+	.people {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.book {
+		grid-template-columns: 72px minmax(0, 1fr);
+		gap: 16px;
+	}
+	.book img {
+		width: 72px;
+		height: 72px;
+	}
+	.photos {
+		--row: 100px;
+		--grow-max: 2.4;
+	}
+}
+
 /* Tablets: two columns. Phones: one. */
 
 @media (max-width: 1023px) {
