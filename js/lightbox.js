@@ -1,6 +1,9 @@
 // Photo viewer for project pages. Every link inside a [data-gallery] element that points at an image
 // opens in a full-screen <dialog> with previous / next / close, arrow keys, Esc and swipe.
 // Without this script (or without <dialog> support) the same links simply open the image file.
+// Optional attributes on a link: data-preview (a lighter image for the viewer to show instead of the link's
+// file), data-download (a label such as "JPEG, 424 KB" that offers the link's own file as a download), and
+// data-original with data-original-label (a further file to download, such as the TIFF original).
 (() => {
 	const galleries = document.querySelectorAll("[data-gallery]");
 	if (!galleries.length || typeof HTMLDialogElement !== "function") return;
@@ -12,6 +15,7 @@
 		'<img class="viewer-img" alt="">' +
 		'<div class="viewer-bar">' +
 		'<p class="viewer-count" aria-live="polite"></p>' +
+		'<p class="viewer-files"></p>' +
 		'<button type="button" class="viewer-prev">previous</button>' +
 		'<button type="button" class="viewer-next">next</button>' +
 		'<button type="button" class="viewer-close" autofocus>close</button>' +
@@ -23,15 +27,40 @@
 	img.addEventListener("load", loaded);
 	img.addEventListener("error", loaded);
 	const count = viewer.querySelector(".viewer-count");
+	const files = viewer.querySelector(".viewer-files");
 	const prev = viewer.querySelector(".viewer-prev");
 	const next = viewer.querySelector(".viewer-next");
 	let links = [];
 	let index = 0;
 	let opener = null;
 
+	const source = (link) => link.dataset.preview || link.href;
+
 	const preload = (i) => {
 		const link = links[(i + links.length) % links.length];
-		if (link) new Image().src = link.href;
+		if (link) new Image().src = source(link);
+	};
+
+	// Download links for the photo on screen: the link's own file and any original it names
+	const downloads = (link) => {
+		const offered = [];
+		if (link.dataset.download) offered.push([link.href, link.dataset.download]);
+		if (link.dataset.original) offered.push([link.dataset.original, link.dataset.originalLabel || "original"]);
+		if (!offered.length) return [];
+		const label = document.createElement("span");
+		label.className = "viewer-files-label";
+		label.textContent = "download";
+		label.setAttribute("aria-hidden", "true");
+		return [label, ...offered.map(([href, text]) => {
+			const a = document.createElement("a");
+			a.href = href;
+			a.setAttribute("download", "");
+			const hidden = document.createElement("span");
+			hidden.className = "visually-hidden";
+			hidden.textContent = "download ";
+			a.append(hidden, text);
+			return a;
+		})];
 	};
 
 	const show = (i) => {
@@ -39,11 +68,12 @@
 		const link = links[index];
 		const thumb = link.querySelector("img");
 		img.classList.add("is-loading");
-		img.src = link.href;
+		img.src = source(link);
 		img.alt = thumb ? thumb.alt : "";
 		if (img.complete) img.classList.remove("is-loading");
 		const several = links.length > 1;
 		count.textContent = several ? `${index + 1} / ${links.length}` : "";
+		files.replaceChildren(...downloads(link));
 		prev.hidden = next.hidden = !several;
 		if (several) {
 			preload(index + 1);
