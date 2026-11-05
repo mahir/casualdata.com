@@ -45,6 +45,7 @@ spacing:
   list-row: "12px"
   section-gap: "clamp(96px, 11vw, 160px)"
   foot-top: "clamp(96px, 12vw, 168px)"
+  record-row-gap: "clamp(56px, 7vw, 96px)"
 components:
   wordmark:
     height: "clamp(20px, 2vw, 28px)"
@@ -75,6 +76,22 @@ components:
     textColor: "{colors.ink}"
     typography: "{typography.headline}"
     width: "24ch"
+  project-logo:
+    height: "clamp(36px, 4vw, 56px)"
+  record-label:
+    textColor: "{colors.index-grey}"
+    typography: "{typography.label}"
+  record-body:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    width: "66ch"
+  photo-row:
+    height: "clamp(120px, 13vw, 200px)"
+    gap: "8px"
+  viewer:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.label}"
 ---
 
 # Design System: {casualdata}
@@ -87,14 +104,14 @@ The archive is a calm index of finished work. A white page carries a grid of pho
 
 The system is deliberately small. Two families share the work: Host Grotesk sets names and sentences, and Fragment Mono sets the record's data and labels (years, the section label, the footer line), the way a receipt or a log would. The `{casualdata}` wordmark is drawn as outlines of a third face, Archivo, and is never set as live type. There are no borders, cards, panels, shadows, gradients or rounded corners. Hierarchy comes from space, grotesk against mono, weight 500 against 400, and ink against grey.
 
-Each project is recognized by its photograph and, on pointing or focus, by a 3px underline of its name in the project's own color. That underline is the only place a project color appears on the shared frame. The project pages that follow inherit this frame and keep their own logos inside it. The rejected gallery direction (rooms, floor plan, color walls, exhibition metaphor) is not part of this system.
+Each project is recognized by its photograph and, on pointing or focus, by a 3px underline of its name in the project's own color. On a project page the same color also marks its links on hover and focus; underlines are the only place a project color appears on the shared frame. A project page is the same frame in a longer form: the project's own logo with its year, one banner photograph, then the record as label-and-content rows, then the photographs in justified rows that open in a white full-screen viewer. The rejected gallery direction (rooms, floor plan, color walls, exhibition metaphor) is not part of this system.
 
 **Key Characteristics:**
 - White page, ink type, one grey; color comes from the photographs.
 - One 3:2 frame for every work image, cropped with `object-fit: cover`.
 - Name left, year right, on one baseline, under every image and in every text row.
 - Host Grotesk for names and text, Fragment Mono for years, labels and the footer; Archivo only inside the wordmark outlines.
-- Project color only as a 3px name underline on hover and focus.
+- Project color only as an underline on hover and focus: 3px under names, 2px under links in a project's record.
 - Flat: no borders, shadows, radii or fills beyond the blank image placeholder.
 
 ## Colors
@@ -118,7 +135,7 @@ The project accents, each sampled from the project's own logo and bound to it by
 - **Blank** (#F4F4F4): the placeholder fill behind a work image while it loads. Never a surface or panel color.
 
 ### Named Rules
-**The Underline-Only Rule.** A project color is used only as the color of the 3px underline under that project's name on hover and focus. Never as text color, fill, border or background: value machine (2.5:1), social bits (4.1:1) and sense of patterns (1.9:1) fail 4.5:1 text contrast on white.
+**The Underline-Only Rule.** A project color is used only as the color of an underline on hover and focus: 3px under the project's name, 2px under a link in the project's record. Never as text color, fill, border or background: value machine (2.5:1), social bits (4.1:1) and sense of patterns (1.9:1) fail 4.5:1 text contrast on white.
 
 **The Photographs Bring the Color Rule.** The frame stays ink, grey and white. If a surface looks colorful, the color must come from the work's own images or logo.
 
@@ -133,9 +150,9 @@ The project accents, each sampled from the project's own logo and bound to it by
 
 ### Hierarchy
 - **Headline** (500, clamp(22px, 2.4vw, 32px), 1.2, max 24ch): the one sentence heading on a notice page such as the 404.
-- **Body** (400, 17px, 1.5): running text and prose links such as "back to all projects".
+- **Body** (400, 17px, 1.5): running text, record entries, and prose links such as "back to all projects".
 - **Title** (500, 17px, 1.35, -0.005em): project and extra names in captions and text lists.
-- **Label** (Fragment Mono 400, 14px, 1.35, grey): years, right-aligned; the section label; the footer line.
+- **Label** (Fragment Mono 400, 14px, 1.35, grey): years, right-aligned; section labels; on project pages the when-and-where of a dated entry, publisher and e-mail lines, file formats and sizes, and the photo viewer's count and controls; the footer line.
 
 ### Named Rules
 **The Wordmark Stands Alone Rule.** Archivo and its wide heavy cut belong to the wordmark only. All live text is Host Grotesk (weights 400 and 500) or Fragment Mono (400).
@@ -152,6 +169,8 @@ The work grid has three equal columns above 1023px, two from 600px to 1023px, an
 
 Text lists share the work grid's columns and gap, but every row sits in the first column, so a text row is always exactly one grid column wide at every breakpoint: one third of the page on desktop, half on tablet, full width on phones. A text list that follows the grid starts one row gap below it; a new section (the extras) starts 96–160px below the previous one, with its label 8px above the list.
 
+A project page keeps the same column and gutters. Under the head and banner, its record is a stack of rows 56–96px apart. Above 1023px each row puts its label in the first grid column and its content across the other two; at 1023px and below the label sits 12px above full-width content. Running text keeps a 66ch measure. Photo groups use the same content column.
+
 **The Name Left, Year Right Rule.** Every entry, image caption or text row, is one flex line: name at the start, year at the end, aligned on the baseline, at least 16px apart. An empty year slot means the year is unknown; never fill it with a placeholder.
 
 **The Generous Space Rule.** Sections are separated by space alone, never by rules, boxes or background bands.
@@ -164,7 +183,7 @@ The system is completely flat. There are no shadows, overlays or tonal layers; t
 
 ## Shapes
 
-Square corners everywhere (no radius). Images are rectangular 3:2 crops, never masked or rounded. There are no borders or dividers. The only drawn lines are text underlines (1px for prose links, 3px for the accent under a name) and the focus outline.
+Square corners everywhere (no radius). Images are rectangular 3:2 crops, never masked or rounded. There are no borders or dividers. The only drawn lines are text underlines (1px for prose links at rest, 2px in the accent on hover inside a project's record, 3px for the accent under a name) and the focus outline. Photographs on project pages keep their own proportions and are never cropped, except the banner.
 
 ## Components
 
@@ -199,6 +218,45 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 ### Notice page
 - The 404 pattern: the wordmark header, one headline sentence (max 24ch) in place of the grid, a prose link 24px below it, and the footer line.
 
+### Project page head
+- The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default; set it per logo).
+
+### Banner
+- One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original). On phones a `<picture>` source may serve a taller crop of the same photograph.
+
+### Record row
+- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page.
+- Running text (`.prose`): 66ch measure, paragraphs 0.9em apart.
+- Links in a row: ink with a 1px underline at rest; on hover and focus the underline turns the project's accent and 2px.
+
+### Dated entries
+- `.events`: when and where ("September 2007, Linz") in the label role in a 240px column, what happened in the body role beside it, 6px apart; stacked on phones.
+
+### Publications
+- `.books`: a 96px cover (72px on phones) beside the title (500, the link), the authors line, and the publisher line in the label role. Two side by side on desktop and tablet, one on phones.
+
+### Link list
+- `.link-list`: names that are links, with no underline at rest and a 3px accent underline on hover and focus, like a text-list name. Columns of at least 9.5rem: three on desktop, two on phones. A long single word gets a `<wbr>` at a natural break.
+
+### People
+- `.people`: one block per person: the name as a 500-weight link, the affiliation in the body role, the e-mail in the label role. Two side by side above 599px.
+
+### Photo rows
+- `.photos[data-gallery]`: links to the large file, each with `--ar` set to the photo's width ÷ height, holding a lazy-loaded 800px WebP with width, height and alt text. Rows are justified by flex-grow in proportion to `--ar` from a target height `--row` (clamp(120px, 13vw, 200px); 100px on phones), 8px apart, never cropped. Growth is capped at `--grow-max` (1.4; 2.4 on phones, where narrow rows need more), just above what a full row needs, so a nearly full last row still fills the width and a short one stays visibly partial at about the height of the rows above. Cursor zoom-in; no hover effect on the photo.
+- `.figure[data-gallery]`: a single photograph across the content, linked to its large file.
+- Large files are WebP, 2000px on the long side when a press original exists, otherwise the original page's size. Each carries a provenance sidecar.
+
+### Files
+- `.files`: name left (title role), format and size right (label role, never wrapping), like a text-list row, with the accent underline on the name on hover and focus.
+
+### Colophon
+- The project's own credit line from its original page, in the body role, grey, in the content column at the end of the record.
+
+### Photo viewer
+- `/js/lightbox.js`, loaded with `defer` on any page with a `[data-gallery]`. A `<dialog>` that fills the screen in paper: the photo contained in it, and one bar beneath with the count ("3 / 10", label role, grey) at the left and previous, next and close at the right as words in the label role, with a 2px accent underline on hover and focus.
+- Arrow keys and swipe step through the group and wrap; Esc or a click outside the photo closes; focus starts on close and returns to the opening link; the page stops scrolling while it is open. A photo that is still loading is hidden (opacity 0, 0.2s) rather than leaving the previous one on screen.
+- No captions: the alt text stays alt text. Without the script, each link opens its image file.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -209,6 +267,8 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - **Do** put name left and year right on one baseline, and leave the year empty when it is unknown.
 - **Do** keep text lists one grid column wide at every breakpoint, with names of entries that have no page in grey.
 - **Do** keep every text color at 4.5:1 or better on white: ink or grey only.
+- **Do** keep a project page's sections, text and order as on its original page; add only what the user approved (such as a downloads list of the project's own documents).
+- **Do** mark every group of photos with `data-gallery`, give each link `--ar` and each image width, height and alt text, and load `/js/lightbox.js` on that page.
 
 ### Don't:
 - **Don't** use a project accent as text color, background, border or fill; it is an underline color only.
@@ -218,3 +278,4 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - **Don't** add small uppercase labels above headings or decorative icons.
 - **Don't** bring back the gallery metaphor: no rooms, floor plans, wall colors, hanging lines or exhibition language.
 - **Don't** rewrite, re-case or shorten names, dates or the footer line.
+- **Don't** show alt text as visible captions or add descriptions of the work; the archive adds no new text.
