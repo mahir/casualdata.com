@@ -405,6 +405,31 @@ a:is(:hover, :focus-visible) .name {
 	margin-top: 12px;
 }
 
+/* Named entries in running text, such as the projects of an exhibition or the members' bios: the name as a
+   subhead, an optional label line (who made it), a photograph, then the text */
+.entries > .entry + .entry {
+	margin-top: clamp(40px, 4.5vw, 56px);
+}
+.entry-title {
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+.entry-title + .meta {
+	margin-top: 2px;
+}
+.entry > .figure {
+	margin: 14px 0 16px;
+}
+.entry > p + p {
+	margin-top: 0.9em;
+}
+.entry-title + p:not(.meta) {
+	margin-top: 0.2em;
+}
+
 /* Photographs in justified rows: each link grows in proportion to its aspect ratio (--ar), so every
    photo in a row has the same height and none is cropped. Growth is capped (--grow-max) just above what
    a full row needs (measured from 320px to 1700px wide), so a nearly full last row still fills the width
