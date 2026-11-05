@@ -36,7 +36,7 @@ Every page must work on desktop and phone screens, since a visitor may arrive at
 - Footer line: "All data is somehow casual, 2005–today." (the end year was "2014" until the user changed it on 2026-11-04)
 - Every page shares one casualdata layout and type system. Inside it, each project keeps its own logo and signature color.
 - Minimal and modern: a white page, a quiet image grid, mostly black and white, each project's color only as a small accent. No gallery or exhibition metaphor (the user's decision on 2026-11-03, after seeing a gallery-themed build).
-- The text is a historical record: keep it as written, fixing only typos and broken links.
+- The text is a historical record: keep it as written, fixing only typos and broken links. Exceptions the user asked for on 2026-11-04 and 05: the user's name is written "Mahir Yavuz" on every page, in credits, colophons, bios and meta tags (it was "Mahir M. Yavuz", "Mahir M. Yavuz, MFA" or "Mahir Mustafa Yavuz"); co-authors' names stay as written. The LaTeX sources of the published SIGGRAPH paper in `newsknitter/data/nk_acmsiggraph/` keep "Mahir M. Yavuz", since they are the paper as published. On the newsknitter page the "Last modified on 28 December 2009" line is gone.
 
 ## Evidence on Hand
 

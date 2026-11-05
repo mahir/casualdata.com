@@ -388,7 +388,7 @@ else
     <p>&nbsp;</p>
   </div>
   <div id="footer">
-    <p>Ebru Kurbak &amp; Mahir Mustafa Yavuz, &copy; 2007-2008<br />
+    <p>Ebru Kurbak &amp; Mahir Yavuz, &copy; 2007-2008<br />
     </p>
     <!-- end #footer -->
   </div>

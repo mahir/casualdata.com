@@ -72,3 +72,4 @@ Most of the size on disk (about 2.6 GB in total) is media in `newsknitter/` (abo
 
   `socialbits/.htaccess` is the stock WordPress root rewrite. It sends unknown paths to `/index.php`, but no such file exists at the socialbits root.
 - The pages under `extra/` are in Turkish and the rest are in English. Keep each page's language when you edit it.
+- Every page writes the user's name as "Mahir Yavuz", never "Mahir M. Yavuz" or "Mahir Mustafa Yavuz" (the user's decision on 2026-11-05; see PRODUCT.md). Addresses such as `mahirmyavuz.com` and the e-mail lines stay as they are.
