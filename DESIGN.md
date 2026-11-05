@@ -28,6 +28,12 @@ typography:
     fontWeight: 500
     lineHeight: 1.35
     letterSpacing: "-0.005em"
+  subhead:
+    fontFamily: "Host Grotesk, Host Grotesk fallback, Arial, sans-serif"
+    fontSize: "22px"
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: "-0.01em"
   label:
     fontFamily: "Fragment Mono, Fragment Mono fallback, Courier New, monospace"
     fontSize: "14px"
@@ -152,6 +158,7 @@ The project accents, each sampled from the project's own logo and bound to it by
 - **Headline** (500, clamp(22px, 2.4vw, 32px), 1.2, max 24ch): the one sentence heading on a notice page such as the 404.
 - **Body** (400, 17px, 1.5): running text, record entries, and prose links such as "back to all projects".
 - **Title** (500, 17px, 1.35, -0.005em): project and extra names in captions and text lists.
+- **Subhead** (500, 22px, 1.3, -0.01em): a heading inside running text on a project page (value machine's "Commons & Economy"), 1.5em below the paragraph before it.
 - **Label** (Fragment Mono 400, 14px, 1.35, grey): years, right-aligned; section labels; on project pages the when-and-where of a dated entry, publisher and e-mail lines, file formats and sizes, and the photo viewer's count and controls; the footer line.
 
 ### Named Rules
@@ -220,14 +227,14 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 
 ### Project page head
 - The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default).
-- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(22px, 2.6vw, 34px), `--logo-baseline: 0.967`).
+- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(15px, 1.35vw, 20px), `--logo-baseline: 0.988`, so its slab title stays about as tall as newsknitter's lettering).
 
 ### Banner
 - One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original). On phones a `<picture>` source may serve a taller crop of the same photograph.
-- When the original header was a drawing rather than a photograph, `.banner-drawing` shows it at twice its drawn size (at most 390px wide), with no placeholder fill, starting on the record's content column on desktop and at the left edge below 1024px (value machine's network drawing).
+- The proportion may differ per project when the crop has to end cleanly on the photo's content (value machine: about 3.7:1, the top of the interface close-up, ending between two rows of the list). A project whose original header was a drawing still leads with a photograph; the drawing moves into the text (see Drawing and sign-off).
 
 ### Record row
-- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page.
+- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page; names that page set in capitals for effect are set in normal case (value machine, at the user's request).
 - Running text (`.prose`): 66ch measure, paragraphs 0.9em apart.
 - Links in a row: ink with a 1px underline at rest; on hover and focus the underline turns the project's accent and 2px.
 
@@ -250,9 +257,9 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - `.figure[data-gallery]`: a single photograph across the content, linked to its large file.
 - Large files are WebP, 2000px on the long side when a press original exists, otherwise the original page's size. Each carries a provenance sidecar.
 
-### Receipt lines
-- `.receipt-text`: lines that reproduce a receipt or printout from the work, kept as written (value machine's "- Commons & Economy ++++…" subheads and the closing "THANKS FOR PURCHASING INFORMATION" between rows of asterisks). Label role, grey, at min(14px, 3.5vw) so a 40-character line fits a 320px phone; the runs of "+" and "*" align because the face is monospaced.
-- As subheads inside running text they sit 1.8em below the paragraph before; the closing block (`.receipt`) is as wide as its longest line, with the lines centred on each other.
+### Drawing and sign-off
+- `.prose > .drawing`: a small drawing from the project's original page, set between paragraphs at the size it was drawn, 2em above and below (value machine's network drawing, 195×155).
+- `.prose > .sign-off`: a closing line quoted from the work, in the label role, 1.6em below the last paragraph (value machine's "THANKS FOR PURCHASING INFORMATION", as its receipts printed it).
 
 ### Files
 - `.files`: name left (title role), format and size right (label role, never wrapping), like a text-list row, with the accent underline on the name on hover and focus.
