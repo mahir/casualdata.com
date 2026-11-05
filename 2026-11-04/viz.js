@@ -1,10 +1,10 @@
-// No.001 — daylight hours for every latitude and day of 2026.
+// 2026-11-04 — daylight hours for every latitude and day of 2026.
 // Sunrise and sunset use the standard -0.833° solar altitude (refraction plus
 // the sun's radius) and the Spencer (1971) series for solar declination.
 (function () {
 	const C = CD.colors;
 	const DAYS = 365, LAT_STEP = 0.5, ROWS = 361;          // 90N .. 90S
-	const PUB = 308;                                        // 5 Nov 2026, 0-based day of year
+	const PUB = 307;                                        // 4 Nov 2026, 0-based day of year
 	const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	const MSTART = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 	const CITIES = [
@@ -103,7 +103,7 @@
 		ctx.font = `400 ${10 * s}px ${C.mono}`; ctx.textBaseline = "middle";
 		for (const { l, c } of LEVELS) {
 			const d = l < 12 ? 20 : 172, pts = c[d]; if (!pts.length) continue;
-			ctx.fillStyle = l < 12 ? C.ink : C.paper;
+			ctx.fillStyle = l < 12 ? "#EDEBE6" : "#121212";   // on the map's own night/day tones, whatever the theme
 			ctx.fillText(`${l}h`, X(d) + 4 * s, Yr(pts[0]) + (l < 12 ? 8 : -8) * s);
 		}
 
@@ -133,14 +133,14 @@
 			}
 		}
 
-		// publication day: the one red line
+		// the day it was published (4 Nov): the one red line
 		const xp = X(PUB);
 		ctx.fillStyle = C.red; ctx.fillRect(xp - 1 * s, g.y0, 2 * s, g.ph + 6 * s);
 		ctx.font = `400 ${10 * s}px ${C.mono}`; ctx.textBaseline = "middle";
-		const tw = ctx.measureText("TODAY").width + 12 * s, th = 18 * s;
+		const tw = ctx.measureText("4 NOV").width + 12 * s, th = 18 * s;
 		const tx = Math.min(xp - tw / 2, g.x0 + g.pw - tw);
 		ctx.fillStyle = C.ink; ctx.fillRect(tx, g.y0, tw, th);
-		ctx.fillStyle = C.paper; ctx.fillText("TODAY", tx + 6 * s, g.y0 + th / 2 + 0.5 * s);
+		ctx.fillStyle = C.paper; ctx.fillText("4 NOV", tx + 6 * s, g.y0 + th / 2 + 0.5 * s);
 
 		// selection: thin crosshair + red dot
 		const sx = X(st.d), sy = Y(st.lat);
@@ -150,13 +150,16 @@
 		ctx.beginPath(); ctx.arc(sx, sy, 6 * s, 0, 2 * Math.PI);
 		ctx.fillStyle = C.red; ctx.fill();
 		ctx.lineWidth = 2 * s; ctx.strokeStyle = C.paper; ctx.stroke();
+
+		// the reading, next to the dot
+		const [value, context] = readout();
+		CD.label(ctx, sx, sy, value, context, s, { x: g.x0, y: g.y0, w: g.pw, h: g.ph });
 		return g;
 	}
 
 	// ---------- screen ----------
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
-	const bigEl = document.getElementById("big"), smallEl = document.getElementById("small");
 	let geo = null, W = 0, H = 0, raf = 0;
 
 	function paint() {
@@ -167,11 +170,11 @@
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
 		geo = draw(ctx, 0, 0, W, H, 1, W < 560);
-		const [b, sm] = readout();
-		bigEl.textContent = b; smallEl.textContent = sm;
+		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
 	new ResizeObserver(schedule).observe(stage);
+	document.addEventListener("cd-theme", schedule);
 	document.fonts.ready.then(schedule);
 
 	let urlT;
@@ -199,6 +202,6 @@
 
 	CD.exporter = {
 		readout,
-		draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, false)
+		draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.8, false)
 	};
 })();

@@ -30,16 +30,28 @@
 	font-display: swap;
 }
 
+/* The page is white by day and black by night, by the reader's local hour
+   (kit/theme.js sets data-theme on <html> before the page paints). */
 :root {
-	--paper: #0E0E0E;   /* the page (dark) */
-	--ink: #EDEBE6;     /* type and marks (light) */
-	--ink-2: #A8A59E;   /* secondary text, 8.1:1 on the page */
-	--ink-3: #66635E;   /* rules and axis ticks only */
-	--rule: #2A2927;
+	/* day: white page */
+	--paper: #FFFFFF;
+	--ink: #121212;
+	--ink-2: #5A5853;   /* secondary text, 7.2:1 on white */
+	--ink-3: #A9A69F;   /* rules and axis ticks only */
+	--rule: #E6E4DF;
 	--red: #FF3D1F;     /* the one thing. marks only, never text */
 	--sans: "Host Grotesk", Arial, sans-serif;
 	--mono: "Ioskeley Mono", ui-monospace, "SF Mono", Menlo, monospace;
 	--gut: clamp(16px, 2.4vw, 36px);
+	color-scheme: light;
+}
+:root[data-theme="dark"] {
+	/* night: black page */
+	--paper: #0E0E0E;
+	--ink: #EDEBE6;
+	--ink-2: #A8A59E;   /* 8.1:1 on the page */
+	--ink-3: #66635E;
+	--rule: #2A2927;
 	color-scheme: dark;
 }
 
@@ -60,8 +72,10 @@ button { font: inherit; color: inherit; }
 /* {casual: data} is the name; {●} is the symbol (favicon, stamps, tight spaces) */
 .cd-mark { display: inline-flex; align-items: center; text-decoration: none; flex: none; }
 .cd-mark img { height: 20px; width: auto; display: block; }
+/* two wordmark files, one per theme: .wm-d for the black page, .wm-l for the white one */
 .cd-mark .sym { display: none; }
-@media (max-width: 400px) { .cd-mark .wm { display: none; } .cd-mark .sym { display: block; } }
+:root[data-theme="dark"] .wm-l, :root:not([data-theme="dark"]) .wm-d { display: none; }
+@media (max-width: 400px) { .cd-mark .wm { display: none !important; } .cd-mark .sym { display: block; } }
 
 .cd-meta { font: 400 12px/1.3 var(--mono); letter-spacing: .02em; color: var(--ink-2); text-transform: uppercase; }
 .cd-meta b { font-weight: 400; color: var(--ink); }
@@ -88,22 +102,19 @@ body.cd-day {
 .cd-btn.solid { background: var(--ink); color: var(--paper); }
 .cd-btn.solid:hover { background: transparent; color: var(--ink); }
 
+/* The head is two things: the title, and one or two sentences that say how to
+   read the chart. The reading itself lives in the chart (CD.label). */
 .cd-head {
-	display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 32px; align-items: end;
-	padding: clamp(14px, 2.4vh, 28px) var(--gut) clamp(10px, 1.6vh, 18px);
+	display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 10px 48px; align-items: end;
+	padding: clamp(16px, 3vh, 36px) var(--gut) clamp(14px, 2.4vh, 26px);
 }
 .cd-title {
-	margin: 0; font-weight: 800; letter-spacing: -.045em; line-height: .92;
-	font-size: clamp(30px, min(6.4vw, 8.4vh), 96px);
-	text-wrap: balance;
+	/* light on purpose: 800 belongs to the wordmark alone */
+	margin: 0; font-weight: 400; letter-spacing: -.025em; line-height: 1;
+	font-size: clamp(28px, min(4.4vw, 6.6vh), 72px);
+	max-width: 18ch; text-wrap: balance;
 }
-.cd-dek { margin: 10px 0 0; max-width: 52ch; color: var(--ink-2); font-size: clamp(14px, 1.3vw, 17px); text-wrap: pretty; }
-.cd-readout { text-align: right; min-width: 14ch; }
-.cd-readout .big {
-	display: block; font-weight: 800; letter-spacing: -.04em; line-height: .9;
-	font-size: clamp(34px, min(5.2vw, 7.4vh), 80px); font-variant-numeric: tabular-nums;
-}
-.cd-readout .cd-meta { display: block; margin-top: 8px; }
+.cd-dek { margin: 0; max-width: 44ch; justify-self: end; color: var(--ink-2); font-size: clamp(14px, 1.2vw, 16px); line-height: 1.45; text-wrap: pretty; }
 
 .cd-stage { position: relative; min-height: 0; margin: 0 var(--gut); }
 .cd-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
@@ -116,10 +127,8 @@ body.cd-day {
 
 @media (max-width: 720px) {
 	.cd-head { grid-template-columns: 1fr; }
-	.cd-readout { text-align: left; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 	.cd-foot .hint { display: none; }
-	.cd-readout .cd-meta { margin: 0; }
-	.cd-dek { display: none; }
+	.cd-dek { justify-self: start; font-size: 14px; }
 	.cd-bar { gap: 12px; }
 	.cd-bar .cd-meta .long { display: none; }
 	.cd-btn .label { display: none; }
