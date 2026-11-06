@@ -275,7 +275,14 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 - `.files-note`: one grey line in the body role, 16px under the list, for files offered elsewhere on the page (newshaper: "Open any photo above to download it as a 300 dpi JPEG.").
 
 ### Colophon
-- The project's own credit line from its original page, in the body role, grey, in the content column at the end of the record.
+- The project's own credit line from its original page, in the body role, grey, in the content column at the end of the record. At most 35em wide (referandum's colophon runs to three lines).
+
+### Article (the extras)
+- An extra that is a written piece rather than a project (referandum 2010) has no logo. `.article-head`: the title as the page's `h1` in text (`.article-title`, 30–48px, weight 500, line height 1.1, tracking -0.02em, balanced, at most 20ch), the subtitle under it (`.article-subtitle`, 19–22px, 10px below), then the byline and date in the label role (12px below). No year at the right: the byline already carries the date.
+- One record row follows: an optional `.side-note` in the label column (15px, grey, at most 36ch; the English note for international visitors, with `lang="en"`), stacked above the text on tablets and phones with 32px under it, and the running text in `.article-body` across the content columns.
+- `.article-body`: paragraphs, lists and rules at most 35em wide, measured in em because Host Grotesk's text runs narrower than its zero (66ch gave lines of about 95 characters). Paragraphs 0.9em apart; a `.chart` 2em above and below. The original's `<hr>` breaks stay as 1px hairlines (ink at 14%), 3em above and below, on the text's left edge. A numbered list keeps the paragraph measure (border-box), with numbers in the mono, grey.
+- `.chart`: the article's own charts, maps and screenshots at the size they were made (592px; a map 918px with a 2x render where a vector source matches the published image), on white with no frame, mat, caption or viewer. A source line, where the original had one, is a `figcaption` in the label role 10px below. Alt text is in the page's language and carries the chart's figures.
+- `.update`: a dated update note inside a paragraph ("{Güncelleme: 18/09/2010}"), in the label role inline.
 
 ### Photo viewer
 - `/js/lightbox.js`, loaded with `defer` on any page with a `[data-gallery]`. A `<dialog>` that fills the screen in paper: the photo contained in it, and one bar beneath with the count ("3 / 10", label role, grey) at the left and previous, next and close at the right as words in the label role, with a 2px accent underline on hover and focus.

@@ -529,6 +529,7 @@ a:is(:hover, :focus-visible) .name {
 
 .colophon {
 	grid-column: 2 / -1;
+	max-width: 35em;
 	font-size: 17px;
 	color: var(--ink-2);
 }
@@ -547,6 +548,79 @@ a:is(:hover, :focus-visible) .name {
 /* A closing line quoted from the work, such as the receipt's "THANKS FOR PURCHASING INFORMATION" */
 .prose > .sign-off {
 	margin-top: 1.6em;
+}
+
+/* Articles (the extras): a text title in place of a logo, a note in the label column, then the running
+   text with its charts at the size they were made */
+.article-title {
+	max-width: 20ch;
+	font-size: clamp(30px, 3.4vw, 48px);
+	font-weight: 500;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	text-wrap: balance;
+}
+.article-subtitle {
+	margin-top: 10px;
+	font-size: clamp(19px, 1.6vw, 22px);
+	line-height: 1.3;
+	letter-spacing: -0.005em;
+}
+.article-subtitle + .meta {
+	margin-top: 12px;
+}
+.side-note {
+	grid-column: 1;
+	max-width: 36ch;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--ink-2);
+}
+/* Measured in em: Host Grotesk's text runs narrower than its zero, so 66ch gave lines of about 95 characters */
+.article-body > :is(p, ol, hr) {
+	max-width: 35em;
+}
+.article-body > * + * {
+	margin-top: 0.9em;
+}
+.article-body > .chart,
+.article-body > .chart + * {
+	margin-top: 2em;
+}
+.article-body > hr {
+	margin: 3em 0;
+	border: 0;
+	border-top: 1px solid rgb(17 17 17 / 0.14);
+}
+.article-body > hr + * {
+	margin-top: 0;
+}
+.article-body ol {
+	box-sizing: border-box;
+	padding-left: 1.6em;
+}
+.article-body li {
+	padding-left: 0.3em;
+}
+.article-body li + li {
+	margin-top: 0.5em;
+}
+.article-body li::marker {
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
+}
+.chart figcaption {
+	margin-top: 10px;
+}
+.colophon a[rel="license"] {
+	white-space: nowrap;
+}
+/* The update note inside a paragraph, set as data like the dates */
+.update {
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
 }
 
 /* The photo viewer opened by /js/lightbox.js: the photo on the white page, controls in the mono below it */
@@ -639,6 +713,9 @@ html:has(.viewer[open]) {
 	.row-body,
 	.colophon {
 		grid-column: 1;
+	}
+	.side-note {
+		margin-bottom: 32px;
 	}
 }
 @media (max-width: 599px) {
