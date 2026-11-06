@@ -277,6 +277,16 @@ a:is(:hover, :focus-visible) .name {
 	width: auto;
 	height: var(--logo-h);
 }
+/* A subtitle that belonged to the project's header graphic, set as text under the logo */
+.project-tagline {
+	display: block;
+	margin-top: 10px;
+	font-family: var(--mono);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.4;
+	color: var(--ink-2);
+}
 /* The year sits on the baseline of the logo's lettering (60% down a newsknitter-style logo) */
 .project-head .year {
 	margin-top: calc(var(--logo-h) * var(--logo-baseline, 0.6) - 12px);
@@ -320,7 +330,8 @@ a:is(:hover, :focus-visible) .name {
 .prose {
 	max-width: 66ch;
 }
-.prose > p + p {
+.prose > p + p,
+.prose > p + .link-list {
 	margin-top: 0.9em;
 }
 .row-body a {
@@ -455,6 +466,22 @@ a:is(:hover, :focus-visible) .name {
 .figure > a {
 	display: block;
 	cursor: zoom-in;
+}
+/* Prints of one size, such as sense of patterns' six A1 posters: an even grid, six across, three on phones */
+.posters {
+	display: grid;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: 8px;
+}
+.posters > a {
+	cursor: zoom-in;
+}
+.posters img {
+	width: 100%;
+	background: var(--blank);
+	/* A hairline sheet edge, so white posters on the white page still read as six sheets */
+	outline: 1px solid rgb(17 17 17 / 0.1);
+	outline-offset: -1px;
 }
 
 /* Files to download: name left, format and size right, like a text-list row */
@@ -615,6 +642,13 @@ html:has(.viewer[open]) {
 	}
 }
 @media (max-width: 599px) {
+	/* Wrapped names in narrow columns need more space between entries than between their lines */
+	.link-list > li {
+		padding: 7px 0;
+	}
+	.posters {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
 	.events > li {
 		grid-template-columns: minmax(0, 1fr);
 		padding: 8px 0;
