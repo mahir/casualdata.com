@@ -37,7 +37,7 @@
 	--paper: #FFFFFF;
 	--ink: #121212;
 	--ink-2: #5A5853;   /* secondary text, 7.2:1 on white */
-	--ink-3: #A9A69F;   /* rules and axis ticks only */
+	--ink-3: #8E8B84;   /* rules and axis ticks only; 3:1 on white for chart marks */
 	--rule: #E6E4DF;
 	--red: #FF3D1F;     /* the one thing. marks only, never text */
 	--sans: "Host Grotesk", Arial, sans-serif;

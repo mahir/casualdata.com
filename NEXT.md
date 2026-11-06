@@ -18,7 +18,12 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 - URL: `casualdata.com/YYYY-MM-DD/`, a folder named for the day's date at the root. The query string holds the reader's selection (for example `?d=200&lat=-34`), so a shared link opens the same view.
 - One screen: `body.cd-day` is a 100dvh grid made of a bar, a head (title, dek and live readout), the stage (a canvas) and a footer (source). Nothing scrolls.
 - Share sheet (`kit/cd.js`): copy the link, the native share sheet (with the image attached where supported), and PNG downloads at 1080×1350 (4:5) and 1600×900 (16:9). The image holds only the visualization, the date and casualdata.com. The day's code supplies `CD.exporter = { draw(ctx, x, y, w, h, scale) }` and the kit adds the date line.
+- **The image has no title, so the chart states the point.** Every piece writes its one takeaway into the drawing (a count like "30 of 31 moved left", or a fact on the red mark), so the shared image makes sense on its own.
+- **The exporter always draws the finished frame.** A piece that animates on load sets its animation value to 1 while `CD.exporter.draw` runs and restores it after, so a reader who shares in the first second, or from a background tab, never gets a half-drawn image.
+- **Text in the chart is at least 11.5 px** (`11.5 * s`) in IoskeleyMono; chips use 11 px for their context line.
 - Register each day in `kit/days.js`. The menu and the front page read that list.
+- **Drafts.** A day with `draft: true` in `kit/days.js` is left out of the menu and the front page, and its top bar says "Draft". Its URL still works, and adding `?drafts` to any page lists every draft. Remove the flag to publish it.
+- **Data is frozen into the day.** Each day's numbers live in its own `data.js`, with sources and timestamps in comments, so the page never depends on another site. `.impeccable/tools/build_data.py` (local only) turned the research files for 6–8 Nov into those `data.js` files.
 
 ## Adding a day
 
