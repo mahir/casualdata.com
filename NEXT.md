@@ -30,6 +30,7 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 1. Copy the latest day's folder to a folder named for the new date (for example `2026-11-06/`) and change `data-day`, the title, dek, meta tags and `data-source`.
 2. Write `viz.js`: draw into the stage canvas, make the drawing function reusable for export, and keep the reader's state in the URL.
 3. Add the day to `kit/days.js`.
+4. Render its link-preview image with `node tools/cards.js YYYY-MM-DD` (a local server on port 8000 must be running). It writes `/YYYY-MM-DD/card.png`, 1200×630 in the day theme, through the same `CD.render` the share sheet uses, and the page's `og:image` tags point at it. Render it again whenever the day's data changes.
 
 ## Launched
 
@@ -37,5 +38,4 @@ The daily front page is `/index.html`. The 2007–2014 homepage moved to `/work/
 
 ## Still to do
 
-- Generate a static `card.png` for each day so link previews have an image (`og:image`). This needs a headless-browser render script. No preview image is set yet.
 - Decide where the data for each day comes from and record its source on the page.
