@@ -277,6 +277,16 @@ a:is(:hover, :focus-visible) .name {
 	width: auto;
 	height: var(--logo-h);
 }
+/* A subtitle that belonged to the project's header graphic, set as text under the logo */
+.project-tagline {
+	display: block;
+	margin-top: 10px;
+	font-family: var(--mono);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.4;
+	color: var(--ink-2);
+}
 /* The year sits on the baseline of the logo's lettering (60% down a newsknitter-style logo) */
 .project-head .year {
 	margin-top: calc(var(--logo-h) * var(--logo-baseline, 0.6) - 12px);
@@ -320,7 +330,8 @@ a:is(:hover, :focus-visible) .name {
 .prose {
 	max-width: 66ch;
 }
-.prose > p + p {
+.prose > p + p,
+.prose > p + .link-list {
 	margin-top: 0.9em;
 }
 .row-body a {
@@ -405,6 +416,31 @@ a:is(:hover, :focus-visible) .name {
 	margin-top: 12px;
 }
 
+/* Named entries in running text, such as the projects of an exhibition or the members' bios: the name as a
+   subhead, an optional label line (who made it), a photograph, then the text */
+.entries > .entry + .entry {
+	margin-top: clamp(40px, 4.5vw, 56px);
+}
+.entry-title {
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+.entry-title + .meta {
+	margin-top: 2px;
+}
+.entry > .figure {
+	margin: 14px 0 16px;
+}
+.entry > p + p {
+	margin-top: 0.9em;
+}
+.entry-title + p:not(.meta) {
+	margin-top: 0.2em;
+}
+
 /* Photographs in justified rows: each link grows in proportion to its aspect ratio (--ar), so every
    photo in a row has the same height and none is cropped. Growth is capped (--grow-max) just above what
    a full row needs (measured from 320px to 1700px wide), so a nearly full last row still fills the width
@@ -431,6 +467,22 @@ a:is(:hover, :focus-visible) .name {
 	display: block;
 	cursor: zoom-in;
 }
+/* Prints of one size, such as sense of patterns' six A1 posters: an even grid, six across, three on phones */
+.posters {
+	display: grid;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: 8px;
+}
+.posters > a {
+	cursor: zoom-in;
+}
+.posters img {
+	width: 100%;
+	background: var(--blank);
+	/* A hairline sheet edge, so white posters on the white page still read as six sheets */
+	outline: 1px solid rgb(17 17 17 / 0.1);
+	outline-offset: -1px;
+}
 
 /* Files to download: name left, format and size right, like a text-list row */
 .files {
@@ -451,9 +503,33 @@ a:is(:hover, :focus-visible) .name {
 .files > li:first-child a {
 	padding-top: 0;
 }
+/* A line under the list about files offered elsewhere, such as the photos' 300 dpi JPEGs in the viewer */
+.files-note {
+	max-width: 40rem;
+	margin-top: 16px;
+	color: var(--ink-2);
+}
+
+/* Embedded video players, side by side where two fit at a usable size, each 16:9 like the videos */
+.videos {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+	gap: clamp(20px, 2.5vw, 40px);
+}
+.video {
+	aspect-ratio: 16 / 9;
+	background: var(--blank);
+}
+.video iframe {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
 
 .colophon {
 	grid-column: 2 / -1;
+	max-width: 35em;
 	font-size: 17px;
 	color: var(--ink-2);
 }
@@ -472,6 +548,79 @@ a:is(:hover, :focus-visible) .name {
 /* A closing line quoted from the work, such as the receipt's "THANKS FOR PURCHASING INFORMATION" */
 .prose > .sign-off {
 	margin-top: 1.6em;
+}
+
+/* Articles (the extras): a text title in place of a logo, a note in the label column, then the running
+   text with its charts at the size they were made */
+.article-title {
+	max-width: 20ch;
+	font-size: clamp(30px, 3.4vw, 48px);
+	font-weight: 500;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	text-wrap: balance;
+}
+.article-subtitle {
+	margin-top: 10px;
+	font-size: clamp(19px, 1.6vw, 22px);
+	line-height: 1.3;
+	letter-spacing: -0.005em;
+}
+.article-subtitle + .meta {
+	margin-top: 12px;
+}
+.side-note {
+	grid-column: 1;
+	max-width: 36ch;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--ink-2);
+}
+/* Measured in em: Host Grotesk's text runs narrower than its zero, so 66ch gave lines of about 95 characters */
+.article-body > :is(p, ol, hr) {
+	max-width: 35em;
+}
+.article-body > * + * {
+	margin-top: 0.9em;
+}
+.article-body > .chart,
+.article-body > .chart + * {
+	margin-top: 2em;
+}
+.article-body > hr {
+	margin: 3em 0;
+	border: 0;
+	border-top: 1px solid rgb(17 17 17 / 0.14);
+}
+.article-body > hr + * {
+	margin-top: 0;
+}
+.article-body ol {
+	box-sizing: border-box;
+	padding-left: 1.6em;
+}
+.article-body li {
+	padding-left: 0.3em;
+}
+.article-body li + li {
+	margin-top: 0.5em;
+}
+.article-body li::marker {
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
+}
+.chart figcaption {
+	margin-top: 10px;
+}
+.colophon a[rel="license"] {
+	white-space: nowrap;
+}
+/* The update note inside a paragraph, set as data like the dates */
+.update {
+	font-family: var(--mono);
+	font-size: 14px;
+	color: var(--ink-2);
 }
 
 /* The photo viewer opened by /js/lightbox.js: the photo on the white page, controls in the mono below it */
@@ -565,8 +714,18 @@ html:has(.viewer[open]) {
 	.colophon {
 		grid-column: 1;
 	}
+	.side-note {
+		margin-bottom: 32px;
+	}
 }
 @media (max-width: 599px) {
+	/* Wrapped names in narrow columns need more space between entries than between their lines */
+	.link-list > li {
+		padding: 7px 0;
+	}
+	.posters {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
 	.events > li {
 		grid-template-columns: minmax(0, 1fr);
 		padding: 8px 0;
