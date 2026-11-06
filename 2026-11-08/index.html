@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>These people decided it · casualdata</title>
+  <meta name="description" content="The closest races of the 2026 midterms, drawn as crowds: one person for every vote in the margin.">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="These people decided it">
+  <meta property="og:description" content="The closest races of 2026, one person per vote of margin. casualdata, 8 November 2026">
+  <meta property="og:url" content="https://casualdata.com/2026-11-08/">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/kit/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/ioskeley-mono-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="/kit/theme.js"></script>
+  <link rel="stylesheet" href="/kit/cd.css">
+</head>
+<body class="cd-day" data-day="2026-11-08">
+
+<header class="cd-bar">
+  <a class="cd-mark" href="/next/" aria-label="casualdata"><img class="wm wm-d" src="/kit/wordmark.svg" alt="" width="115" height="20"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="" width="115" height="20"><img class="sym" src="/kit/mark.svg" alt="" width="25" height="20"></a>
+  <p class="cd-meta" style="margin:0"><b>Sun 8 Nov 2026</b><span class="long"> · closest races, 2026</span></p>
+  <div class="cd-actions">
+    <button class="cd-btn solid" data-open="cd-share" aria-label="Share"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v7M3 4l3-3 3 3M1 8v3h10V8" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span class="label">Share</span></button>
+    <button class="cd-btn" data-open="cd-menu" aria-label="Menu"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1 3h10M1 6h10M1 9h10" stroke="currentColor" stroke-width="1.4"/></svg><span class="label">Menu</span></button>
+  </div>
+</header>
+
+<section class="cd-head">
+  <h1 class="cd-title">These 99 people may decide a seat in Congress</h1>
+  <p class="cd-dek">Each person here is one vote of the margin in one of the closest races of the midterms. The red one is you. Pick another race in the strip below.</p>
+  <p class="visually-hidden" id="cd-live" aria-live="polite"></p>
+</section>
+
+<main class="cd-stage" id="stage">
+  <canvas id="cv" tabindex="0" role="img" aria-label="The vote margin of the chosen race drawn as one person per vote, with a strip of the 26 closest races of 2026 below. Use the left and right arrow keys to change race."></canvas>
+</main>
+
+<footer class="cd-foot cd-meta">
+  <span data-source="State results and AP via NYT and NBC, 5 Nov 2026 · not final">State results and AP via NYT and NBC, 5 Nov · none final, most uncalled</span>
+  <span class="hint">←→ race</span>
+</footer>
+
+<script src="/kit/days.js"></script>
+<script src="/kit/cd.js"></script>
+<script src="data.js"></script>
+<script src="viz.js"></script>
+</body>
+</html>

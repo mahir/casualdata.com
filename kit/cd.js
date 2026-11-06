@@ -3,9 +3,17 @@
 //   CD.exporter = { draw(ctx, x, y, w, h, scale) }
 // The exported image is the visualization, the date and casualdata.com.
 (function () {
-	const days = window.CD_DAYS || [];
+	// Days marked draft: true are left out of the menu and the front page until the flag
+	// is removed. Add ?drafts to any URL to list them for review.
 	const id = document.body.dataset.day || "";
-	const day = days.find(d => d.date === id);
+	const showDrafts = new URLSearchParams(location.search).has("drafts");
+	const all = window.CD_DAYS || [];
+	const days = all.filter(d => !d.draft || showDrafts);
+	const day = all.find(d => d.date === id);
+	if (day && day.draft) document.addEventListener("DOMContentLoaded", () => {
+		const meta = document.querySelector(".cd-bar .cd-meta");
+		if (meta) meta.insertAdjacentHTML("afterbegin", '<b class="cd-draft">Draft</b> · ');
+	});
 	const fmtDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" }).replace(",", "");
 
 	const shortDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" });
@@ -33,8 +41,15 @@
 		const pad = 8 * s, gap = 12 * s;
 		ctx.save();
 		ctx.font = `600 ${17 * s}px ${C.sans}`; const vw = ctx.measureText(value).width;
-		ctx.font = `400 ${10.5 * s}px ${C.mono}`; const cw = ctx.measureText(context.toUpperCase()).width;
-		const w = Math.max(vw, cw) + pad * 2, h = 17 * s + 10.5 * s + pad * 2 + 5 * s;
+		ctx.font = `400 ${11 * s}px ${C.mono}`;
+		// the context wraps at its " · " breaks when the chip would be wider than the chart
+		const parts = context.toUpperCase().split(" · "), lines = [];
+		for (const p of parts) {
+			const t = lines.length ? lines[lines.length - 1] + " · " + p : p;
+			if (lines.length && ctx.measureText(t).width + pad * 2 > box.w) lines.push(p); else if (lines.length) lines[lines.length - 1] = t; else lines.push(p);
+		}
+		const cw = Math.max(...lines.map(l => ctx.measureText(l).width)), lh = 15 * s;
+		const w = Math.min(box.w, Math.max(vw, cw) + pad * 2), h = 17 * s + 11 * s + (lines.length - 1) * lh + pad * 2 + 5 * s;
 		let x = px + gap, y = py - h / 2;
 		if (x + w > box.x + box.w) x = leftX - gap - w;
 		if (x < box.x) {                                   // no room on either side: sit above (or below) the point
@@ -45,7 +60,8 @@
 		ctx.fillStyle = C.ink; ctx.fillRect(x, y, w, h);
 		ctx.fillStyle = C.paper; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		ctx.font = `600 ${17 * s}px ${C.sans}`; ctx.fillText(value, x + pad, y + pad + 14 * s);
-		ctx.font = `400 ${10.5 * s}px ${C.mono}`; ctx.fillText(context.toUpperCase(), x + pad, y + h - pad - 1 * s);
+		ctx.font = `400 ${11 * s}px ${C.mono}`;
+		lines.forEach((l, i) => ctx.fillText(l, x + pad, y + pad + 17 * s + 5 * s + 11 * s + i * lh - 1 * s));
 		ctx.restore();
 	};
 	// A visually hidden live region that repeats the reading for screen readers.

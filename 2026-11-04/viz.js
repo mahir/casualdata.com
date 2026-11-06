@@ -13,6 +13,7 @@
 		["Sydney", -33.87], ["Ushuaia", -54.80]
 	];
 
+	const LONDON = 51.51;
 	const rad = Math.PI / 180;
 	function decl(d) {
 		const g = 2 * Math.PI / 365 * d;
@@ -100,7 +101,7 @@
 		ctx.drawImage(bmp, g.x0, g.y0, g.pw, g.ph);
 
 		// contour labels near the left edge
-		ctx.font = `400 ${10 * s}px ${C.mono}`; ctx.textBaseline = "middle";
+		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle";
 		for (const { l, c } of LEVELS) {
 			const d = l < 12 ? 20 : 172, pts = c[d]; if (!pts.length) continue;
 			ctx.fillStyle = l < 12 ? "#EDEBE6" : "#121212";   // on the map's own night/day tones, whatever the theme
@@ -108,7 +109,7 @@
 		}
 
 		// axes: latitude left, months below
-		ctx.fillStyle = C.ink2; ctx.textAlign = "right"; ctx.font = `400 ${10.5 * s}px ${C.mono}`;
+		ctx.fillStyle = C.ink2; ctx.textAlign = "right"; ctx.font = `400 ${11.5 * s}px ${C.mono}`;
 		for (let lat = 90; lat >= -90; lat -= 30) {
 			ctx.fillText(fmtLat(lat), g.x0 - 8 * s, Math.min(Math.max(Y(lat), g.y0 + 6 * s), g.y0 + g.ph - 6 * s));
 		}
@@ -123,7 +124,7 @@
 
 		// cities on the right
 		if (!g.compact) {
-			ctx.textBaseline = "middle"; ctx.font = `400 ${10.5 * s}px ${C.mono}`;
+			ctx.textBaseline = "middle"; ctx.font = `400 ${11.5 * s}px ${C.mono}`;
 			for (const [name, lat] of CITIES) {
 				const yy = Y(lat), near = Math.abs(lat - st.lat) < 1;
 				ctx.fillStyle = near ? C.ink : C.ink3;
@@ -136,11 +137,13 @@
 		// the day it was published (4 Nov): the one red line
 		const xp = X(PUB);
 		ctx.fillStyle = C.red; ctx.fillRect(xp - 1 * s, g.y0, 2 * s, g.ph + 6 * s);
-		ctx.font = `400 ${10 * s}px ${C.mono}`; ctx.textBaseline = "middle";
-		const tw = ctx.measureText("4 NOV").width + 12 * s, th = 18 * s;
+		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle";
+		// the tag carries the day's one fact, so the image says something without the title
+		const tag = g.compact ? "4 NOV" : `4 NOV · LONDON LOSES ${fmtDelta(PUB, LONDON).replace(/^−/, "").replace(" a day", "").toUpperCase()} OF LIGHT A DAY`;
+		const tw = ctx.measureText(tag).width + 12 * s, th = 20 * s;
 		const tx = Math.min(xp - tw / 2, g.x0 + g.pw - tw);
 		ctx.fillStyle = C.ink; ctx.fillRect(tx, g.y0, tw, th);
-		ctx.fillStyle = C.paper; ctx.fillText("4 NOV", tx + 6 * s, g.y0 + th / 2 + 0.5 * s);
+		ctx.fillStyle = C.paper; ctx.fillText(tag, tx + 6 * s, g.y0 + th / 2 + 0.5 * s);
 
 		// selection: thin crosshair + red dot
 		const sx = X(st.d), sy = Y(st.lat);

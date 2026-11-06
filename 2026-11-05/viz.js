@@ -1,15 +1,17 @@
-// 2026-11-05 — each Senate race against the state's 2024 vote for president.
+// 2026-11-05 — how far each Senate race moved from the state's 2024 vote for president.
 // Margins are Republican minus Democrat, in points of the two-party vote for the Senate
 // and of the total vote for president (as compiled for The midterm tide).
+// Every arrow starts at one spine (each state's own 2024 vote) and runs as far as the state
+// moved, so the picture is the count itself: thirty arrows left, one red arrow right.
 (function () {
 	const C = CD.colors;
 	const rows = window.SENATE.map(d => {
 		const sen = (d.rep - d.dem) / (d.rep + d.dem) * 100;
 		return { ...d, sen, move: sen - d.pres, flip: d.won && d.won !== d.held };
-	}).sort((a, b) => b.pres - a.pres);                      // Trump's best state on top
+	}).sort((a, b) => a.move - b.move);                       // the biggest move on top: the arrows form a wedge
 	const toD = rows.filter(d => d.move < 0).length;
 	const median = (() => { const m = rows.map(d => Math.abs(d.move)).sort((a, b) => a - b); return m[Math.floor(m.length / 2)]; })();
-	const XMIN = -45, XMAX = 50;
+	const XMIN = -30, XMAX = 22;                               // points moved; left = toward the Democrats
 
 	const lead = v => Math.abs(v) < 0.5 ? "even" : v > 0 ? `R +${v.toFixed(0)}` : `D +${(-v).toFixed(0)}`;
 	const presLead = v => Math.abs(v) < 0.5 ? "even" : v > 0 ? `Trump +${v.toFixed(0)}` : `Harris +${(-v).toFixed(0)}`;
@@ -30,67 +32,75 @@
 
 	// ---------- drawing, shared by the screen and the PNG ----------
 	function draw(ctx, x, y, w, h, s, narrow) {
-		const L = (narrow ? 34 : 118) * s, R = 12 * s, T = 26 * s, B = 26 * s;
-		const x0 = x + L, pw = w - L - R, y0 = y + T, ph = h - T - B;
+		const T = 30 * s, B = 28 * s, x0 = x, pw = w, y0 = y + T, ph = h - T - B;
 		const X = v => x0 + (v - XMIN) / (XMAX - XMIN) * pw;
 		const rh = ph / rows.length, Y = i => y0 + (i + 0.5) * rh;
-		const dot = Math.max(2.5 * s, Math.min(5 * s, rh * 0.26));
+		const thick = Math.max(1.6 * s, Math.min(6 * s, rh * 0.34)), head = Math.max(4 * s, Math.min(11 * s, rh * 0.62));
+		const zx = X(0);
 
-		// grid and axis
-		ctx.font = `400 ${10.5 * s}px ${C.mono}`; ctx.textBaseline = "alphabetic";
-		for (const t of [-40, -20, 0, 20, 40]) {
-			ctx.fillStyle = t === 0 ? C.ink : C.rule;
-			ctx.fillRect(Math.round(X(t)) - (t === 0 ? 0.5 * s : 0.5), y0 - 6 * s, t === 0 ? 1 * s : 1, ph + 12 * s);
-			ctx.fillStyle = C.ink2; ctx.textAlign = "center";
-			ctx.fillText(t === 0 ? "EVEN" : t < 0 ? `D+${-t}` : `R+${t}`, X(t), y0 + ph + 20 * s);
+		// scale: a rule every 10 points on the Democratic side, and the spine
+		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "alphabetic";
+		for (const t of [-30, -20, -10]) {
+			ctx.fillStyle = C.rule; ctx.fillRect(Math.round(X(t)), y0, 1, ph);
+			ctx.fillStyle = C.ink2; ctx.textAlign = t === -30 ? "left" : "center";
+			ctx.fillText(narrow && t < -10 ? `${-t}` : `${-t} PTS`, X(t), y0 + ph + 20 * s);   // phones: only the last one says PTS
 		}
-		ctx.textAlign = "right"; ctx.fillStyle = C.ink2;
-		ctx.fillText("← MORE DEMOCRATIC", X(0) - 8 * s, y0 - 12 * s);
-		ctx.textAlign = "left";
-		ctx.fillText("MORE REPUBLICAN →", X(0) + 8 * s, y0 - 12 * s);
+		ctx.fillStyle = C.ink; ctx.fillRect(zx - 0.75 * s, y0 - 8 * s, 1.5 * s, ph + 16 * s);
+		ctx.textAlign = "center"; ctx.fillStyle = C.ink2;
+		ctx.fillText(narrow ? "2024" : "2024 VOTE FOR PRESIDENT", zx, y0 + ph + 20 * s);
+		ctx.textAlign = "right"; ctx.fillText("← TOWARD THE DEMOCRATS", zx - 10 * s, y0 - 14 * s);
+		ctx.textAlign = "left"; ctx.fillText(narrow ? "TOWARD R →" : "TOWARD THE REPUBLICANS →", zx + 10 * s, y0 - 14 * s);
 
-		// rows
-		const fs = Math.max(9 * s, Math.min(13 * s, rh * 0.66));
+		// arrows
 		rows.forEach((d, i) => {
 			const yy = Y(i), on = i === sel, odd = d.move > 0;
-			const a = X(d.pres), b = X(d.pres + d.move * grow);
-			if (on) { ctx.fillStyle = C.rule; ctx.fillRect(x, yy - rh / 2, w, rh); }
-
-			// state name
-			ctx.textBaseline = "middle"; ctx.textAlign = "right";
-			ctx.font = `${d.flip || on ? 700 : 500} ${fs}px ${C.sans}`;
-			ctx.fillStyle = on || d.flip ? C.ink : C.ink2;
-			ctx.fillText(narrow ? d.s : d.name, x0 - 10 * s, yy + 0.5 * s);
-
-			// the move: a line from 2024 to 2026 with an arrowhead
+			const tip = X(d.move * grow), dir = odd ? 1 : -1;
 			const col = odd ? C.red : on ? C.ink : C.ink2;
-			const dir = Math.sign(b - a) || -1, head = Math.min(dot * 1.9, Math.abs(b - a));
-			ctx.strokeStyle = col; ctx.lineWidth = (odd || on ? 2.2 : 1.6) * s;
-			ctx.beginPath(); ctx.moveTo(a, yy); ctx.lineTo(b - dir * head * 0.6, yy); ctx.stroke();
-			ctx.beginPath();
-			ctx.moveTo(b, yy); ctx.lineTo(b - dir * head, yy - head * 0.62); ctx.lineTo(b - dir * head, yy + head * 0.62); ctx.closePath();
-			if (d.won) { ctx.fillStyle = col; ctx.fill(); } else { ctx.lineWidth = 1.2 * s; ctx.stroke(); }
-			// 2024 tail
-			ctx.beginPath(); ctx.arc(a, yy, dot * 0.62, 0, Math.PI * 2);
-			ctx.fillStyle = C.paper; ctx.fill(); ctx.lineWidth = 1.3 * s; ctx.strokeStyle = col; ctx.stroke();
-
-			// the exception gets the red dot and a note (unless its reading is open)
-			if (odd) {
-				ctx.beginPath(); ctx.arc(b, yy, dot * 1.25, 0, Math.PI * 2); ctx.fillStyle = C.red; ctx.fill();
-				if (!on) {
-					ctx.font = `400 ${10.5 * s}px ${C.mono}`; ctx.textAlign = "left"; ctx.fillStyle = C.ink;
-					ctx.fillText(narrow ? "← MOVED RIGHT" : "← THE ONE THAT MOVED RIGHT", Math.max(a, b, X(0)) + dot * 2 + 6 * s, yy + 0.5 * s);
+			const hd = Math.min(head, Math.abs(tip - zx));
+			if (on) { ctx.fillStyle = C.rule; ctx.fillRect(x, yy - rh / 2, w, rh); }
+			ctx.fillStyle = col;
+			ctx.fillRect(Math.min(zx, tip - dir * hd), yy - thick / 2, Math.abs(tip - dir * hd - zx), thick);
+			ctx.beginPath(); ctx.moveTo(tip, yy); ctx.lineTo(tip - dir * hd, yy - hd * 0.6); ctx.lineTo(tip - dir * hd, yy + hd * 0.6); ctx.closePath();
+			if (d.won) ctx.fill(); else { ctx.fillStyle = C.paper; ctx.fill(); ctx.lineWidth = 1.2 * s; ctx.strokeStyle = col; ctx.stroke(); }
+			// the state's code just past the tip
+			if (grow === 1 && rh >= 9 * s) {
+				ctx.font = `400 ${Math.min(11.5 * s, rh * 0.7)}px ${C.mono}`; ctx.textBaseline = "middle";
+				ctx.textAlign = odd ? "left" : "right"; ctx.fillStyle = on || odd ? C.ink : C.ink2;
+				// a hollow head means the race is uncalled; say so beside it, not only in the footer
+				let tag = d.won ? d.s : odd ? `${d.s} · STILL COUNTING` : `STILL COUNTING · ${d.s}`;
+				if (!odd && tip - 6 * s - ctx.measureText(tag).width < x0) {    // no room past a long arrow: the note goes across the spine
+					tag = d.s;
+					ctx.textAlign = "left"; ctx.fillText("STILL COUNTING", zx + 10 * s, yy + 0.5 * s); ctx.textAlign = "right";
 				}
+				ctx.fillText(tag, tip + dir * 6 * s, yy + 0.5 * s);
 			}
 		});
 
-		// the reading for the chosen state, beside its arrow
-		if (sel >= 0 && grow === 1) {
-			const d = rows[sel], [value, context] = readout();
-			const lo = Math.min(X(d.pres), X(d.sen)) - dot * 2, hi = Math.max(X(d.pres), X(d.sen)) + dot;
-			CD.label(ctx, hi, Y(sel), value, context, s, { x: x0, y: y0, w: pw, h: ph }, lo);
+		// the count, written into the picture so the image carries it without a title
+		if (grow === 1) {
+			const maine = rows.findIndex(d => d.move > 0);
+			const bx = zx + 18 * s, by = y0 + ph * 0.3, room = x0 + pw - bx;
+			const line = narrow ? `${toD} of ${rows.length}` : `${toD} of ${rows.length} moved left`;
+			ctx.textBaseline = "alphabetic"; ctx.textAlign = "left"; ctx.fillStyle = C.ink;
+			ctx.font = `400 ${100}px ${C.sans}`;
+			const big = Math.max(16 * s, Math.min(34 * s, ph * 0.07, 100 * room / ctx.measureText(line).width));   // fit the space right of the spine
+			ctx.font = `400 ${big}px ${C.sans}`;
+			ctx.fillText(line, bx, by);
+			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = C.ink2;
+			if (narrow) { ctx.fillText("MOVED LEFT", bx, by + 20 * s); ctx.fillText(`TYPICAL ${median.toFixed(0)} PTS`, bx, by + 35 * s); }
+			else ctx.fillText(`TYPICAL MOVE ${median.toFixed(0)} POINTS`, bx, by + 20 * s);
+			if (maine >= 0 && sel !== maine) {
+				ctx.fillStyle = C.ink; ctx.textBaseline = "middle";
+				ctx.fillText(narrow ? "THE ONE" : "THE ONLY ONE THAT MOVED RIGHT", X(rows[maine].move) + 34 * s, Y(maine) + 0.5 * s);
+			}
 		}
-		ctx.textAlign = "left";
+
+		// the reading for the chosen state
+		if (sel >= 0 && grow === 1) {
+			const d = rows[sel], [value, context] = readout(), tip = X(d.move);
+			CD.label(ctx, Math.max(tip, zx) + 28 * s, Y(sel), value, context, s, { x: x0, y: y0, w: pw, h: ph }, Math.min(tip, zx) - 28 * s);
+		}
+		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		return { x0, pw, y0, ph, rh };
 	}
 
@@ -143,5 +153,6 @@
 		if (e.key === "Escape") select(-1);
 	});
 
-	CD.exporter = { draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.7, false) };
+	// the image is always the finished picture, even if the arrows are still growing on screen
+	CD.exporter = { draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false); grow = g; } };
 })();
