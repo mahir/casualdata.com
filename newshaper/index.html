@@ -1,90 +1,138 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!doctype html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Newshaper</title>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/thickbox.js"></script>
-
-<link rel="stylesheet" href="css/newshaper.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/thickbox.css" type="text/css" media="screen" />
-
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Newshaper | { casualdata }</title>
+  <meta name="description" content="Newshaper is a tabletop interactive system which deals with re-contextualization of daily news items gathered from live news feeds.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/fragment-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/casualdata.css">
+  <script src="/js/lightbox.js" defer></script>
+  <script src="/js/photo-rows.js" defer></script>
 </head>
-<body>
-<div id="container">
-  <div id="header">
-    <div id="bookmark"> <a href="http://del.icio.us/post?url=http://newshaper.net/&amp;title=Newshaper" title="Bookmark at Del.icio.us!" rel="nofollow"><img src="gfx/delicious.png" width="14" height="14" /></a> <a href="http://digg.com/submit?phase=2&amp;url=http://newshaper.net/&amp;title=Newshaper" title="Digg it!" rel="nofollow"><img src="gfx/digg.png" width="17" height="16" /></a> <a href="http://www.stumbleupon.com/submit?url=http://newshaper.net/&amp;title=Newshaper" title="Submit to Stumbleupon!" rel="nofollow"><img src="gfx/su.png" width="17" height="16" /></a></div>
-    <img src="gfx/logo.png" alt="Newshaper" width="214" height="75" />
-    <img src="gfx/banner.jpg" width="680" height="200" border="0" />
-    <!-- end #header -->
-  </div>
-  <div id="mainContent">
-    <h2 class="black">About Newshaper</h2>
-	<p>Newshaper is a tabletop interactive system which deals with re-contextualization of daily news items gathered from live news feeds. It allows users to create their own relational networks and 'emotional maps' based on actual live news streamed from internet. Due to the dynamic nature of live data streams system constantly creates different content for users and due to manipulations done by the users it generates different visual results of the same content. In a more general sense, users of Newshaper system shape their own perception about the daily news and share their vision with other users. System allows them to save their designed structure.</p>
-<br /><br />
-	<p>Most of the time, mass media sources deliver the daily news in a context. This context creates a meta-meaning that usually effects the simple meaning of the news. By tagging, by categorizing, by geo-locating, by making it popular or unpopular mass media is shaping the perception of the daily news items in a different perspective. Newshaper allows their users to break this pre-defined structures which have been delivered by the source. After users shape their own news scape, system also allows to see the comparison between pre-defined structure and user defined structure in a visual way.</p> 
-<br /><br />
-	<p>By using Newshaper users might define their feelings about news and importance of each item. The users can save their mood and the news map they created as a proof of that particular moment. Average of all sessions recorded by users creates the overall mood of the day in order to display the common thoughts and feelings about the actual news provided by media sources.</p><br /><br />
-	<h2 class="black">Exhibitions, Presentations</h2>
-	<p><strong>September 2009, Linz</strong>, Exhibited at <a href="http://www.aec.at/humannature/en/interface-cultures/b-information-visualisation-projects">Ars Electronica 2009</a>.</p>
-	<p><strong>March-August 2009, Istanbul</strong>, Exhibited at <a href="http://www.santralistanbul.org/uncharted/">Uncharted in SantralIstanbul</a>.</p><br /><br />
-	
-	<h2 class="gray">Credits & Thanks:</h2>
-    <p>To contact and feedbacks: <strong>hello [at] newshaper [dot] net</strong><br />
-	<a href="http://lummo.eu">Javier Lloret</a>, Graduate Student, Kunstuniversität Linz, <a href="http://www.interface.ufg.ac.at">Interface Cultures</a><br />
-      <a href="http://mahirmyavuz.com">Mahir Yavuz</a>, PhD Candidate, Kunstuniversität Linz, <a href="http://www.interface.ufg.ac.at">Interface Cultures</a><br />
-      </p><br /><br />
-<p>The installation consists a tabletop projection, a camera tracks the shadows on the table to create interactivity and a dynamic database that constantly gathers live news items from internet. The software has three different functions; it automatically streams news items every minute and place them onto the table, it allows users to modify the visual look and organization of the news landscape by using their hands and it gives the opportunity to save the designed structure of any given moment. The software is written in C++ with using <a href="http://www.openframeworks.cc/">OpenFrameworks</a> Libraries. <a href="http://www.nuigroup.com/touchlib/">Touchlib</a> libraries are used for finger tracking and the news data is gathered from <a href="http://www.ap.org/">Associated Press</a>.<br /><br />
-	Special Thanks to Stefan Mittlböck, Martin Kaltenbrunner, Berkay Daver, Travis Kirton, Jayme Cochrane & the technical crew of SantralIstanbul for their invaluable support and time. Images in Istanbul: Courtesy of Efe Mert Kaya.</p><br /><br />
+<body class="ns">
 
-	<h2 class="black">Videos</h2>
-	<div class="video">
-		<iframe src="https://player.vimeo.com/video/6744548?title=1&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="681" height="375" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>
-	</div>
-	<div class="video">
-		<iframe src="https://player.vimeo.com/video/6740643?title=1&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="681" height="383" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>
-	</div>
-	
-	<h2 class="black">Exhibition Images (Istanbul)</h2>
-    <div class="gallery">
-	<a href="images/ns_istanbul01.jpg" title="" class="thickbox" rel="gallery-istanbul"><img src="images/ns_istanbul01_s.jpg" width="120" height="100" /></a> 
-	<a href="images/ns_istanbul02.jpg" title="" class="thickbox" rel="gallery-istanbul"><img src="images/ns_istanbul02_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_istanbul03.jpg" title="" class="thickbox" rel="gallery-istanbul"><img src="images/ns_istanbul03_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_istanbul04.jpg" title="" class="thickbox" rel="gallery-istanbul"><img src="images/ns_istanbul04_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_istanbul05.jpg" title="" class="thickbox" rel="gallery-istanbul"><img src="images/ns_istanbul05_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_istanbul06.jpg" title="" class="thickbox" rel="gallery-istanbul"><img src="images/ns_istanbul06_s.jpg" width="120" height="100" /></a></div>
-	<h2 class="black">Exhibition Images (Linz)</h2>
-    <div class="gallery">
-	<a href="images/ns_linz01.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz01_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz02.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz02_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz03.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz03_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz04.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz04_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz05.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz05_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz06.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz06_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz07.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz07_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz08.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz08_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz09.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz09_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz10.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz10_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz11.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz11_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz12.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz12_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz13.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz13_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz14.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz14_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz15.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz15_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz16.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz16_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz17.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz17_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz18.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz18_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz19.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz19_s.jpg" width="120" height="100" /></a>
-	<a href="images/ns_linz20.jpg" title="" class="thickbox" rel="gallery-linz"><img src="images/ns_linz20_s.jpg" width="120" height="100" /></a></div>
-	<br /><br />
+<header class="site-head">
+  <a class="wordmark" href="/"><img src="/img/casualdata.svg" alt="casualdata home" width="232" height="28"></a>
+</header>
+
+<main>
+  <div class="project-head" style="--logo-baseline: 0.579">
+    <h1 class="project-logo"><img src="gfx/newshaper.svg" alt="Newshaper" width="254" height="56"></h1>
+    <p class="year">2009</p>
   </div>
-  <div id="footer">
-    <p>Javier Lloret &amp; Mahir Yavuz, &copy; 2009<br />
-      Last modified on 25 September 2009</p>
-    <!-- end #footer -->
+  <figure class="banner">
+    <picture>
+      <source media="(max-width: 599px)" srcset="images/web/ns_istanbul02-800.webp 800w, images/web/ns_istanbul02-2000.webp 2000w" sizes="100vw" width="2000" height="1333">
+      <img src="images/web/ns_banner-1200.webp" srcset="images/web/ns_banner-1200.webp 1200w, images/web/ns_banner-1800.webp 1800w, images/web/ns_banner-2400.webp 2400w" sizes="min(100vw, 1600px)" width="2400" height="706" alt="A hand reaching into the Newshaper projection in the dark: headlines, rings of yellow and grey, and the Newshaper name on the table">
+    </picture>
+  </figure>
+
+  <div class="rows">
+    <section class="row" aria-labelledby="about">
+      <h2 id="about">About Newshaper</h2>
+      <div class="row-body prose">
+        <p>Newshaper is a tabletop interactive system which deals with re-contextualization of daily news items gathered from live news feeds. It allows users to create their own relational networks and ‘emotional maps’ based on actual live news streamed from internet. Due to the dynamic nature of live data streams system constantly creates different content for users and due to manipulations done by the users it generates different visual results of the same content. In a more general sense, users of Newshaper system shape their own perception about the daily news and share their vision with other users. System allows them to save their designed structure.</p>
+        <p>Most of the time, mass media sources deliver the daily news in a context. This context creates a meta-meaning that usually effects the simple meaning of the news. By tagging, by categorizing, by geo-locating, by making it popular or unpopular mass media is shaping the perception of the daily news items in a different perspective. Newshaper allows their users to break this pre-defined structures which have been delivered by the source. After users shape their own news scape, system also allows to see the comparison between pre-defined structure and user defined structure in a visual way.</p>
+        <p>By using Newshaper users might define their feelings about news and importance of each item. The users can save their mood and the news map they created as a proof of that particular moment. Average of all sessions recorded by users creates the overall mood of the day in order to display the common thoughts and feelings about the actual news provided by media sources.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="exhibitions">
+      <h2 id="exhibitions">Exhibitions, Presentations</h2>
+      <div class="row-body">
+        <ul class="events" role="list">
+          <li><span class="when">September 2009, Linz</span><span>Exhibited at <a href="https://webarchive.ars.electronica.art/festival/2009/humannature/en/interface-cultures/b-information-visualisation-projects.html">Ars Electronica 2009</a>.</span></li>
+          <li><span class="when">March–August 2009, Istanbul</span><span>Exhibited at <a href="https://web.archive.org/web/20090602013739/http://www.santralistanbul.org/uncharted/">Uncharted in SantralIstanbul</a>.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="videos">
+      <h2 id="videos">Videos</h2>
+      <div class="row-body videos">
+        <div class="video"><iframe src="https://player.vimeo.com/video/6744548?title=1&amp;byline=0&amp;portrait=0&amp;color=ffffff&amp;dnt=1" title="Newshaper, video 1 of 2 (Vimeo)" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="video"><iframe src="https://player.vimeo.com/video/6740643?title=1&amp;byline=0&amp;portrait=0&amp;color=ffffff&amp;dnt=1" title="Newshaper, video 2 of 2 (Vimeo)" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="istanbul">
+      <h2 id="istanbul">Exhibition Images (Istanbul)</h2>
+      <div class="row-body photos" data-gallery>
+        <a href="images/web/ns_istanbul01-2000.webp" data-original="300dpi/ns_istanbul_001.jpg" data-original-label="JPEG, 4.1 MB" style="--ar: 1.5009"><img src="images/web/ns_istanbul01-800.webp" width="800" height="533" loading="lazy" alt="The Newshaper logo projected on the dark table beside the first headlines"></a>
+        <a href="images/web/ns_istanbul02-2000.webp" data-original="300dpi/ns_istanbul_002.jpg" data-original-label="JPEG, 2.9 MB" style="--ar: 1.5009"><img src="images/web/ns_istanbul02-800.webp" width="800" height="533" loading="lazy" alt="A hand reaching into the projection on the dark table, rings and headlines around it"></a>
+        <a href="images/web/ns_istanbul03-2000.webp" data-original="300dpi/ns_istanbul_003.jpg" data-original-label="JPEG, 2.7 MB" style="--ar: 1.5009"><img src="images/web/ns_istanbul03-800.webp" width="800" height="533" loading="lazy" alt="A visitor’s hands spread over the projected news in the dark"></a>
+        <a href="images/web/ns_istanbul04-2000.webp" data-original="300dpi/ns_istanbul_004.jpg" data-original-label="JPEG, 3.1 MB" style="--ar: 1.5009"><img src="images/web/ns_istanbul04-800.webp" width="800" height="533" loading="lazy" alt="Headlines projected over yellow and grey rings, a visitor’s head in shadow"></a>
+        <a href="images/web/ns_istanbul05-2000.webp" data-original="300dpi/ns_istanbul_005.jpg" data-original-label="JPEG, 4.2 MB" style="--ar: 1.5009"><img src="images/web/ns_istanbul05-800.webp" width="800" height="533" loading="lazy" alt="A hand moving a headline across the table"></a>
+        <a href="images/web/ns_istanbul06-2000.webp" data-original="300dpi/ns_istanbul_006.jpg" data-original-label="JPEG, 2.5 MB" style="--ar: 1.5009"><img src="images/web/ns_istanbul06-800.webp" width="800" height="533" loading="lazy" alt="A visitor’s face lit by the table"></a>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="linz">
+      <h2 id="linz">Exhibition Images (Linz)</h2>
+      <div class="row-body photos" data-gallery>
+        <a href="images/web/ns_linz01-2000.webp" data-original="300dpi/ns_linz_001.jpg" data-original-label="JPEG, 5.9 MB" style="--ar: 0.6663"><img src="images/web/ns_linz01-800.webp" width="533" height="800" loading="lazy" alt="A visitor walking past the white Newshaper table in a hall with a red carpet"></a>
+        <a href="images/web/ns_linz02-2000.webp" data-original="300dpi/ns_linz_002.jpg" data-original-label="JPEG, 7.4 MB" style="--ar: 0.6663"><img src="images/web/ns_linz02-800.webp" width="533" height="800" loading="lazy" alt="Two visitors in yellow and black jackets at the table"></a>
+        <a href="images/web/ns_linz03-2000.webp" data-original="300dpi/ns_linz_003.jpg" data-original-label="JPEG, 5.9 MB" style="--ar: 1.5009"><img src="images/web/ns_linz03-800.webp" width="800" height="533" loading="lazy" alt="Visitors reading the table, a man at a desk in the hall behind them"></a>
+        <a href="images/web/ns_linz04-2000.webp" data-original="300dpi/ns_linz_004.jpg" data-original-label="JPEG, 7.6 MB" style="--ar: 1.5009"><img src="images/web/ns_linz04-800.webp" width="800" height="533" loading="lazy" alt="Two visitors leaning over the table, its side perforated in the shape of a hand"></a>
+        <a href="images/web/ns_linz05-2000.webp" data-original="300dpi/ns_linz_005.jpg" data-original-label="JPEG, 3.7 MB" style="--ar: 1.5009"><img src="images/web/ns_linz05-800.webp" width="800" height="533" loading="lazy" alt="Headlines arranged around a half ring, the Newshaper logo at the edge of the table"></a>
+        <a href="images/web/ns_linz06-2000.webp" data-original="300dpi/ns_linz_006.jpg" data-original-label="JPEG, 3.9 MB" style="--ar: 1.5009"><img src="images/web/ns_linz06-800.webp" width="800" height="533" loading="lazy" alt="A finger on one of the headlines set in columns around a yellow ring"></a>
+        <a href="images/web/ns_linz07-2000.webp" data-original="300dpi/ns_linz_007.jpg" data-original-label="JPEG, 2.1 MB" style="--ar: 1.5009"><img src="images/web/ns_linz07-800.webp" width="800" height="533" loading="lazy" alt="A hand pointing at a headline among columns of news"></a>
+        <a href="images/web/ns_linz08-2000.webp" data-original="300dpi/ns_linz_008.jpg" data-original-label="JPEG, 3.6 MB" style="--ar: 1.5009"><img src="images/web/ns_linz08-800.webp" width="800" height="533" loading="lazy" alt="Two hands arranging headlines around the yellow ring"></a>
+        <a href="images/web/ns_linz09-2000.webp" data-original="300dpi/ns_linz_009.jpg" data-original-label="JPEG, 2.8 MB" style="--ar: 1.7778"><img src="images/web/ns_linz09-800.webp" width="800" height="450" loading="lazy" alt="A finger on the close button beside a set of rings"></a>
+        <a href="images/web/ns_linz10-2000.webp" data-original="300dpi/ns_linz_010.jpg" data-original-label="JPEG, 3.1 MB" style="--ar: 1.5009"><img src="images/web/ns_linz10-800.webp" width="800" height="533" loading="lazy" alt="A hand dragging a headline over the yellow ring"></a>
+        <a href="images/web/ns_linz11-2000.webp" data-original="300dpi/ns_linz_011.jpg" data-original-label="JPEG, 2.3 MB" style="--ar: 1.5009"><img src="images/web/ns_linz11-800.webp" width="800" height="533" loading="lazy" alt="A finger on a small set of rings in the middle of the table"></a>
+        <a href="images/web/ns_linz12-2000.webp" data-original="300dpi/ns_linz_012.jpg" data-original-label="JPEG, 3.2 MB" style="--ar: 1.5009"><img src="images/web/ns_linz12-800.webp" width="800" height="533" loading="lazy" alt="Two fingers among the headlines on the yellow and brown ring"></a>
+        <a href="images/web/ns_linz13-2000.webp" data-original="300dpi/ns_linz_013.jpg" data-original-label="JPEG, 3.1 MB" style="--ar: 1.5009"><img src="images/web/ns_linz13-800.webp" width="800" height="533" loading="lazy" alt="Two hands over the rings and headlines"></a>
+        <a href="images/web/ns_linz14-2000.webp" data-original="300dpi/ns_linz_014.jpg" data-original-label="JPEG, 3.3 MB" style="--ar: 1.5009"><img src="images/web/ns_linz14-800.webp" width="800" height="533" loading="lazy" alt="A finger on a headline ending “running out for bipartisan”"></a>
+        <a href="images/web/ns_linz15-2000.webp" data-original="300dpi/ns_linz_015.jpg" data-original-label="JPEG, 3.5 MB" style="--ar: 1.5009"><img src="images/web/ns_linz15-800.webp" width="800" height="533" loading="lazy" alt="A finger on the headline “UK court convicts 3 of plot to blow up airliners”"></a>
+        <a href="images/web/ns_linz16-2000.webp" data-original="300dpi/ns_linz_016.jpg" data-original-label="JPEG, 3.1 MB" style="--ar: 1.5009"><img src="images/web/ns_linz16-800.webp" width="800" height="533" loading="lazy" alt="Rings above an open news story, “UK court convicts 3 of plot”"></a>
+        <a href="images/web/ns_linz17-2000.webp" data-original="300dpi/ns_linz_017.jpg" data-original-label="JPEG, 3.3 MB" style="--ar: 1.5009"><img src="images/web/ns_linz17-800.webp" width="800" height="533" loading="lazy" alt="A finger on a headline ending “running out for health compromise”"></a>
+        <a href="images/web/ns_linz18-2000.webp" data-original="300dpi/ns_linz_018.jpg" data-original-label="JPEG, 2.9 MB" style="--ar: 1.5009"><img src="images/web/ns_linz18-800.webp" width="800" height="533" loading="lazy" alt="Rings above a news story, a hand at the edge of the table"></a>
+        <a href="images/web/ns_linz19-2000.webp" data-original="300dpi/ns_linz_019.jpg" data-original-label="JPEG, 4.2 MB" style="--ar: 1.5009"><img src="images/web/ns_linz19-800.webp" width="800" height="533" loading="lazy" alt="Hands beside rings and the story “Hidden pockets of elderly said to be in poverty”"></a>
+        <a href="images/web/ns_linz20-2000.webp" data-original="300dpi/ns_linz_020.jpg" data-original-label="JPEG, 3.6 MB" style="--ar: 1.5009"><img src="images/web/ns_linz20-800.webp" width="800" height="533" loading="lazy" alt="Headlines laid over yellow and orange arcs"></a>
+        <a href="images/web/ns_linz21-2000.webp" data-original="300dpi/ns_linz_021.jpg" data-original-label="JPEG, 2.8 MB" style="--ar: 1.5009"><img src="images/web/ns_linz21-800.webp" width="800" height="533" loading="lazy" alt="The table with no hands on it: a yellow ring and a summary of the day in one corner"></a>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="downloads">
+      <h2 id="downloads">Downloads</h2>
+      <div class="row-body">
+        <ul class="files" role="list">
+          <li><a href="jma/newshaper_jma.pdf"><span class="name">Project description and technical requirements</span><span class="meta">PDF, 334 KB</span></a></li>
+        </ul>
+        <p class="files-note">Open any photo above to download it as a 300 dpi JPEG.</p>
+      </div>
+    </section>
+
+    <section class="row" aria-labelledby="credits">
+      <h2 id="credits">Credits &amp; Thanks:</h2>
+      <div class="row-body prose">
+        <p class="meta">To contact and feedbacks: hello [at] newshaper [dot] net</p>
+        <div class="people">
+          <p><a class="person-name" href="https://web.archive.org/web/20091207073512/http://www.lummo.eu/">Javier Lloret</a><br>
+            Graduate Student, Kunstuniversität Linz, <a href="https://web.archive.org/web/20090710010426/http://www.interface.ufg.ac.at/">Interface Cultures</a></p>
+          <p><a class="person-name" href="http://mahirmyavuz.com">Mahir Yavuz</a><br>
+            PhD Candidate, Kunstuniversität Linz, <a href="https://web.archive.org/web/20090710010426/http://www.interface.ufg.ac.at/">Interface Cultures</a></p>
+        </div>
+        <p>The installation consists a tabletop projection, a camera tracks the shadows on the table to create interactivity and a dynamic database that constantly gathers live news items from internet. The software has three different functions; it automatically streams news items every minute and place them onto the table, it allows users to modify the visual look and organization of the news landscape by using their hands and it gives the opportunity to save the designed structure of any given moment. The software is written in C++ with using <a href="https://openframeworks.cc/">OpenFrameworks</a> Libraries. <a href="https://web.archive.org/web/20090209003011/http://nuigroup.com/touchlib/">Touchlib</a> libraries are used for finger tracking and the news data is gathered from <a href="https://www.ap.org/">Associated Press</a>.</p>
+        <p>Special Thanks to Stefan Mittlböck, Martin Kaltenbrunner, Berkay Daver, Travis Kirton, Jayme Cochrane &amp; the technical crew of SantralIstanbul for their invaluable support and time. Images in Istanbul: Courtesy of Efe Mert Kaya.</p>
+      </div>
+    </section>
+
+    <div class="row">
+      <p class="colophon">Javier Lloret &amp; Mahir Yavuz, ©&nbsp;2009<br>
+        Last modified on 25 September 2009</p>
+    </div>
   </div>
-  <!-- end #container -->
-</div>
+</main>
+
+<footer class="site-foot">
+  <p>All data is somehow casual, 2005–today.</p>
+</footer>
+
 </body>
 </html>
