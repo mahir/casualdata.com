@@ -14,7 +14,7 @@ window.CD_DAYS = [
 		dek: "Each state’s Senate vote this week against its vote for president in 2024."
 	},
 	{
-		date: "2026-11-06", draft: true,
+		date: "2026-11-06",
 		path: "/2026-11-06/",
 		title: "If the country were 100 people, 51 of them stayed home",
 		dek: "The 2026 electorate as a town of 100."
