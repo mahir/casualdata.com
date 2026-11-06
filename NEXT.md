@@ -31,8 +31,11 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 2. Write `viz.js`: draw into the stage canvas, make the drawing function reusable for export, and keep the reader's state in the URL.
 3. Add the day to `kit/days.js`.
 
-## Before launch (not done yet)
+## Launched
 
-- Move the current homepage to `/work/` and serve `next/index.html` at `/`. Then change the links in the menu and front page that point to `/next/` and to `/`.
+The daily front page is `/index.html`. The 2007–2014 homepage moved to `/work/`, and the archive pages' wordmarks link there. `/next/` only redirects to `/`.
+
+## Still to do
+
 - Generate a static `card.png` for each day so link previews have an image (`og:image`). This needs a headless-browser render script. No preview image is set yet.
 - Decide where the data for each day comes from and record its source on the page.

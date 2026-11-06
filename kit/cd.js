@@ -78,7 +78,7 @@
 	function panel(id, title, body) {
 		const d = document.createElement("dialog");
 		d.className = "cd-panel"; d.id = id; d.setAttribute("aria-label", title);
-		d.innerHTML = `<div class="in"><div class="top"><a class="cd-mark" href="/next/">${CD.wordmark}</a><button class="cd-btn" data-close>Close</button></div>${body}</div>`;
+		d.innerHTML = `<div class="in"><div class="top"><a class="cd-mark" href="/">${CD.wordmark}</a><button class="cd-btn" data-close>Close</button></div>${body}</div>`;
 		d.addEventListener("click", e => { if (e.target === d || e.target.closest("[data-close]")) d.close(); });
 		document.body.append(d);
 		return d;
@@ -95,7 +95,7 @@
 			<li><a href="/newshaper/"><span class="n">2009</span><span>newshaper</span></a></li>
 			<li><a href="/socialbits/"><span class="n">2009</span><span>social bits</span></a></li>
 			<li><a href="/senseofpatterns/"><span class="n">2011</span><span>sense of patterns</span></a></li>
-			<li><a href="/"><span class="n">all</span><span>The archive</span></a></li>
+			<li><a href="/work/"><span class="n">all</span><span>The archive</span></a></li>
 		</ul></section>
 		<section><h2>About</h2><p>A new data visualization every day, one screen each. Made by casualdata since 2005. All data is somehow casual.</p></section>`);
 

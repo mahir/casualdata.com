@@ -3,64 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>casualdata · a data visualization every day</title>
-  <meta name="description" content="A new data visualization every day, one screen each. From casualdata, making work from casual data since 2005.">
-  <meta name="theme-color" content="#FFFFFF">
-  <link rel="icon" href="/kit/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/ioskeley-mono-regular.woff2" as="font" type="font/woff2" crossorigin>
-  <script src="/kit/theme.js"></script>
-  <link rel="stylesheet" href="/kit/cd.css">
-  <style>
-    body { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
-    .hero { padding: clamp(32px, 8vh, 96px) var(--gut) 40px; display: grid; gap: clamp(28px, 5vh, 56px); align-content: start; }
-    .hero-mark { margin: 0; }
-    .hero-mark img { display: block; width: min(100%, 1100px); height: auto; }
-    .lede { margin: 0; font-size: clamp(20px, 2.4vw, 32px); font-weight: 600; letter-spacing: -.02em; max-width: 26ch; line-height: 1.3; }
-    .today { display: grid; grid-template-columns: auto 1fr auto; gap: 8px 24px; align-items: baseline; padding: 20px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); text-decoration: none; }
-    .today .t { font-weight: 400; letter-spacing: -.025em; font-size: clamp(26px, 4vw, 56px); line-height: .95; }
-    .today:hover .t { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 4px; text-underline-offset: 8px; }
-    .today .go { font: 400 12px/1 var(--mono); text-transform: uppercase; }
-    .today .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--red); align-self: center; }
-    @media (max-width: 720px) { .today { grid-template-columns: auto 1fr; } .today .go { grid-column: 2; } }
-    .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
-  </style>
+  <title>casualdata</title>
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://casualdata.com/">
+  <meta http-equiv="refresh" content="0; url=/">
+  <script>location.replace("/" + location.search + location.hash);</script>
 </head>
 <body>
-<header class="cd-bar">
-  <p class="cd-meta" style="margin:0" id="stamp"></p>
-  <div class="cd-actions"><button class="cd-btn" data-open="cd-menu"><span>Menu</span></button></div>
-</header>
-
-<main class="hero">
-  <h1 class="hero-mark"><img class="wm-d" src="/kit/wordmark.svg" alt="casualdata" width="5656" height="981"><img class="wm-l" src="/kit/wordmark-light.svg" alt="casualdata" width="5656" height="981"></h1>
-  <p class="lede">A new data visualization every day. One screen, one idea, one red dot.</p>
-  <a class="today" id="today" href="#"><span class="dot"></span><span class="t"></span><span class="go"></span></a>
-  <div class="two">
-    <section><h2 class="cd-meta" style="margin:0 0 10px">Every day so far</h2><ul class="cd-list" id="all"></ul></section>
-    <section><h2 class="cd-meta" style="margin:0 0 10px">Work 2007–2014</h2><ul class="cd-list">
-      <li><a href="/newsknitter/"><span class="n">2007</span><span>newsknitter</span></a></li>
-      <li><a href="/valuemachine/"><span class="n">2008</span><span>value machine</span></a></li>
-      <li><a href="/newshaper/"><span class="n">2009</span><span>newshaper</span></a></li>
-      <li><a href="/socialbits/"><span class="n">2009</span><span>social bits</span></a></li>
-      <li><a href="/senseofpatterns/"><span class="n">2011</span><span>sense of patterns</span></a></li>
-    </ul></section>
-  </div>
-</main>
-
-<footer class="cd-foot cd-meta"><span>All data is somehow casual, 2005–today.</span><span>casualdata.com</span></footer>
-
-<script src="/kit/days.js"></script>
-<script src="/kit/cd.js"></script>
-<script>
-  const last = CD.days[CD.days.length - 1];
-  const t = document.getElementById("today");
-  t.href = last.path;
-  t.querySelector(".t").textContent = last.title;
-  t.querySelector(".go").textContent = `${CD.fmtDate(last.date)} →`;
-  document.getElementById("stamp").innerHTML = `<b>${CD.fmtDate(last.date)}</b>`;
-  document.getElementById("all").innerHTML = CD.days.slice().reverse().map(d =>
-    `<li><a href="${d.path}"><span class="n">${CD.shortDate(d.date)}</span><span>${d.title}</span></a></li>`).join("");
-</script>
+  <p>The front page moved to <a href="/">casualdata.com</a>.</p>
 </body>
 </html>
