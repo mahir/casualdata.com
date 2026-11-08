@@ -26,7 +26,7 @@ window.CD_DAYS = [
 		dek: "Abortion rights beat Harris everywhere; transgender limits beat Trump everywhere."
 	},
 	{
-		date: "2026-11-08", draft: true,
+		date: "2026-11-08",
 		path: "/2026-11-08/",
 		title: "These 99 people may decide a seat in Congress",
 		dek: "The closest races of 2026, one person per vote."
