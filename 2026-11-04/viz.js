@@ -147,9 +147,10 @@
 
 		// selection: thin crosshair + red dot
 		const sx = X(st.d), sy = Y(st.lat);
-		ctx.strokeStyle = "rgba(255,61,31,.75)"; ctx.lineWidth = 1 * s;
+		ctx.strokeStyle = C.red; ctx.globalAlpha = 0.75; ctx.lineWidth = 1 * s;
 		ctx.beginPath(); ctx.moveTo(g.x0, sy); ctx.lineTo(g.x0 + g.pw, sy); ctx.stroke();
 		if (st.d !== PUB) { ctx.beginPath(); ctx.moveTo(sx, g.y0); ctx.lineTo(sx, g.y0 + g.ph); ctx.stroke(); }
+		ctx.globalAlpha = 1;
 		ctx.beginPath(); ctx.arc(sx, sy, 6 * s, 0, 2 * Math.PI);
 		ctx.fillStyle = C.red; ctx.fill();
 		ctx.lineWidth = 2 * s; ctx.strokeStyle = C.paper; ctx.stroke();
@@ -180,27 +181,24 @@
 	document.addEventListener("cd-theme", schedule);
 	document.fonts.ready.then(schedule);
 
-	let urlT;
-	function set(d, lat) {
-		st.d = clampD(Math.round(d)); st.lat = clampL(lat);
-		schedule();
-		clearTimeout(urlT);
-		urlT = setTimeout(() => history.replaceState(null, "", `?d=${st.d}&lat=${st.lat}`), 150);
-	}
-	function fromPointer(e) {
-		if (!geo) return;
+	// Same handling as every day (see CD.selection in kit/cd.js): pointing previews a reading, a click,
+	// tap or key pins it, only the pinned reading goes into the link, and leaving returns to it.
+	let pinned = { d: st.d, lat: st.lat };
+	function show(d, lat) { st.d = clampD(Math.round(d)); st.lat = clampL(lat); schedule(); }
+	function set(d, lat) { show(d, lat); pinned = { d: st.d, lat: st.lat }; CD.state.set({ d: st.d, lat: st.lat }); }
+	function at(e) {
 		const r = cv.getBoundingClientRect();
 		const px = e.clientX - r.left, py = e.clientY - r.top;
-		const d = (px - geo.x0) / geo.pw * DAYS - 0.5, lat = 90 - (py - geo.y0) / geo.ph * 180;
-		set(Math.max(0, Math.min(DAYS - 1, d)), lat);
+		return [Math.max(0, Math.min(DAYS - 1, (px - geo.x0) / geo.pw * DAYS - 0.5)), 90 - (py - geo.y0) / geo.ph * 180];
 	}
-	cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); fromPointer(e); });
-	cv.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || e.buttons) fromPointer(e); });
+	cv.addEventListener("pointerdown", e => { if (!geo) return; if (e.pointerType !== "mouse") cv.setPointerCapture(e.pointerId); set(...at(e)); });
+	cv.addEventListener("pointermove", e => { if (!geo) return; if (e.buttons) set(...at(e)); else if (e.pointerType === "mouse") show(...at(e)); });
+	cv.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") show(pinned.d, pinned.lat); });
 	cv.addEventListener("keydown", e => {
 		const k = e.shiftKey ? 10 : 1;
 		const m = { ArrowLeft: [-k, 0], ArrowRight: [k, 0], ArrowUp: [0, k], ArrowDown: [0, -k] }[e.key];
 		if (m) { e.preventDefault(); set((st.d + m[0] + DAYS) % DAYS, st.lat + m[1]); }
-		if (e.key === "t" || e.key === "Home") set(PUB, st.lat);
+		if (e.key === "Escape" || e.key === "Home" || e.key === "t") { e.preventDefault(); set(PUB, st.lat); }
 	});
 
 	CD.exporter = {

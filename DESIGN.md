@@ -1,314 +1,266 @@
 ---
-name: "{casualdata}"
-description: "A calm index of the work: white page, black type, a quiet 3:2 grid of photographs, each project's own color only as a hover underline."
+name: casualdata daily
+description: One interactive data visualization a day, one screen each, one red dot.
 colors:
-  ink: "#111111"
-  index-grey: "#6B6B6B"
   paper: "#FFFFFF"
-  blank: "#F4F4F4"
-  newsknitter-red: "#B92025"
-  value-machine-grey: "#A3A3A3"
-  newshaper-black: "#111111"
-  social-bits-orange: "#EE3100"
-  sense-of-patterns-pink: "#F6A6AA"
+  ink: "#121212"
+  ink-2: "#5A5853"
+  ink-3: "#8E8B84"
+  rule: "#E6E4DF"
+  red: "#E8341C"
+  paper-night: "#0E0E0E"
+  ink-night: "#EDEBE6"
+  ink-2-night: "#A8A59E"
+  ink-3-night: "#66635E"
+  rule-night: "#2A2927"
+  red-night: "#FF5A3D"
+  brace-night: "#77746E"
 typography:
+  display:
+    fontFamily: "Host Grotesk, Arial, sans-serif"
+    fontSize: "clamp(28px, min(4.4vw, 6.6vh), 72px)"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "-0.025em"
   headline:
-    fontFamily: "Host Grotesk, Host Grotesk fallback, Arial, sans-serif"
-    fontSize: "clamp(22px, 2.4vw, 32px)"
+    fontFamily: "Host Grotesk, Arial, sans-serif"
+    fontSize: "clamp(20px, 1.9vw, 26px)"
     fontWeight: 500
-    lineHeight: 1.2
-  body:
-    fontFamily: "Host Grotesk, Host Grotesk fallback, Arial, sans-serif"
-    fontSize: "17px"
-    fontWeight: 400
-    lineHeight: 1.5
+    lineHeight: 1.25
+    letterSpacing: "-0.015em"
   title:
-    fontFamily: "Host Grotesk, Host Grotesk fallback, Arial, sans-serif"
-    fontSize: "17px"
+    fontFamily: "Host Grotesk, Arial, sans-serif"
+    fontSize: "19px"
     fontWeight: 500
-    lineHeight: 1.35
-    letterSpacing: "-0.005em"
-  subhead:
-    fontFamily: "Host Grotesk, Host Grotesk fallback, Arial, sans-serif"
-    fontSize: "22px"
-    fontWeight: 500
-    lineHeight: 1.3
-    letterSpacing: "-0.01em"
-  label:
-    fontFamily: "Fragment Mono, Fragment Mono fallback, Courier New, monospace"
-    fontSize: "14px"
+    lineHeight: 1.22
+    letterSpacing: "-0.012em"
+  body:
+    fontFamily: "Host Grotesk, Arial, sans-serif"
+    fontSize: "16px"
     fontWeight: 400
-    lineHeight: 1.35
-spacing:
-  gutter: "clamp(20px, 4vw, 56px)"
-  max-width: "1600px"
-  head-top: "clamp(28px, 3.5vw, 48px)"
-  main-top: "clamp(56px, 8vw, 112px)"
-  grid-row-gap: "clamp(40px, 5vw, 72px)"
-  grid-column-gap: "clamp(20px, 2.5vw, 40px)"
-  caption-top: "14px"
-  caption-gap: "16px"
-  list-row: "12px"
-  section-gap: "clamp(96px, 11vw, 160px)"
-  foot-top: "clamp(96px, 12vw, 168px)"
-  record-row-gap: "clamp(56px, 7vw, 96px)"
-components:
+    lineHeight: 1.45
+  label:
+    fontFamily: "Ioskeley Mono, ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "12px"
+    fontWeight: 400
+    lineHeight: 1.3
+    letterSpacing: "0.02em"
+  chart-label:
+    fontFamily: "Ioskeley Mono, ui-monospace, Menlo, monospace"
+    fontSize: "11.5px"
+    fontWeight: 400
+  reading-value:
+    fontFamily: "Host Grotesk, Arial, sans-serif"
+    fontSize: "17px"
+    fontWeight: 600
   wordmark:
-    height: "clamp(20px, 2vw, 28px)"
-  work-image:
-    backgroundColor: "{colors.blank}"
-    width: "100%"
-  work-name:
+    fontFamily: "Host Grotesk"
+    fontWeight: 800
+    letterSpacing: "-0.05em"
+rounded:
+  none: "0"
+  round: "50%"
+  pill: "999px"
+spacing:
+  gutter: "clamp(16px, 2.4vw, 36px)"
+  xs: "8px"
+  sm: "12px"
+  md: "20px"
+  lg: "28px"
+  xl: "48px"
+components:
+  button:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    typography: "{typography.label}"
+    rounded: "{rounded.pill}"
+    padding: "7px 14px"
+  button-hover:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+  button-solid:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.label}"
+    rounded: "{rounded.pill}"
+    padding: "7px 14px"
+  button-phone:
+    padding: "8px 10px"
+    height: "44px"
+    width: "44px"
+  stepper-arrow:
+    textColor: "{colors.ink}"
+    rounded: "{rounded.round}"
+    size: "34px"
+  stepper-arrow-hover:
+    backgroundColor: "{colors.rule}"
+  reading-chip:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.reading-value}"
+    rounded: "{rounded.none}"
+    padding: "8px"
+  day-tile:
+    backgroundColor: "{colors.rule}"
     textColor: "{colors.ink}"
     typography: "{typography.title}"
-  work-year:
-    textColor: "{colors.index-grey}"
-    typography: "{typography.label}"
-  text-list-row:
-    textColor: "{colors.ink}"
-    typography: "{typography.title}"
-    padding: "12px 0"
-  text-list-row-unlinked:
-    textColor: "{colors.index-grey}"
-    typography: "{typography.title}"
-    padding: "12px 0"
-  section-label:
-    textColor: "{colors.index-grey}"
-    typography: "{typography.label}"
-  footer-line:
-    textColor: "{colors.index-grey}"
-    typography: "{typography.label}"
-  notice-heading:
-    textColor: "{colors.ink}"
-    typography: "{typography.headline}"
-    width: "24ch"
-  project-logo:
-    height: "clamp(36px, 4vw, 56px)"
-  record-label:
-    textColor: "{colors.index-grey}"
-    typography: "{typography.label}"
-  record-body:
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    width: "66ch"
-  photo-row:
-    height: "clamp(120px, 13vw, 200px)"
-    gap: "8px"
-  viewer:
+    rounded: "{rounded.none}"
+  day-nav-phone:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     typography: "{typography.label}"
+    height: "52px"
+  share-panel:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.none}"
+    width: "min(420px, 100vw)"
+  toast:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.label}"
+    rounded: "{rounded.pill}"
+    padding: "10px 16px"
 ---
 
-# Design System: {casualdata}
+# Design System: casualdata daily
 
 ## Overview
 
-**Creative North Star: "The Quiet Index"**
+**Creative North Star: "One Red Dot"**
 
-The archive is a calm index of finished work. A white page carries a grid of photographs, each cropped to the same 3:2 frame, with the project's name on the left and its years on the right beneath it. Everything else is black type at modest sizes and one grey. The frame stays out of the work's way: the photographs supply all the color and texture the page has.
+casualdata daily is a sheet of paper that turns over with the day. By the reader's own clock it is white from 07:00 to 18:59 and black otherwise, and on either ground everything is ink and a short ladder of warm greys, except one thing: the single point in each chart that matters, drawn in red. The home page says it outright ("One screen, one idea, one red dot."), and the `{•}` symbol is the same idea drawn as a mark. The red is rare on purpose, so a reader finds the point in seconds and recognizes casualdata from a shared image alone.
 
-The system is deliberately small. Two families share the work: Host Grotesk sets names and sentences, and Fragment Mono sets the record's data and labels (years, the section label, the footer line), the way a receipt or a log would. The `{casualdata}` wordmark is drawn as outlines of a third face, Archivo, and is never set as live type. There are no borders, cards, panels, shadows, gradients or rounded corners. Hierarchy comes from space, grotesk against mono, weight 500 against 400, and ink against grey.
+The frame is flat, ruled and quiet: a 1px ink rule under the top bar, a grotesk title set light and large, a two-sentence dek saying how to read the chart, and then the chart takes the rest of the screen. Short labels are uppercase mono, so dates, counts, axes and buttons read as one register of small facts. Charts carry their own words: the reading sits inside the drawing in an ink chip beside the point, and every exported image carries the date and casualdata.com at its foot.
 
-Each project is recognized by its photograph and, on pointing or focus, by a 3px underline of its name in the project's own color. On a project page the same color also marks its links on hover and focus; underlines are the only place a project color appears on the shared frame. A project page is the same frame in a longer form: the project's own logo with its year, one banner photograph, then the record as label-and-content rows, then the photographs in justified rows that open in a white full-screen viewer. The rejected gallery direction (rooms, floor plan, color walls, exhibition metaphor) is not part of this system.
+This file documents the daily frame (`kit/`). The 2007–2014 archive pages (`/work/` and the project folders, on `css/casualdata.css`) follow [DESIGN-archive.md](DESIGN-archive.md), not this file.
 
 **Key Characteristics:**
-- White page, ink type, one grey; color comes from the photographs.
-- One 3:2 frame for every work image, cropped with `object-fit: cover`.
-- Name left, year right, on one baseline, under every image and in every text row.
-- Host Grotesk for names and text, Fragment Mono for years, labels and the footer; Archivo only inside the wordmark outlines.
-- Project color only as an underline on hover and focus: 3px under names, 2px under links in a project's record.
-- Flat: no borders, shadows, radii or fills beyond the blank image placeholder.
+- Two grounds, chosen by the reader's local hour; every token has a day and a night value and every drawing works on both.
+- One accent, red, tuned per ground; everything else is ink and greys between page and ink.
+- Host Grotesk for names and sentences, Ioskeley Mono uppercase for short labels.
+- Flat: 1px rules, square chart surfaces, pill buttons, no shadows.
+- One screen per day when it fits; the chart has a floor height and the page scrolls rather than squeeze it.
 
 ## Colors
 
-A black-and-white frame with one grey, and five project colors held back for a single underline.
+A white or black page, ink, three warm greys, and one red per ground. The two theme sets swap in full on `:root[data-theme="dark"]`; canvas drawings read the same tokens through `CD.colors` and redraw when the theme turns.
 
 ### Primary
-- **Index Ink** (#111111): all names, headings, body text and links; the focus outline; the selection background. Contrast on paper 18.9:1.
-
-### Secondary
-The project accents, each sampled from the project's own logo and bound to it by a class on the work's list item (or, on a project page, on the page): newsknitter (`.nk`), value machine (`.vm`), newshaper (`.ns`), social bits (`.sb`), sense of patterns (`.sop`).
-- **Newsknitter Red** (#B92025): newsknitter's underline.
-- **Value Machine Grey** (#A3A3A3): value machine's underline. 2.5:1 on white.
-- **Newshaper Black** (#111111): newshaper's underline; the same value as ink.
-- **Social Bits Orange** (#EE3100): social bits' underline. 4.1:1 on white.
-- **Sense of Patterns Pink** (#F6A6AA): sense of patterns' underline. 1.9:1 on white.
+- **Signal Red** (red, day): the one point that matters in each chart (the red line, the red dot, the red arrow, the red people), the dot in the `{•}` symbol, and large labels. At 4.3:1 on white it is below body-text contrast, so it is never used for running text.
+- **Night Signal Red** (red-night): the same role on the black page, lifted to stay as loud there (6.2:1).
 
 ### Neutral
-- **Index Grey** (#6B6B6B): years, the extras label, the footer line, and the names of entries that have no page. 5.3:1 on paper, so it is the lightest value allowed for text.
-- **Paper** (#FFFFFF): the page background; also the `theme-color` and the selection text.
-- **Blank** (#F4F4F4): the placeholder fill behind a work image while it loads. Never a surface or panel color.
+- **Day Paper / Night Paper** (paper, paper-night): the page, the share panel, the phone bottom bar, and the text inside ink chips and solid buttons.
+- **Ink / Night Ink** (ink, ink-night): titles, body, the top-bar and footer rules, button outlines, the reading chip's ground, and the chart marks the reader has selected.
+- **Graphite** (ink-2, ink-2-night): secondary text (deks, the intro's second sentence, labels, sources) and unselected chart marks; 7.2:1 by day and 8.1:1 by night.
+- **Stone** (ink-3, ink-3-night): axis ticks, quiet chart marks, link underlines in the foot and the disabled stepper arrow. About 3.3:1 on either page: enough for marks, not for text.
+- **Hairline** (rule, rule-night): row dividers in lists, the highlight band behind a hovered chart row, the arrow hover disc and the empty image well of a tile.
+- **Brace Grey, night** (brace-night): the braces of the wordmark and symbol on the black page only. On white the braces use Stone.
 
 ### Named Rules
-**The Underline-Only Rule.** A project color is used only as the color of an underline on hover and focus: 3px under the project's name, 2px under a link in the project's record. Never as text color, fill, border or background: value machine (2.5:1), social bits (4.1:1) and sense of patterns (1.9:1) fail 4.5:1 text contrast on white.
+**The One Red Rule.** Each chart has exactly one red idea: one line, one arrow, one row, one group of people, one "you". Everything else in the drawing is ink, Graphite, Stone or Hairline. If a second thing wants to be red, it is not the point.
 
-**The Photographs Bring the Color Rule.** The frame stays ink, grey and white. If a surface looks colorful, the color must come from the work's own images or logo.
+**The Marks Not Text Rule.** Red fills marks, dots and underlines and sets large labels; it is never the color of a sentence, a source line or small mono text.
+
+**The Both Grounds Rule.** No color is written into a page or drawing as a literal; use the tokens (CSS variables or `CD.colors`) so the drawing turns with the page at 07:00 and 19:00. The one exception is a tone that depicts the subject itself and must not turn: the 4 Nov daylight map paints night and day in the night and day ink values whatever the theme.
 
 ## Typography
 
-**Display Font:** none as live text. The `{casualdata}` wordmark is an SVG of Archivo outlines (name at width 125, weight 800; braces at weight 300). Archivo's license stays in `fonts/OFL-Archivo.txt`.
-**Text Font:** Host Grotesk (Doğukan Karapınar, Element Type; a uniwidth grotesk, so changing weight never changes width), self-hosted variable woff2, weight 300–800, latin and latin-ext files, SIL OFL (`fonts/OFL-HostGrotesk.txt`).
-**Mono Font:** Fragment Mono (Wei Huang; a monospaced Helvetica built from URW's Nimbus Sans), self-hosted woff2, one weight (400), latin and latin-ext files, SIL OFL (`fonts/OFL-FragmentMono.txt`).
-**Fallbacks:** "Host Grotesk fallback" (local Arial) and "Fragment Mono fallback" (local Courier New) are scaled with `size-adjust` and ascent/descent overrides to the web fonts' metrics, so text moves at most 1px when the fonts arrive. Both latin files are preloaded on every page. Together the latin and latin-ext files cover Turkish.
+**Display Font:** Host Grotesk (with Arial, sans-serif), self-hosted, variable 300–800
+**Body Font:** Host Grotesk
+**Label/Mono Font:** Ioskeley Mono (with ui-monospace, SF Mono, Menlo, monospace), 400 and 700
 
-**Character:** A contemporary grotesk with a little warmth for names, against a narrow, Helvetica-derived mono for dates and labels: an index that reads like a well-kept log. The wordmark's wide heavy cut is the only loud moment, and it stays small.
+**Character:** A plain contemporary grotesk set light at large sizes, against a narrow mono used only in capitals for short facts. The grotesk speaks in sentences; the mono speaks in dates and numbers.
 
 ### Hierarchy
-- **Headline** (500, clamp(22px, 2.4vw, 32px), 1.2, max 24ch): the one sentence heading on a notice page such as the 404.
-- **Body** (400, 17px, 1.5): running text, record entries, and prose links such as "back to all projects".
-- **Title** (500, 17px, 1.35, -0.005em): project and extra names in captions and text lists.
-- **Subhead** (500, 22px, 1.3, -0.01em): a heading inside running text on a project page (value machine's "Commons & Economy"), 1.5em below the paragraph before it; also the name of each entry in an entries list (social bits' projects and members).
-- **Label** (Fragment Mono 400, 14px, 1.35, grey): years, right-aligned; section labels; on project pages the when-and-where of a dated entry, publisher and e-mail lines, file formats and sizes, and the photo viewer's count and controls; the footer line.
+- **Display** (400, fluid to 72px, line-height 1, tracking -0.025em): the day title and the lead tile's title on home (which runs to 46px); balanced, at most about 18–20ch.
+- **Headline** (500, fluid 20–26px, 1.25): the home intro line, its second sentence in Graphite.
+- **Title** (500, 19px, 1.28): tile titles on home; share-panel rows use 600 at 17px.
+- **Body** (400, 16px, 1.4–1.45): deks and the home footer text, at most 44–60ch; the day dek steps down to 14px on phones.
+- **Label** (Ioskeley Mono 400, 12px, 0.02em, uppercase; buttons and panel headings 0.04em): dates, counts, the top-bar date, buttons, the toast. Source footers use the mono at 12.5px but keep sentence case, because sources are sentences.
+- **Chart label** (Ioskeley Mono 400, 11.5px, uppercase): axes, row tags, counts drawn in canvas.
+- **Reading value** (Host Grotesk 600, 17px): the number in the reading chip, over an 11px mono context line.
 
 ### Named Rules
-**The Wordmark Stands Alone Rule.** Archivo and its wide heavy cut belong to the wordmark only. All live text is Host Grotesk (weights 400 and 500) or Fragment Mono (400).
+**The 800 Belongs to the Wordmark Rule.** Weight 800 and -0.05em tracking are the logo's alone. Page titles stay at 400, and nothing in the frame goes above 600.
 
-**The Mono Is for the Record Rule.** Fragment Mono sets the record's data and labels: years, section labels, the footer line. Names and prose stay in Host Grotesk. The mono has one weight; `font-synthesis: none` keeps the browser from faking a bold, so never ask it for one.
-
-**The Text As Written Rule.** Names keep their original lower-case spelling and dates keep the form the owner gave them ("2007", "2009"). Type styling never changes case.
+**The Capitals Are for Facts Rule.** Uppercase mono is for short labels (dates, counts, buttons, axis names). Sentences, including source lines, keep their own case.
 
 ## Layout
 
-A centered column, max 1600px, with fluid side gutters (20px on phones to 56px on wide screens). Inside it, from the top: the wordmark (header top padding 28–48px), generous space (56–112px), the main content, then the footer line after 96–168px.
+The day page is a single-column grid of five rows: top bar, head, stage, foot, and on phones the bottom bar. The stage takes the height left over (`1fr`) but never less than its floor, `--stage-min` (clamp 240px, 40dvh, 420px); below that the page scrolls instead of squeezing the chart. The head is two columns (title about 1.6 : dek 1, dek aligned right and bottom) on wide screens and one column at 720px and below.
 
-The work grid has three equal columns above 1023px, two from 600px to 1023px, and one at 599px and below. Column gap is 20–40px; row gap is 40–72px. Each cell is a full-width 3:2 image with the caption 14px beneath it.
+Horizontal rhythm is one fluid gutter (clamp 16px, 2.4vw, 36px) used for every edge: bar, head, stage margin, foot, home grid and panel. Vertical padding in the head and intro is set in `vh` clamps so the day fits one screen on laptops.
 
-Text lists share the work grid's columns and gap, but every row sits in the first column, so a text row is always exactly one grid column wide at every breakpoint: one third of the page on desktop, half on tablet, full width on phones. A text list that follows the grid starts one row gap below it; a new section (the extras) starts 96–160px below the previous one, with its label 8px above the list.
+Home is a grid of every day, newest first: three columns above 960px with the newest tile spanning two columns and two rows, two columns from 960px (the lead spans two columns, one row), one column at 600px and below. Column gap clamps 16–28px, row gap 28–48px; the footer sits 56–112px below the grid.
 
-A project page keeps the same column and gutters. Under the head and banner, its record is a stack of rows 56–96px apart. Above 1023px each row puts its label in the first grid column and its content across the other two; at 1023px and below the label sits 12px above full-width content. Running text keeps a 66ch measure. Photo groups use the same content column.
+Breakpoints: 960px and 600px for the home grid, 720px for the phone frame (bottom bar, icon-only buttons, 44px targets), 400px for swapping the wordmark for the `{•}` symbol.
 
-**The Name Left, Year Right Rule.** Every entry, image caption or text row, is one flex line: name at the start, year at the end, aligned on the baseline, at least 16px apart. An empty year slot means the year is unknown; never fill it with a placeholder.
-
-**The Generous Space Rule.** Sections are separated by space alone, never by rules, boxes or background bands.
+**The Floor Not Squeeze Rule.** A chart is never shorter than `--stage-min`. When the screen cannot fit it, the page scrolls and the phone bottom bar stays sticky in thumb reach.
 
 ## Elevation & Depth
 
-The system is completely flat. There are no shadows, overlays or tonal layers; the only filled area is the blank placeholder behind an image. Depth and emphasis come from the photographs themselves and from space.
+Flat. There are no shadows anywhere in the frame. Separation is done with 1px rules: ink for structural edges (under the top bar, above the phone bottom bar and home footer, the share panel's left edge, the top of the share list) and Hairline for dividers inside a group. The only overlay is the share panel, a full-height sheet from the right over a 60% black backdrop.
 
-**The Flat Page Rule.** Nothing on the frame lifts, glows or casts a shadow, at rest or on hover. State is shown by an underline or an outline, not by elevation.
+**The Ruled Not Raised Rule.** Depth is a line, never a shadow. A surface that needs to stand apart gets an ink rule on its edge.
 
 ## Shapes
 
-Square corners everywhere (no radius). Images are rectangular 3:2 crops, never masked or rounded. There are no borders or dividers. The only drawn lines are text underlines (1px for prose links at rest, 2px in the accent on hover inside a project's record, 3px for the accent under a name) and the focus outline. Photographs on project pages keep their own proportions and are never cropped, except the banner.
+Two shapes only. Things the reader reads (the chart stage, tiles, the reading chip, the share panel) are square-cornered. Things the reader presses (buttons, the toast) are full pills, and round things (the stepper arrow's hover disc, the red dots) are circles. Tile images keep the 1200:630 link-card proportion inside a 1px Hairline inset outline.
 
 ## Components
 
-### Wordmark header
-- **Form:** the `{casualdata}` SVG at the top left of the content column, 20–28px tall (clamp(20px, 2vw, 28px)), width automatic.
-- **Home page:** the wordmark is the page's `h1`, not a link.
-- **Every other page:** the wordmark is a link to `/` with alt text "casualdata home". A project page shows its own project logo inside the page content, not in place of this wordmark.
+### Buttons
+Quiet, small and outlined: they read as labels until touched.
+- **Shape:** full pill (999px), 1px ink outline.
+- **Default:** transparent, ink text in the uppercase mono label (12px, 0.04em), 7px × 14px, optional 12px line icon drawn as inline SVG.
+- **Hover:** fills ink with paper text. **Solid** (Share) is the inverse: ink fill at rest, outline on hover.
+- **Focus:** 2px ink outline, 3px offset (site-wide).
+- **Phone (≤720px):** the text label hides, leaving the icon in a 44px minimum target.
 
-### Work tile
-- **Structure:** a list item carrying the project's accent class, containing one link (or a plain block if there is no page) that holds the image and the caption. The whole tile is the link; it has no underline at rest.
-- **Image:** 3:2, `object-fit: cover`, full column width, blank placeholder fill, explicit width and height attributes, responsive `srcset`. Images below the first row load lazily. Every shipping raster carries its provenance in a sidecar JSON.
-- **Caption:** name (title role, ink) left, year (label role, mono, grey) right.
-- **Hover / Focus:** the name gains a 3px underline in the project's accent, offset 0.35em, fading in over 0.2s on cubic-bezier(0.16, 1, 0.3, 1). Keyboard focus also draws the ink outline 8px outside the tile.
+### Reading chip (signature)
+The chart's reading, drawn in canvas beside the point it describes (`CD.label`): a square ink block with the value in Host Grotesk 600 over a mono uppercase context line in paper, 8px padding, 12px from the point. It flips left near the right edge, wraps its context at " · " breaks, and is mirrored to screen readers by a polite live region.
 
-### Text list
-- **Use:** entries without an image: projects without a page, and the extras / research list. On project pages, the same pattern fits any name-and-date list.
-- **Row:** name left, year right, 12px vertical padding, title and label roles; no dividers between rows.
-- **Linked row:** ink name, no underline at rest, accent underline on hover and focus like a work tile (ink when no project class is set).
-- **Unlinked row:** the name is in grey so it does not read as a link; nothing reacts to the pointer.
+### Day tile (home)
+- **Corner Style:** square.
+- **Image:** the day's own share render in the reader's theme (`thumb.webp` / `thumb-night.webp`, 720 and 1200px), cropped to its chart at 1200:548 so the image's foot (logo, date, address) does not repeat the caption, on a Hairline well.
+- **Last row:** when the last row has room left over, its last tile widens to fill it and puts its caption beside the image, at the image's foot.
+- **Under it:** the date in the mono label, then the title. The newest tile is twice the size, its title in Display and its dek beneath; its label starts with a small red dot and "Latest".
+- **Hover / Focus:** the title takes a 2px red underline at a 4px offset; keyboard focus outlines the image in ink.
 
-### Section label
-- A plain heading in the label role (mono, grey), sitting 8px above its list. Lower-case as written ("extras / research"). No rule, no uppercase, no tracking.
+### Navigation
+- **Top bar:** the logo (20px tall), the date in the mono label (ink weight for the date, Graphite for the subject), and the actions on the right, over a 1px ink rule. On home the right side is a plain mono text link to the archive, never a button, so nothing outranks the days.
+- **Day stepper (desktop):** typographic ‹ and › in Host Grotesk 22px either side of the date, each in a 34px circular target that takes a Hairline disc on hover; a missing neighbour shows as a Stone arrow that is not a link; on the newest published day the missing › is announced as "The next day comes tomorrow".
+- **Phone bottom bar (≤720px):** previous day · All days · Share · next day, cells at least 52px tall, mono 13px uppercase, a Hairline divider before All days, sticky to the bottom over the paper with the safe-area inset. Share moves here from the top bar as the one solid pill (44px). On the newest day the next cell reads "Tomorrow" in Graphite.
 
-### Links and focus
-- **Prose links:** inherit the text color, 1px underline offset 0.25em. Used for sentences such as "back to all projects".
-- **Focus:** a 2px ink outline offset 4px on every focusable element (8px on work tiles). Selection is ink with paper text.
-- **Motion:** only the underline color transitions; with reduced motion set, all transitions are off.
+### The reader's selection
+Every day handles its reading the same way, through `CD.selection` and `CD.bindSelection` in `kit/cd.js`: pointing previews a reading, a click, tap or key pins it, and only the pinned reading goes into the link (`CD.state`, which keeps `?theme` and `?drafts`); leaving the chart returns to the pinned reading. Keys are the same on every day: arrows step, Escape and Home return to the overview. The chosen mark gets an ink ring. The reading chip (`CD.label`) takes an `avoid` list (headings, other marks) and sits in the first clear place right of, left of, above or below the point.
 
-### Footer line
-- "All data is somehow casual, 2005–today." in the label role (mono, grey), at the bottom of every page.
+### Share panel
+A full-height dialog sliding from the right edge (up to 420px) over a 35% black backdrop, so the view being shared stays visible; paper ground with an ink left rule, the logo and a Close button at top, a mono heading in Graphite, a line naming the reading the link and image carry, then a ruled list: each row a short mono key (link, send, 4:5, 16:9) and a 600 17px action, red underline on hover. It opens with focus on Copy link. Exported images are the drawing plus one foot line, the same on every image: the `{casualdata}` wordmark (30 units tall) and the date in Graphite mono at left, `casualdata.com/YYYY-MM-DD` in ink at right, in the reader's theme.
 
-### Notice page
-- The 404 pattern: the wordmark header, one headline sentence (max 24ch) in place of the grid, a prose link 24px below it, and the footer line.
+### Logo
+`{casualdata}`: Host Grotesk 800 letters at -0.05em between weight-300 braces in grey; `{•}`: weight-600 grey braces around one red dot. Two files per mark, one per ground, built from the font by `.impeccable/brand/build/build.py`. The logo never changes and never carries the date; the date sits beside it in the top bar.
 
-### Project page head
-- The project's own logo as the page's `h1` (an SVG where one can be drawn from the project's print files, alt text the project's name), clamp(36px, 4vw, 56px) tall. The project's year sits at the right in the label role, its baseline on the baseline of the logo's lettering (`--logo-baseline`, 0.6 of the logo height by default).
-- Both are set per page on `.project-head` when the logo needs it: a long one-line title sets a smaller `--logo-h` so it fits a phone (value machine: clamp(15px, 1.35vw, 20px), `--logo-baseline: 0.988`, so its slab title stays about as tall as newsknitter's lettering). Newshaper keeps the default height with `--logo-baseline: 0.579`, the baseline of NEWSHAPER below the raised hand; its logo is the outlines from the project's 2009 project sheet PDF, recoloured to ink. Social bits sets `--logo-h: clamp(56px, 5.6vw, 80px)` and `--logo-baseline: 0.659`, since its square mark stands much taller than its lettering; the lettering stays 12.6–18px tall. Its logo rebuilds the 2010 web PNG as vector from the squares of the booklet's logo and DTL Nobel Bold outlines embedded in the booklet, in the logo's own orange. Sense of patterns uses value machine's title size (`--logo-h: clamp(15px, 1.35vw, 20px)`, `--logo-baseline: 0.98`) for its one-line pink lockup, taken from the poster titles in its print PDF.
-- `.project-tagline`: a subtitle that was part of the project's header graphic, set as text under the logo in the label role, normal case, 10px below it (sense of patterns' "Visualizing mobility data in public spaces", which the embedded font could not rebuild and which would be unreadable at logo size).
-
-### Banner
-- One photograph across the full content width, 24–40px below the head, in the proportion of the project's original banner (newsknitter: 3.4:1, rebuilt from the press original; newshaper: 3.4:1, the 2009 banner's framing cut again from the press original it was taken from). On phones a `<picture>` source may serve a taller crop of the same photograph.
-- The proportion may differ per project when the crop has to end cleanly on the photo's content (value machine: about 3.7:1, the top of the interface close-up, ending between two rows of the list). A project whose original header was a drawing still leads with a photograph; the drawing moves into the text (see Drawing and sign-off). A project whose original page had no banner and no photograph larger than 800px (social bits) has none: the rows follow the head.
-
-### Record row
-- A `section.row`: the section label (`h2`, label role, line height 25.5px so it sits on the first line of the content) and the content (`.row-body`, body role). Section names and order follow the project's original page; names that page set in capitals for effect are set in normal case (value machine, at the user's request). Credits & Thanks may move to the end, after the videos and photographs, when the original page put it before them (newshaper, at the user's request). A sidebar on the original page becomes record rows under its own labels, after the main column's sections (social bits). A project's second page (social bits' AMBER 2009 page) follows the press images page: the logo links back to the project page and the page title is the first row's label, as its `h1`.
-- Running text (`.prose`): 66ch measure, paragraphs 0.9em apart.
-- Links in a row: ink with a 1px underline at rest; on hover and focus the underline turns the project's accent and 2px.
-
-### Dated entries
-- `.events`: when and where ("September 2007, Linz") in the label role in a 240px column, what happened in the body role beside it, 6px apart; stacked on phones.
-
-### Publications
-- `.books`: a 96px cover (72px on phones) beside the title (500, the link), the authors line, and the publisher line in the label role. Two side by side on desktop and tablet, one on phones.
-
-### Link list
-- `.link-list`: names that are links, with no underline at rest and a 3px accent underline on hover and focus, like a text-list name. Columns of at least 9.5rem: three on desktop, two on phones. A long single word gets a `<wbr>` at a natural break. On phones the entries are 7px apart above and below, so a name that wraps never reads as two entries.
-
-### People
-- `.people`: one block per person: the name as a 500-weight link, the affiliation in the body role, the e-mail in the label role. Two side by side above 599px.
-
-### Photo rows
-- `.photos[data-gallery]`: links to the large file, each with `--ar` set to the photo's width ÷ height, holding a lazy-loaded 800px WebP with width, height and alt text, 8px apart, never cropped. The target row height is `--row` (clamp(120px, 13vw, 200px); 100px on phones).
-- `/js/photo-rows.js` (loaded with `defer` wherever `.photos` appears) sets the rows: a photo joins a row while that brings the row's height closer to `--row`, and each row is sized to fill the width exactly. The last row fills the width too if that makes it at most 15% taller than the row above; otherwise it keeps the row above's height and stays visibly partial (measured from 320px to 1700px: no middle row ends short, no last row is taller than the one above, and a partial last row leaves at least a fifth of the width empty).
-- Without the script, the CSS fallback justifies rows by flex-grow in proportion to `--ar`. Growth is capped at `--grow-max` (1.4; 2.4 on phones, where narrow rows need more), just above what a full row needs, so a nearly full last row still fills the width and a short one stays visibly partial at about the height of the rows above. A gallery whose own photos need more (mostly portraits) sets `--grow-max-wide` on itself after measuring every width from 600px to 1700px; value machine uses 1.6. Phones keep 2.4 regardless. Cursor zoom-in; no hover effect on the photo.
-- `.figure[data-gallery]`: a single photograph across the content, linked to its large file.
-- `.posters[data-gallery]`: prints of one size (sense of patterns' six A1 posters) in an even grid, six across and three on phones, 8px apart, each linked to its 2000px render, with a 1px hairline edge (ink at 10%, inset) so white sheets still read on the white page; no mat, shadow or frame. Posters are rendered from the print PDF rather than shown as mockup photos; `/js/photo-rows.js` is not needed.
-- On a press images page (`newsknitter/300dpi/`), each link points at the full-size press JPEG, so without the script it opens the file to save; the viewer shows the 2000px WebP preview and offers the JPEG and TIFF (see Photo viewer). The page's `h1` is the first row's label ("Hi-res Images"), and the project logo above it links back to the project page.
-- Large files are WebP, 2000px on the long side when a press original exists, otherwise the original page's size. Each carries a provenance sidecar.
-
-### Entries
-- `.entries`: named blocks in a row's running text, such as an exhibition's projects or a group's members. Each `.entry` has its name as a subhead (`.entry-title`, balanced wrapping), an optional label-role line under it (who made it), an optional single photograph (`.figure[data-gallery]`, across the measure, 14px above and 16px below), then its paragraphs; a project with a Flickr album ends with a plain link such as "42 photos on Flickr". Entries are 40–56px apart. A project that was a closed accordion item on the original page is shown open.
-
-### Videos
-- `.videos`: the project's own video players (Vimeo iframes from the original page, with `dnt=1` added and `loading="lazy"`), each 16:9 on a blank (#F4F4F4) ground, side by side when each can be at least 22rem wide and stacked below that, with the column gutter (clamp(20px, 2.5vw, 40px)) between them, so they read as two players. Each iframe has a `title`.
-
-### Drawing and sign-off
-- `.prose > .drawing`: a small drawing from the project's original page, set between paragraphs at the size it was drawn, 2em above and below (value machine's network drawing, 195×155).
-- `.prose > .sign-off`: a closing line quoted from the work, in the label role, 1.6em below the last paragraph (value machine's "THANKS FOR PURCHASING INFORMATION", as its receipts printed it).
-
-### Files
-- `.files`: name left (title role), format and size right (label role, never wrapping), like a text-list row, with the accent underline on the name on hover and focus.
-- `.files-note`: one grey line in the body role, 16px under the list, for files offered elsewhere on the page (newshaper: "Open any photo above to download it as a 300 dpi JPEG.").
-
-### Colophon
-- The project's own credit line from its original page, in the body role, grey, in the content column at the end of the record. At most 35em wide (referandum's colophon runs to three lines).
-
-### Article (the extras)
-- An extra that is a written piece rather than a project (referandum 2010) has no logo. `.article-head`: the title as the page's `h1` in text (`.article-title`, 30–48px, weight 500, line height 1.1, tracking -0.02em, balanced, at most 20ch), the subtitle under it (`.article-subtitle`, 19–22px, 10px below), then the byline and date in the label role (12px below). No year at the right: the byline already carries the date.
-- One record row follows: an optional `.side-note` in the label column (15px, grey, at most 36ch; the English note for international visitors, with `lang="en"`), stacked above the text on tablets and phones with 32px under it, and the running text in `.article-body` across the content columns.
-- `.article-body`: paragraphs, lists and rules at most 35em wide, measured in em because Host Grotesk's text runs narrower than its zero (66ch gave lines of about 95 characters). Paragraphs 0.9em apart; a `.chart` 2em above and below. The original's `<hr>` breaks stay as 1px hairlines (ink at 14%), 3em above and below, on the text's left edge. A numbered list keeps the paragraph measure (border-box), with numbers in the mono, grey.
-- `.chart`: the article's own charts, maps and screenshots at the size they were made (592px; a map 918px with a 2x render where a vector source matches the published image), on white with no frame, mat, caption or viewer. A source line, where the original had one, is a `figcaption` in the label role 10px below. Alt text is in the page's language and carries the chart's figures.
-- `.update`: a dated update note inside a paragraph ("{Güncelleme: 18/09/2010}"), in the label role inline.
-
-### Photo viewer
-- `/js/lightbox.js`, loaded with `defer` on any page with a `[data-gallery]`. A `<dialog>` that fills the screen in paper: the photo contained in it, and one bar beneath with the count ("3 / 10", label role, grey) at the left and previous, next and close at the right as words in the label role, with a 2px accent underline on hover and focus.
-- Arrow keys and swipe step through the group and wrap; Esc or a click outside the photo closes; focus starts on close and returns to the opening link; the page stops scrolling while it is open. A photo that is still loading is hidden (opacity 0, 0.2s) rather than leaving the previous one on screen.
-- No captions: the alt text stays alt text. Without the script, each link opens its image file.
-- **Downloads (press images page, or a project page whose press originals are on hand):** a link may carry `data-preview` (a lighter image the viewer shows instead of the link's own file), `data-download` (a label such as "JPEG, 583 KB" that offers the link's own file) and `data-original` with `data-original-label` (a further file, such as the TIFF in the `media` Release). The viewer then lists them right after the count: "download" in grey, then each file as a link with a 1px ink underline that turns 2px and the accent on hover and focus. On a project page (newshaper), the link keeps pointing at the 2000px WebP and `data-original` alone offers the 300 dpi JPEG. On phones the downloads take their own line above the count and the controls. Sizes are decimal (1 MB = 1,000,000 bytes), KB below 1 MB, one decimal place for MB.
+### Toast
+An ink pill with paper mono label text, centred 24px from the bottom, rising 20px and fading in over 0.2s; still under reduced motion.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** link every page to `/css/casualdata.css` and build it from the same parts: wordmark header, content column, footer line.
-- **Do** set the project's accent class (nk, vm, ns, sb, sop) on the element that holds its name, so the hover and focus underline picks up the project's color.
-- **Do** keep each project's own logo on its page as the project's identity, inside the shared frame.
-- **Do** crop every work image to 3:2 and give it width, height, alt text and a provenance sidecar.
-- **Do** put name left and year right on one baseline, and leave the year empty when it is unknown.
-- **Do** keep text lists one grid column wide at every breakpoint, with names of entries that have no page in grey.
-- **Do** keep every text color at 4.5:1 or better on white: ink or grey only.
-- **Do** keep a project page's sections, text and order as on its original page; add only what the user approved (such as a downloads list of the project's own documents).
-- **Do** mark every group of photos with `data-gallery`, give each link `--ar` and each image width, height and alt text, and load `/js/lightbox.js` and `/js/photo-rows.js` on that page.
+- **Do** read every color from the tokens (`var(--…)` in CSS, `CD.colors` in canvas) and redraw on the `cd-theme` event.
+- **Do** give each chart exactly one red idea and draw everything else in ink, Graphite, Stone and Hairline.
+- **Do** put the chart's point in words inside the drawing, with `CD.label` beside the point.
+- **Do** keep short labels in uppercase Ioskeley Mono at 11.5–12px and sentences in Host Grotesk in their own case.
+- **Do** give phone controls 44px minimum targets and keep previous day, All days, Share and next day in the bottom bar.
+- **Do** wire every chart through `CD.selection` / `CD.bindSelection`, so preview, pin, keys and the link behave the same on every day.
+- **Do** let the page scroll before the stage drops below `--stage-min`.
+- **Do** separate surfaces with 1px rules: ink for structure, Hairline inside a group.
 
 ### Don't:
-- **Don't** use a project accent as text color, background, border or fill; it is an underline color only.
-- **Don't** set live text in Archivo or in heavy weights; the wide cut belongs to the wordmark.
-- **Don't** set names or prose in the mono, and never give it a bold or an uppercase.
-- **Don't** add borders, cards, panels, shadows, gradients, rounded corners or background bands.
-- **Don't** add small uppercase labels above headings or decorative icons.
-- **Don't** bring back the gallery metaphor: no rooms, floor plans, wall colors, hanging lines or exhibition language.
-- **Don't** rewrite, re-case or shorten names, dates or the footer line.
-- **Don't** show alt text as visible captions or add descriptions of the work; the archive adds no new text.
+- **Don't** set running text, sources or small labels in red; red is for marks, dots, underlines and large labels.
+- **Don't** use weight 800 or -0.05em tracking anywhere but the wordmark.
+- **Don't** put the date or any daily variation inside the logo.
+- **Don't** add shadows, gradients or rounded cards; surfaces are flat and square, and only buttons are pills.
+- **Don't** hard-code a hex or rgba for chrome, accent or grey in a day's `viz.js`; a literal color will not turn with the page (subject tones that must stay fixed, like the daylight map's night and day, are the exception).

@@ -36,7 +36,7 @@
 	const people = [];
 	groups.forEach(g => { for (let i = 0; i < g.n; i++) people.push({ g, red: g.k === lead && i >= g.n - margin }); });
 
-	let sel = -1;                                 // hovered group index
+	let sel = groups.findIndex(g => g.k === CD.state.get("g"));   // the chosen group, -1 = the overview
 	let walk = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 
 	function readout() {
@@ -138,25 +138,18 @@
 		requestAnimationFrame(step);
 	}
 
-	function pick(e) {
-		if (!geo) return;
-		const r = cv.getBoundingClientRect(), px = e.clientX - r.left;
-		const b = geo.boxes.find(b => px >= b.x - geo.cell * 0.5 && px <= b.x + b.w + geo.cell * 0.5);
-		const i = b ? b.gi : -1;
-		if (i !== sel) { sel = i; schedule(); }
-	}
-	cv.addEventListener("pointermove", pick);
-	cv.addEventListener("pointerdown", pick);
-	cv.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { sel = -1; schedule(); } });
-	cv.addEventListener("keydown", e => {
-		if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-			e.preventDefault();
-			const n = groups.length; sel = sel < 0 ? 0 : (sel + (e.key === "ArrowRight" ? 1 : -1) + n) % n; schedule();
-		}
-		if (e.key === "Escape") { sel = -1; schedule(); }
+	const pick = CD.selection({ initial: sel, key: "g", encode: i => groups[i].k, onChange: i => { sel = i; schedule(); } });
+	CD.bindSelection(cv, pick, {
+		at: e => {
+			if (!geo) return -1;
+			const r = cv.getBoundingClientRect(), px = e.clientX - r.left;
+			const b = geo.boxes.find(b => px >= b.x - geo.cell * 0.5 && px <= b.x + b.w + geo.cell * 0.5);
+			return b ? b.gi : -1;
+		},
+		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : groups.length - 1) : (from + dir + groups.length) % groups.length
 	});
 
 	// the image is always the finished picture, even if people are still walking on screen
-	CD.exporter = { draw: (c, x, y, w, h, u) => { const k = walk; walk = 1; draw(c, x, y, w, h, u * 1.6); walk = k; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const k = walk; walk = 1; draw(c, x, y, w, h, u * 1.6); walk = k; } };
 	CD.town = { groups, margin, perPerson };
 })();

@@ -13,14 +13,15 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 
 ## Navigation (8 Nov 2026)
 
-- **Home (`/`) is every day as a grid,** newest first: the newest leads at twice the size with its intro, the rest follow as tiles of their link-preview image, date and title. Drafts are left out unless the URL has `?drafts`. At night the preview images are inverted (with the hue turned back) so they sit on the black page.
+- **Home (`/`) is every day as a grid,** newest first: the newest leads at twice the size with its intro, the rest follow as tiles of their link-preview image, date and title. Drafts are left out unless the URL has `?drafts`. Each tile shows the day's preview in the reader's theme: `thumb.webp` and `thumb-1200.webp` by day, `thumb-night.webp` and `thumb-night-1200.webp` by night, with the first two tiles loaded at once and the rest lazily.
 - **On a day page,** the top bar holds the logo (home), the date between ‹ and › (previous and next day, built by `kit/cd.js` from `kit/days.js`), All days (home) and Share. On phones (720 px and under) the arrows move to a bar at the bottom: previous day · All days · next day, each at least 44 px tall. A draft steps through drafts too.
 - There is no menu panel any more; the archive is linked from the home page's top bar and footer.
 
 ## How a day works
 
 - URL: `casualdata.com/YYYY-MM-DD/`, a folder named for the day's date at the root. The query string holds the reader's selection (for example `?d=200&lat=-34`), so a shared link opens the same view.
-- One screen: `body.cd-day` is a 100dvh grid made of a bar, a head (title, dek and live readout), the stage (a canvas) and a footer (source). Nothing scrolls.
+- One screen: `body.cd-day` is a 100dvh grid made of a bar, a head (title, dek and live readout), the stage (a canvas) and a footer (source). The stage keeps a minimum height (`--stage-min`); when the screen is too short for it (large text, a phone on its side) the page scrolls, and the phone bottom bar stays pinned.
+- The canvas is `role="application"` with `aria-roledescription="interactive chart"`, and its `aria-label` says what it shows and which keys move the reading.
 - Share sheet (`kit/cd.js`): copy the link, the native share sheet (with the image attached where supported), and PNG downloads at 1080×1350 (4:5) and 1600×900 (16:9). The image holds only the visualization, the date and casualdata.com. The day's code supplies `CD.exporter = { draw(ctx, x, y, w, h, scale) }` and the kit adds the date line.
 - **The image has no title, so the chart states the point.** Every piece writes its one takeaway into the drawing (a count like "30 of 31 moved left", or a fact on the red mark), so the shared image makes sense on its own.
 - **The exporter always draws the finished frame.** A piece that animates on load sets its animation value to 1 while `CD.exporter.draw` runs and restores it after, so a reader who shares in the first second, or from a background tab, never gets a half-drawn image.
@@ -32,9 +33,9 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 ## Adding a day
 
 1. Copy the latest day's folder to a folder named for the new date (for example `2026-11-06/`) and change `data-day`, the title, dek, meta tags and `data-source`.
-2. Write `viz.js`: draw into the stage canvas, make the drawing function reusable for export, and keep the reader's state in the URL.
+2. Write `viz.js`: draw into the stage canvas, make the drawing function reusable for export, and wire the reader's reading through `CD.selection` and `CD.bindSelection` (`kit/cd.js`): pointing previews, a click, tap or arrow key pins, Escape and Home go back to the overview, and only the pinned reading goes into the link. Add `readout` to `CD.exporter` so the share panel can name what is shared.
 3. Add the day to `kit/days.js`.
-4. Render its link-preview image with `node tools/cards.js YYYY-MM-DD` (a local server on port 8000 must be running). It writes `/YYYY-MM-DD/card.png`, 1200×630 in the day theme, through the same `CD.render` the share sheet uses, and the page's `og:image` tags point at it. Render it again whenever the day's data changes.
+4. Render its images with `node tools/cards.js YYYY-MM-DD` (a local server on port 8000 must be running). It writes `/YYYY-MM-DD/card.png`, 1200×630 in the day theme, through the same `CD.render` the share sheet uses (the page's `og:image` tags point at it), and, when `cwebp` is installed, the home grid's four thumbnails from a day and a night render. Render them again whenever the day's data changes.
 
 ## Launched
 

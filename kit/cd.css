@@ -71,7 +71,7 @@ button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ---------- the mark ---------- */
-/* {casual: data} is the name; {●} is the symbol (favicon, stamps, tight spaces) */
+/* {casualdata} is the logo; {•} is its icon, where the name does not fit (favicon, tight top bars) */
 .cd-mark { display: inline-flex; align-items: center; text-decoration: none; flex: none; }
 .cd-mark img { height: 20px; width: auto; display: block; }
 /* two wordmark files, one per theme: .wm-d for the black page, .wm-l for the white one */
@@ -83,9 +83,12 @@ button { font: inherit; color: inherit; }
 .cd-meta b { font-weight: 400; color: var(--ink); }
 
 /* ---------- one-screen stage ---------- */
+/* One screen when it fits: the chart takes the height left over. When it would fall below a readable
+   height (large text, a phone on its side), the page scrolls instead of squeezing or clipping it. */
 body.cd-day {
-	height: 100dvh; overflow: hidden;
-	display: grid; grid-template-rows: auto auto 1fr auto; grid-template-columns: minmax(0, 1fr);
+	--stage-min: clamp(240px, 40dvh, 420px);
+	height: auto; min-height: 100dvh;
+	display: grid; grid-template-rows: auto auto minmax(var(--stage-min), 1fr) auto auto; grid-template-columns: minmax(0, 1fr);
 }
 .cd-bar {
 	display: flex; align-items: center; gap: 20px;
@@ -124,6 +127,8 @@ body.cd-day {
 .cd-foot {
 	display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
 	padding: 10px var(--gut) 14px;
+	/* sources are sentences, so they keep their own case; capitals stay for short labels */
+	text-transform: none; letter-spacing: 0; font-size: 12.5px; line-height: 1.45;
 }
 .cd-foot a { text-decoration-color: var(--ink-3); text-underline-offset: 3px; }
 
@@ -149,7 +154,6 @@ a.cd-btn { text-decoration: none; }
 }
 a.cd-arrow:hover, a.cd-arrow:focus-visible { background: var(--rule); }
 span.cd-arrow { color: var(--ink-3); }
-body.cd-day { grid-template-rows: auto auto 1fr auto auto; }
 .cd-daynav { display: none; }
 
 @media (max-width: 720px) {
@@ -158,9 +162,11 @@ body.cd-day { grid-template-rows: auto auto 1fr auto auto; }
 	.cd-btn { min-width: 44px; min-height: 44px; justify-content: center; }
 	.cd-mark { min-height: 44px; }
 	.cd-daynav {
-		display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch;
+		display: grid; grid-template-columns: 1fr auto auto 1fr; align-items: stretch;
 		border-top: 1px solid var(--ink);
 		padding: 0 var(--gut) env(safe-area-inset-bottom, 0px);
+		/* when a page has to scroll (large text, a short screen), the bar stays in thumb reach */
+		position: sticky; bottom: 0; background: var(--paper); z-index: 2;
 	}
 	.cd-daynav a {
 		min-height: 52px; display: flex; align-items: center; gap: 6px; text-decoration: none;
@@ -168,7 +174,18 @@ body.cd-day { grid-template-rows: auto auto 1fr auto auto; }
 	}
 	.cd-daynav a span { font: 400 20px/1 var(--sans); padding-bottom: 2px; }
 	.cd-daynav a[rel="next"] { justify-content: flex-end; }
-	.cd-daynav .all { padding: 0 18px; justify-content: center; border-inline: 1px solid var(--rule); }
+	.cd-daynav .all { padding: 0 16px; justify-content: center; border-left: 1px solid var(--rule); }
+	/* Share moves down here from the top bar, the one filled control, in thumb reach */
+	.cd-actions .solid { display: none; }
+	.cd-daynav .share {
+		align-self: center; margin: 0 10px 0 4px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px;
+		background: var(--ink); color: var(--paper); cursor: pointer;
+		font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em;
+	}
+	.cd-daynav .soon {
+		display: flex; align-items: center; justify-content: flex-end; color: var(--ink-2);
+		font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em;
+	}
 }
 
 /* ---------- home: every day, as a grid ---------- */
@@ -186,14 +203,13 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 	gap: clamp(28px, 3.5vw, 48px) clamp(16px, 2vw, 28px);
 }
 .tile a { display: grid; gap: 8px; align-content: start; text-decoration: none; }
+/* The preview is the day's share image cropped to its chart: the image's foot (logo, date, address)
+   would only repeat the caption under it */
 .tile img {
-	display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630; object-fit: cover;
+	display: block; width: 100%; height: auto; aspect-ratio: 1200 / 548; object-fit: cover; object-position: 50% 0;
 	background: var(--rule); outline: 1px solid var(--rule); outline-offset: -1px; margin-bottom: 4px;
 }
-/* The preview images are drawn in the day theme; at night they are inverted with the hue turned back,
-   so white becomes black and the red stays red */
-:root[data-theme="dark"] .tile img { filter: invert(1) hue-rotate(180deg); outline-color: #D3D4D6; /* inverts to the night rule */ }
-.tile .t { font-size: 19px; font-weight: 500; letter-spacing: -.012em; line-height: 1.22; text-wrap: balance; }
+.tile .t { font-size: 19px; font-weight: 500; letter-spacing: -.012em; line-height: 1.28; text-wrap: balance; }
 .tile .dek { color: var(--ink-2); font-size: 16px; line-height: 1.45; max-width: 52ch; }
 .tile.lead { grid-column: span 2; grid-row: span 2; }
 .tile.lead .t { font-size: clamp(28px, 3vw, 46px); font-weight: 400; letter-spacing: -.025em; line-height: 1.04; max-width: 20ch; }
@@ -201,6 +217,21 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 .tile a:hover .t, .tile a:focus-visible .t { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .tile a:focus-visible { outline: none; }
 .tile a:focus-visible img { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* A last tile that widens to fill its row sits beside its caption instead of above it */
+@media (min-width: 961px) {
+	.tile.span-l2 { grid-column: span 2; }
+	.tile.span-l3 { grid-column: 1 / -1; }
+	.tile:is(.span-l2, .span-l3) a { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 1fr auto auto; column-gap: clamp(16px, 2vw, 28px); }
+	.tile.span-l3 a { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+	.tile:is(.span-l2, .span-l3) img { grid-row: 1 / -1; margin-bottom: 0; }
+	/* the caption sits at the foot of the image, beside it, at the ordinary tile size */
+	.tile:is(.span-l2, .span-l3) .cd-meta { align-self: end; }
+}
+@media (min-width: 601px) and (max-width: 960px) {
+	.tile.span-m2 { grid-column: 1 / -1; }
+}
+.cd-textlink { font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); padding: 14px 0; }
+.cd-textlink:hover { text-decoration-color: var(--ink); }
 .cd-homefoot {
 	margin-top: clamp(56px, 9vh, 112px); padding: 18px var(--gut) 24px; border-top: 1px solid var(--ink);
 	display: flex; justify-content: space-between; align-items: baseline; gap: 12px 32px; flex-wrap: wrap;
@@ -223,7 +254,7 @@ dialog.cd-panel {
 	width: min(420px, 100vw); background: var(--paper); color: var(--ink);
 	border-left: 1px solid var(--ink);
 }
-dialog.cd-panel::backdrop { background: rgb(0 0 0 / .6); }
+dialog.cd-panel::backdrop { background: rgb(0 0 0 / .35); }   /* light enough that the view being shared stays visible */
 .cd-panel .in { padding: 14px var(--gut) 32px; display: grid; gap: 28px; }
 .cd-panel .top { display: flex; justify-content: space-between; align-items: center; }
 .cd-panel h2 { margin: 0 0 10px; font: 400 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); }
@@ -238,6 +269,7 @@ dialog.cd-panel::backdrop { background: rgb(0 0 0 / .6); }
 .cd-list .n { font: 400 12px/1 var(--mono); color: var(--ink-2); }
 .cd-list [aria-current] .n::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); margin-right: 6px; vertical-align: 1px; }
 .cd-panel p { margin: 0; color: var(--ink-2); }
+.cd-panel p b { font-weight: 500; color: var(--ink); }
 .cd-toast {
 	position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
 	background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 999px;

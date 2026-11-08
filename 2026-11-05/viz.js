@@ -49,7 +49,12 @@
 		ctx.textAlign = "center"; ctx.fillStyle = C.ink2;
 		ctx.fillText(narrow ? "2024" : "2024 VOTE FOR PRESIDENT", zx, y0 + ph + 20 * s);
 		ctx.textAlign = "right"; ctx.fillText("← TOWARD THE DEMOCRATS", zx - 10 * s, y0 - 14 * s);
-		ctx.textAlign = "left"; ctx.fillText(narrow ? "TOWARD R →" : "TOWARD THE REPUBLICANS →", zx + 10 * s, y0 - 14 * s);
+		// the Republican side is narrow: shorten the label until it fits, and pin it to the edge if it still doesn't
+		ctx.textAlign = "left";
+		let rLabel = narrow ? "TOWARD R →" : "TOWARD THE REPUBLICANS →";
+		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) rLabel = "R →";
+		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) { ctx.textAlign = "right"; ctx.fillText(rLabel, x0 + pw, y0 - 14 * s); }
+		else ctx.fillText(rLabel, zx + 10 * s, y0 - 14 * s);
 
 		// arrows
 		rows.forEach((d, i) => {
@@ -63,8 +68,11 @@
 			ctx.beginPath(); ctx.moveTo(tip, yy); ctx.lineTo(tip - dir * hd, yy - hd * 0.6); ctx.lineTo(tip - dir * hd, yy + hd * 0.6); ctx.closePath();
 			if (d.won) ctx.fill(); else { ctx.fillStyle = C.paper; ctx.fill(); ctx.lineWidth = 1.2 * s; ctx.strokeStyle = col; ctx.stroke(); }
 			// the state's code just past the tip
-			if (grow === 1 && rh >= 9 * s) {
-				ctx.font = `400 ${Math.min(11.5 * s, rh * 0.7)}px ${C.mono}`; ctx.textBaseline = "middle";
+			// rows too short for every code (small phones) still name the arrows the chart calls out:
+			// the reader's selection and the one that moved the other way
+			const roomy = rh >= 9 * s;
+			if (grow === 1 && (roomy || on || odd)) {
+				ctx.font = `400 ${roomy ? Math.min(11.5 * s, rh * 0.7) : 11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle";
 				ctx.textAlign = odd ? "left" : "right"; ctx.fillStyle = on || odd ? C.ink : C.ink2;
 				// a hollow head means the race is uncalled; say so beside it, not only in the footer
 				let tag = d.won ? d.s : odd ? `${d.s} · STILL COUNTING` : `STILL COUNTING · ${d.s}`;
@@ -129,30 +137,16 @@
 		requestAnimationFrame(step);
 	}
 
-	let urlT;
-	function select(i) {
-		sel = i; schedule();
-		clearTimeout(urlT);
-		urlT = setTimeout(() => history.replaceState(null, "", sel < 0 ? location.pathname : `?s=${rows[sel].s}`), 150);
-	}
-	function fromPointer(e) {
-		if (!geo) return;
-		const r = cv.getBoundingClientRect(), py = e.clientY - r.top;
-		const i = Math.floor((py - geo.y0) / geo.rh);
-		if (i >= 0 && i < rows.length && i !== sel) select(i);
-	}
-	cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); fromPointer(e); });
-	cv.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || e.buttons) fromPointer(e); });
-	cv.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") select(-1); });
-	cv.addEventListener("keydown", e => {
-		if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-			e.preventDefault();
-			const n = rows.length, step = e.key === "ArrowDown" ? 1 : -1;
-			select(sel < 0 ? (step > 0 ? 0 : n - 1) : (sel + step + n) % n);
-		}
-		if (e.key === "Escape") select(-1);
+	const pick = CD.selection({ initial: sel, key: "s", encode: i => rows[i].s, onChange: i => { sel = i; schedule(); } });
+	CD.bindSelection(cv, pick, {
+		at: e => {
+			if (!geo) return -1;
+			const r = cv.getBoundingClientRect(), i = Math.floor((e.clientY - r.top - geo.y0) / geo.rh);
+			return i >= 0 && i < rows.length ? i : -1;
+		},
+		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : rows.length - 1) : (from + dir + rows.length) % rows.length
 	});
 
 	// the image is always the finished picture, even if the arrows are still growing on screen
-	CD.exporter = { draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false); grow = g; } };
 })();

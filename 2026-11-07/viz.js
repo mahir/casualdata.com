@@ -30,7 +30,7 @@
 	const HERO = 0;                                              // the abortion row carries the red
 	const LIB = 26, CON = 20;                                    // points; left = more liberal
 
-	let sel = -1;
+	let sel = -1;                                                // the chosen measure, -1 = the overview; read from ?m= below
 	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 	const pct = v => `${Math.round(v)}%`;
 	const pts1 = v => { const n = Math.round(Math.abs(v)); return `${n} pt${n === 1 ? "" : "s"}`; };
@@ -72,9 +72,10 @@
 		ctx.fillStyle = C.ink; ctx.fillRect(zx - 0.75 * s, y0 - 6 * s, 1.5 * s, ph + 12 * s);
 
 		// rows
-		const placed = [];
+		const placed = [], texts = [];                      // texts: every heading and summary, which the reading chip keeps clear of
 		const backed = (str, tx, ty, size) => {               // text on a page-coloured backing, so no line runs through it
 			const tw = ctx.measureText(str).width, lx = ctx.textAlign === "right" ? tx - tw : tx;
+			texts.push({ x: lx - 4 * s, y: ty - 2 * s, w: tw + 8 * s, h: size + 4 * s });
 			const col = ctx.fillStyle; ctx.fillStyle = C.paper; ctx.fillRect(lx - 4 * s, ty - 2 * s, tw + 8 * s, size + 4 * s);
 			ctx.fillStyle = col; ctx.fillText(str, tx, ty);
 		};
@@ -113,6 +114,8 @@
 				ctx.beginPath(); ctx.arc(q.x, q.y, red || on ? r * 1.15 : r, 0, Math.PI * 2);
 				ctx.fillStyle = red ? C.red : on ? C.ink : C.ink2; ctx.fill();
 				ctx.lineWidth = 1.5 * s; ctx.strokeStyle = on && !red ? C.ink : C.paper; ctx.stroke();
+				// the chosen dot gets a ring, so it reads as chosen in a row of look-alikes
+				if (on) { ctx.beginPath(); ctx.arc(q.x, q.y, r * 1.15 + 4 * s, 0, Math.PI * 2); ctx.lineWidth = 1.5 * s; ctx.strokeStyle = C.ink; ctx.stroke(); }
 			}
 		});
 		// state codes on the far dots of each row, where there is room
@@ -144,7 +147,9 @@
 		}
 		if (sel >= 0 && grow === 1) {
 			const q = placed[sel], [value, context] = readout();
-			CD.label(ctx, q.x + r, q.y, value, context, s, { x: x0, y: y0, w: pw, h: ph }, q.x - r);
+			// the chip keeps clear of the headings and of every other dot
+			const dots = placed.map((o, i) => o && i !== sel ? { x: o.x - r - 2 * s, y: o.y - r - 2 * s, w: 2 * r + 4 * s, h: 2 * r + 4 * s } : null).filter(Boolean);
+			CD.label(ctx, q.x + r + 4 * s, q.y, value, context, s, { x: x0, y: y0, w: pw, h: ph }, q.x - r - 4 * s, [...texts, ...dots]);
 		}
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		return { placed, r };
@@ -171,27 +176,22 @@
 		const step = t => { const k = Math.min(1, Math.max(0, (t - t0) / 900)); grow = k < 1 ? 1 - Math.pow(1 - k, 3) : 1; paint(); if (k < 1) requestAnimationFrame(step); };
 		requestAnimationFrame(step);
 	}
-	function pick(e) {
-		if (!geo) return;
-		const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
-		let best = -1, bd = 20 * 20;
-		geo.placed.forEach((q, i) => { if (!q) return; const d = (q.x - mx) ** 2 + (q.y - my) ** 2; if (d < bd) { bd = d; best = i; } });
-		if (best !== sel) { sel = best; schedule(); }
-	}
-	cv.addEventListener("pointermove", pick);
-	cv.addEventListener("pointerdown", pick);
-	cv.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { sel = -1; schedule(); } });
 	// keys walk the rows top to bottom, liberal to conservative within each
 	const order = pts.map((p, i) => i).sort((a, b) => pts[a].g - pts[b].g || pts[b].gap - pts[a].gap);
-	cv.addEventListener("keydown", e => {
-		if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-			e.preventDefault();
-			const k = order.indexOf(sel), n = order.length;
-			sel = order[k < 0 ? 0 : (k + (e.key === "ArrowRight" ? 1 : -1) + n) % n]; schedule();
-		}
-		if (e.key === "Escape") { sel = -1; schedule(); }
+	const m0 = parseInt(CD.state.get("m"), 10);
+	if (m0 >= 0 && m0 < pts.length) sel = m0;
+	const pick = CD.selection({ initial: sel, key: "m", encode: i => i, onChange: i => { sel = i; schedule(); } });
+	CD.bindSelection(cv, pick, {
+		at: e => {
+			if (!geo) return -1;
+			const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+			let best = -1, bd = 20 * 20;
+			geo.placed.forEach((q, i) => { if (!q) return; const d = (q.x - mx) ** 2 + (q.y - my) ** 2; if (d < bd) { bd = d; best = i; } });
+			return best;
+		},
+		step: (from, dir) => { const k = order.indexOf(from), n = order.length; return order[k < 0 ? (dir > 0 ? 0 : n - 1) : (k + dir + n) % n]; }
 	});
 	// the image is always the finished picture, even if the dots are still moving out on screen
-	CD.exporter = { draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
 	CD.measures = { pts, GROUPS };
 })();

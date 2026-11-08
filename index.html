@@ -17,7 +17,7 @@
 <header class="cd-bar">
   <a class="cd-mark" href="/" aria-current="page" aria-label="casualdata"><img class="wm wm-d" src="/kit/wordmark.svg" alt="" width="110" height="20"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="" width="110" height="20"><img class="sym wm-d" src="/kit/mark.svg" alt="" width="23" height="20"><img class="sym wm-l" src="/kit/mark-light.svg" alt="" width="23" height="20"></a>
   <p class="cd-meta" style="margin:0" id="count"></p>
-  <div class="cd-actions"><a class="cd-btn" href="/work/">Work 2007–2014</a></div>
+  <a class="cd-textlink" href="/work/">Work 2007–2014</a>
 </header>
 
 <main>
@@ -34,15 +34,27 @@
 <script src="/kit/cd.js"></script>
 <script>
   // Newest first. The newest day leads, large, with its intro; the rest follow as tiles.
+  // Each tile shows the day's preview in the reader's theme (thumb.webp by day, thumb-night.webp by night).
   const list = CD.days.slice().reverse();
+  const dark = () => document.documentElement.dataset.theme === "dark";
+  const srcset = d => { const n = dark() ? "thumb-night" : "thumb"; return `${d.path}${n}.webp 720w, ${d.path}${n}-1200.webp 1200w`; };
   document.getElementById("count").textContent = `${list.length} days so far`;
-  document.getElementById("days").innerHTML = list.map((d, i) => `
+  const grid = document.getElementById("days");
+  grid.innerHTML = list.map((d, i) => `
     <li class="tile${i === 0 ? " lead" : ""}"><a href="${d.path}">
-      <img src="${d.path}card.png" width="1200" height="630" alt="" loading="${i < 4 ? "eager" : "lazy"}">
+      <img srcset="${srcset(d)}" sizes="${i === 0 ? "(max-width: 600px) 100vw, 66vw" : "(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"}" src="${d.path}thumb.webp" width="1200" height="630" alt="" ${i < 2 ? 'fetchpriority="high"' : 'loading="lazy"'}>
       <span class="cd-meta">${i === 0 ? '<i class="dot" aria-hidden="true"></i>Latest · ' : ""}${CD.fmtDate(d.date)}</span>
       <span class="t">${d.title}</span>
       ${i === 0 && d.dek ? `<span class="dek">${d.dek}</span>` : ""}
     </a></li>`).join("");
+  // No half-empty last row: when the last row has room left over, its last tile widens to fill it.
+  // Desktop: the lead takes two columns and two rows, with two tiles beside it, then rows of three.
+  // Tablet: the lead takes a row of its own, then rows of two.
+  const tiles = grid.querySelectorAll(".tile"), rest3 = (list.length - 3) % 3, rest2 = (list.length - 1) % 2;
+  if (list.length > 3 && rest3) tiles[list.length - 1].classList.add(rest3 === 1 ? "span-l3" : "span-l2");
+  if (list.length > 1 && rest2) tiles[list.length - 1].classList.add("span-m2");
+  // the theme turns at 07:00 and 19:00 while the page is open
+  document.addEventListener("cd-theme", () => grid.querySelectorAll("img").forEach((img, i) => { img.srcset = srcset(list[i]); }));
 </script>
 </body>
 </html>
