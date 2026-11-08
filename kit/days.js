@@ -20,7 +20,7 @@ window.CD_DAYS = [
 		dek: "The 2026 electorate as a town of 100."
 	},
 	{
-		date: "2026-11-07", draft: true,
+		date: "2026-11-07",
 		path: "/2026-11-07/",
 		title: "On the issues, voters broke from their party",
 		dek: "Every 2026 ballot measure against the state’s vote for president."
