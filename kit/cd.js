@@ -74,7 +74,7 @@
 	let tt;
 	CD.toast = msg => { toast.textContent = msg; toast.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove("on"), 1800); };
 
-	// ---------- panels ----------
+	// ---------- the share panel ----------
 	function panel(id, title, body) {
 		const d = document.createElement("dialog");
 		d.className = "cd-panel"; d.id = id; d.setAttribute("aria-label", title);
@@ -84,20 +84,30 @@
 		return d;
 	}
 
-	const dayItems = days.slice().reverse().map(d =>
-		`<li><a href="${d.path}"${d.date === id ? ' aria-current="page"' : ""}><span class="n">${shortDate(d.date)}</span><span>${d.title}</span></a></li>`).join("");
-
-	const menu = panel("cd-menu", "Menu", `
-		<section><h2>Daily</h2><ul class="cd-list">${dayItems}</ul></section>
-		<section><h2>Work 2007–2014</h2><ul class="cd-list">
-			<li><a href="/newsknitter/"><span class="n">2007</span><span>newsknitter</span></a></li>
-			<li><a href="/valuemachine/"><span class="n">2008</span><span>value machine</span></a></li>
-			<li><a href="/newshaper/"><span class="n">2009</span><span>newshaper</span></a></li>
-			<li><a href="/socialbits/"><span class="n">2009</span><span>social bits</span></a></li>
-			<li><a href="/senseofpatterns/"><span class="n">2011</span><span>sense of patterns</span></a></li>
-			<li><a href="/work/"><span class="n">all</span><span>The archive</span></a></li>
-		</ul></section>
-		<section><h2>About</h2><p>A new data visualization every day, one screen each. Made by casualdata since 2005. All data is somehow casual.</p></section>`);
+	// ---------- moving between days ----------
+	// A day page gets a stepper around its date in the top bar (‹ date ›) and, on phones, a bar at the
+	// bottom with the previous day, all days and the next day. A draft steps through drafts too.
+	const order = day && day.draft ? all : days;
+	const at = order.findIndex(d => d.date === id);
+	if (day && at > -1) {
+		const prev = order[at - 1], next = order[at + 1];
+		const arrow = (d, rel, glyph) => d
+			? `<a class="cd-arrow" rel="${rel}" href="${d.path}" aria-label="${rel === "prev" ? "Previous" : "Next"} day, ${shortDate(d.date)}">${glyph}</a>`
+			: `<span class="cd-arrow" aria-hidden="true">${glyph}</span>`;
+		const meta = document.querySelector(".cd-bar .cd-meta");
+		if (meta) {
+			const step = document.createElement("nav");
+			step.className = "cd-step"; step.setAttribute("aria-label", "Days");
+			meta.replaceWith(step);
+			step.append(document.createRange().createContextualFragment(arrow(prev, "prev", "‹")), meta, document.createRange().createContextualFragment(arrow(next, "next", "›")));
+		}
+		const bar = document.createElement("nav");
+		bar.className = "cd-daynav"; bar.setAttribute("aria-label", "Days");
+		bar.innerHTML = (prev ? `<a href="${prev.path}" rel="prev"><span aria-hidden="true">‹</span> ${shortDate(prev.date)}</a>` : `<span></span>`)
+			+ `<a href="/" class="all">All days</a>`
+			+ (next ? `<a href="${next.path}" rel="next">${shortDate(next.date)} <span aria-hidden="true">›</span></a>` : `<span></span>`);
+		document.body.append(bar);
+	}
 
 	const share = panel("cd-share", "Share", `
 		<section><h2>Share this view</h2><p>The link keeps what you have selected.</p></section>
