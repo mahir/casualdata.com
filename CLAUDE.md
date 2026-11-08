@@ -25,7 +25,7 @@ python3 -m http.server 8000          # static pages, from the repo root
 php -S localhost:8000                # only if you need preorder.php to execute
 ```
 
-`.claude/launch.json` defines this same server on port 8731 (named `static`) for the app's preview pane, a second one on port 8732 (named `static-alt`) for when another session already holds 8731, and `daily` on port 8733, which serves the `daily` worktree (`.claude/worktrees/daily`) for work on that branch. `http.server` sends no cache headers, so after editing CSS, force the browser to reload the stylesheet before you measure or screenshot.
+`.claude/launch.json` defines this same server on port 8731 (named `static`) for the app's preview pane, and a second one on port 8732 (named `static-alt`) for when another session already holds 8731. `http.server` sends no cache headers, so after editing CSS, force the browser to reload the stylesheet before you measure or screenshot.
 
 Pages use relative asset paths, so serve from the repo root and open `/<project>/`. The `.shtml` error pages run `/cgi-sys/fourohfour.cgi` through server-side includes, and that script exists only on cPanel hosts, so these pages do nothing locally.
 
