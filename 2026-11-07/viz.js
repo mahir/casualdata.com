@@ -1,118 +1,153 @@
-// 2026-11-07 — ballot measures against the party vote.
-// x: Harris's share of the state's two-party vote for president in 2024.
-// y: the share of the measure's votes for the side Democrats campaigned for.
-// On the diagonal, voters took the Democratic side exactly as often as they voted for Harris.
-// Above it, the measure did better than the party; below it, worse.
+// 2026-11-07 — ballot measures, grouped by issue, against the party vote.
+// Each measure's gap: the share that took the side Democrats campaigned for, minus Harris's share
+// of the state's two-party vote for president in 2024. A positive gap means the state voted more
+// liberally on the issue than it voted for president; negative, more conservatively.
+// Left is liberal, as on 5 Nov. One row per issue; the abortion row is the one red idea.
 (function () {
 	const C = CD.colors;
+	const GROUPS = [
+		{ key: "abortion", name: "Abortion rights", topics: ["abortion"] },
+		{ key: "trans", name: "Transgender policy", topics: ["transgender policy"] },
+		{ key: "taxes", name: "Taxes", topics: ["taxes", "taxes/education"] },
+		{ key: "voting", name: "Voting and elections", topics: ["voting rules", "ranked-choice voting", "redistricting"] },
+		{ key: "other", name: "Everything else", topics: null },
+	];
+	const groupOf = t => GROUPS.findIndex(g => g.topics && g.topics.includes(t)) + 1 || GROUPS.length;
 	const pts = window.MEASURES.filter(m => m.dside && window.PRES24[m.s]).map(m => {
 		const [t, h] = window.PRES24[m.s];
-		const x = h / (h + t) * 100;
-		const y = (m.dside === "yes" ? m.yes : m.no) / (m.yes + m.no) * 100;
-		return { ...m, x, y, gap: y - x };
+		const harris = h / (h + t) * 100;
+		const dem = (m.dside === "yes" ? m.yes : m.no) / (m.yes + m.no) * 100;
+		return { ...m, harris, dem, gap: dem - harris, g: groupOf(m.topic) - 1 };
 	});
-	const above = pts.filter(p => p.gap > 0).length;
-	const star = pts.reduce((a, p) => Math.abs(p.gap) > Math.abs(a.gap) ? p : a, pts[0]);   // the one red dot
-	const LO = 20, HI = 80;
+	GROUPS.forEach((g, k) => {
+		const mine = pts.filter(p => p.g === k), lib = mine.filter(p => p.gap > 0).length, n = mine.length;
+		g.n = n; g.lib = lib; g.con = n - lib;
+		g.avg = mine.reduce((a, p) => a + p.gap, 0) / n;
+		g.sum = lib === n ? `ALL ${n} MORE LIBERAL` : lib === 0 ? `ALL ${n} MORE CONSERVATIVE`
+			: lib > n - lib ? `${lib} OF ${n} MORE LIBERAL` : lib < n - lib ? `${n - lib} OF ${n} MORE CONSERVATIVE` : `SPLIT ${lib}–${n - lib}`;
+		g.short = lib === n ? `ALL ${n} ←` : lib === 0 ? `ALL ${n} →` : lib > n - lib ? `${lib}/${n} ←` : `${n - lib}/${n} →`;
+	});
+	const HERO = 0;                                              // the abortion row carries the red
+	const LIB = 26, CON = 20;                                    // points; left = more liberal
 
 	let sel = -1;
 	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 	const pct = v => `${Math.round(v)}%`;
+	const pts1 = v => { const n = Math.round(Math.abs(v)); return `${n} pt${n === 1 ? "" : "s"}`; };
+	const result = p => p.passed ? "passed" : p.passed === false ? "failed" : "still counting";
 
 	function readout() {
-		if (sel < 0) return [`${above} of ${pts.length} measures beat the party`, `measured against Harris's 2024 share in each state`];
+		if (sel < 0) {
+			const a = GROUPS[0], t = GROUPS[1];
+			return [`Abortion rights ran ahead of Harris in all ${a.n} states`, `transgender limits ran ahead of Trump in all ${t.n}`];
+		}
 		const p = pts[sel];
 		return [`${p.stateName}: ${p.label}`,
-			`${pct(p.y)} took the Democratic side · Harris ${pct(p.x)} · ${p.passed ? "passed" : p.passed === false ? "failed" : "counting"}`];
+			`${pts1(p.gap)} more ${p.gap > 0 ? "liberal" : "conservative"} than the state's 2024 vote · ${result(p)}`];
 	}
 
 	function draw(ctx, x, y, w, h, s) {
-		const L = 44 * s, B = 34 * s, T = 16 * s, R = 16 * s;
-		const side = Math.min(w - L - R, h - T - B);
-		const x0 = x + L + (w - L - R - side) / 2, y0 = y + T + (h - T - B - side) / 2;
-		const X = v => x0 + (v - LO) / (HI - LO) * side, Y = v => y0 + side - (v - LO) / (HI - LO) * side;
+		const narrow = w < 560 * s;
+		const T = 30 * s, B = 26 * s, padX = 6 * s;
+		const x0 = x + padX, pw = w - 2 * padX, y0 = y + T, ph = h - T - B;
+		const X = v => x0 + (LIB - v) / (LIB + CON) * pw;          // +gap (liberal) to the left
+		const rh = ph / GROUPS.length;
+		const head = Math.max(15 * s, Math.min(24 * s, rh * 0.2));
+		const r = Math.max(3.5 * s, Math.min(6 * s, rh * 0.06));
+		const zx = X(0);
 
-		// grid
-		ctx.font = `400 ${11.5 * s}px ${C.mono}`;
-		for (let v = LO; v <= HI; v += 10) {
-			ctx.fillStyle = C.rule;
-			ctx.fillRect(X(v), y0, 1, side); ctx.fillRect(x0, Y(v), side, 1);
-			ctx.fillStyle = C.ink2; ctx.textAlign = "center"; ctx.textBaseline = "top";
-			ctx.fillText(`${v}%`, X(v), y0 + side + 8 * s);
-			ctx.textAlign = "right"; ctx.textBaseline = "middle";
-			ctx.fillText(`${v}%`, x0 - 8 * s, Y(v));
+		// scale
+		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "alphabetic";
+		for (const t of [20, 10, -10]) {
+			ctx.fillStyle = C.rule; ctx.fillRect(Math.round(X(t)), y0, 1, ph);
+			ctx.fillStyle = C.ink2; ctx.textAlign = "center";
+			ctx.fillText(t === 20 && !narrow ? `${t} PTS` : `${Math.abs(t)}`, X(t), y0 + ph + 18 * s);
 		}
-		// the diagonal: the measure did exactly as well as the party
-		ctx.strokeStyle = C.ink; ctx.lineWidth = 1.2 * s;
-		ctx.beginPath(); ctx.moveTo(X(LO), Y(LO)); ctx.lineTo(X(HI), Y(HI)); ctx.stroke();
-		// the diagonal's name sits at its far end, past the last dots; phones leave it to the corner notes
-		if (side >= 460 * s) {
-		ctx.save(); ctx.translate(X(HI - 0.5), Y(HI - 0.5)); ctx.rotate(-Math.PI / 4);
-		ctx.textAlign = "right"; ctx.textBaseline = "bottom"; ctx.fillStyle = C.ink2;
-		ctx.fillText("SAME AS THE PARTY", 0, -5 * s); ctx.restore();
-		}
-		// the count, written into the empty corners so the image carries it without a title
-		const big = Math.max(18 * s, Math.min(34 * s, side * 0.07));
-		ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.fillStyle = C.ink;
-		ctx.font = `400 ${big}px ${C.sans}`;
-		ctx.fillText(`${above} of ${pts.length}`, x0 + 10 * s, y0 + 10 * s);
-		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = C.ink2;
-		ctx.fillText("BEAT THE PARTY ↑", x0 + 10 * s, y0 + 16 * s + big);
-		ctx.textAlign = "right"; ctx.textBaseline = "bottom";
-		ctx.fillText(`↓ ${pts.length - above} DID WORSE`, x0 + side - 10 * s, y0 + side - 10 * s);
-		ctx.textAlign = "center"; ctx.textBaseline = "top";
-		ctx.fillText("HARRIS'S SHARE OF THE STATE, 2024 →", x0 + side / 2, y0 + side + 22 * s);
-		ctx.save(); ctx.translate(x0 - 34 * s, y0 + side / 2); ctx.rotate(-Math.PI / 2);
-		ctx.textBaseline = "bottom"; ctx.fillText("VOTE FOR THE DEMOCRATIC SIDE →", 0, 0); ctx.restore();
+		ctx.fillStyle = C.ink2; ctx.textAlign = "center";
+		ctx.fillText(narrow ? "SAME" : "SAME AS FOR PRESIDENT", zx, y0 + ph + 18 * s);
+		ctx.textAlign = "right"; ctx.fillText(narrow ? "← MORE LIBERAL" : "← MORE LIBERAL THAN THE STATE VOTED IN 2024", zx - 10 * s, y0 - 14 * s);
+		ctx.textAlign = "left"; ctx.fillText(narrow ? "CONSERVATIVE →" : "MORE CONSERVATIVE →", zx + 10 * s, y0 - 14 * s);
 
-		// points: a stem from the diagonal shows the gap
-		const r = 5 * s;
-		pts.forEach((p, i) => {
-			const px = X(p.x), py = Y(p.x + p.gap * grow), on = i === sel, red = p === star;
-			ctx.strokeStyle = red ? C.red : on ? C.ink : C.ink3; ctx.lineWidth = 1 * s;
-			ctx.beginPath(); ctx.moveTo(px, Y(p.x)); ctx.lineTo(px, py); ctx.stroke();
-			ctx.beginPath(); ctx.arc(px, py, red ? r * 1.3 : r, 0, Math.PI * 2);
-			ctx.fillStyle = red ? C.red : on ? C.ink : C.ink2; ctx.fill();
-			ctx.lineWidth = 1.5 * s; ctx.strokeStyle = C.paper; ctx.stroke();
+		// the zero line, the one reference; headings and dots are drawn over it
+		ctx.fillStyle = C.ink; ctx.fillRect(zx - 0.75 * s, y0 - 6 * s, 1.5 * s, ph + 12 * s);
+
+		// rows
+		const placed = [];
+		const backed = (str, tx, ty, size) => {               // text on a page-coloured backing, so no line runs through it
+			const tw = ctx.measureText(str).width, lx = ctx.textAlign === "right" ? tx - tw : tx;
+			const col = ctx.fillStyle; ctx.fillStyle = C.paper; ctx.fillRect(lx - 4 * s, ty - 2 * s, tw + 8 * s, size + 4 * s);
+			ctx.fillStyle = col; ctx.fillText(str, tx, ty);
+		};
+		GROUPS.forEach((g, k) => {
+			const ry = y0 + k * rh;
+			if (k) { ctx.fillStyle = C.rule; ctx.fillRect(x0, Math.round(ry), pw, 1); }
+			// heading: the issue, and how its measures leaned (beside it, or under it on phones)
+			ctx.textBaseline = "top"; ctx.textAlign = "left"; ctx.fillStyle = C.ink;
+			ctx.font = `400 ${head}px ${C.sans}`;
+			const hy = ry + 8 * s;
+			backed(g.name, x0, hy, head);
+			const nameW = ctx.measureText(g.name).width;
+			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = k === HERO ? C.ink : C.ink2;
+			const beside = !narrow && x0 + nameW + 24 * s + ctx.measureText(g.sum).width < x0 + pw;
+			let top = hy + head;
+			if (beside) { ctx.textAlign = "right"; backed(g.sum, x0 + pw, hy + (head - 11.5 * s) * 0.6, 11.5 * s); }
+			else { backed(g.sum, x0, hy + head + 4 * s, 11.5 * s); top += 4 * s + 11.5 * s; }
+
+			// a beeswarm along the axis: each dot takes the nearest free slot to the row's centre line
+			const band0 = top + 6 * s, band1 = ry + rh - 6 * s, cy = (band0 + band1) / 2, half = Math.max(r, (band1 - band0) / 2 - r * 0.5);
+			const mine = pts.map((p, i) => i).filter(i => pts[i].g === k).sort((a, b) => pts[b].gap - pts[a].gap);
+			const here = [];
+			for (const i of mine) {
+				const px = X(pts[i].gap * grow);
+				let py = cy;
+				for (let step = 0; step < 80; step++) {
+					const off = Math.ceil(step / 2) * (r * 0.5) * (step % 2 ? -1 : 1);
+					if (Math.abs(off) > half) break;
+					const cand = cy + off;
+					if (!here.some(q => (q.x - px) ** 2 + (q.y - cand) ** 2 < (2 * r + 1.5 * s) ** 2)) { py = cand; break; }
+				}
+				here.push({ x: px, y: py, i }); placed[i] = { x: px, y: py };
+			}
+			for (const q of here) {
+				const red = k === HERO, on = q.i === sel;
+				ctx.beginPath(); ctx.arc(q.x, q.y, red || on ? r * 1.15 : r, 0, Math.PI * 2);
+				ctx.fillStyle = red ? C.red : on ? C.ink : C.ink2; ctx.fill();
+				ctx.lineWidth = 1.5 * s; ctx.strokeStyle = on && !red ? C.ink : C.paper; ctx.stroke();
+			}
 		});
+		// state codes on the far dots of each row, where there is room
 		if (grow === 1) {
 			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle";
-			const th = 12 * s, lh = 15 * s, taken = [];
-			const free = b => !taken.some(t => b.x < t.x + t.w && t.x < b.x + b.w && b.y < t.y + t.h && t.y < b.y + b.h);
-			// the red dot's note sits in the empty space to its left, ending just short of the dot
-			const showNote = sel < 0 && star;
-			if (showNote) {
-				const name = star.stateName.toUpperCase();
-				const lines = side < 460 * s ? [`${name} →`] : [`${name} →`, `${pct(star.y)} DEMOCRATIC SIDE`, `${pct(star.x)} HARRIS`];
-				const ex = X(star.x) - r * 1.3 - 8 * s, sy = Y(star.y);
-				ctx.textAlign = "right";
-				lines.forEach((l, k) => {
-					const tw = ctx.measureText(l).width;
-					taken.push({ x: ex - tw, y: sy + k * lh - th / 2, w: tw, h: th });
-					ctx.fillStyle = k ? C.ink2 : C.ink; ctx.fillText(l, ex, sy + k * lh);
-				});
-			}
-			// state codes for the big breaks, biggest first; a code with no free spot beside its dot is left out
-			ctx.textAlign = "left";
-			const idx = pts.map((p, i) => i).filter(i => (pts[i] !== star || !showNote) && (Math.abs(pts[i].gap) >= 10 || i === sel))
-				.sort((a, b) => (b === sel) - (a === sel) || Math.abs(pts[b].gap) - Math.abs(pts[a].gap));
-			const named = new Set(showNote ? [star.s] : []);     // one code per state: a second CA adds nothing
+			// a code must sit clear of every other dot, or it could be read as that dot's
+			const th = 12 * s, gap = r + 5 * s;
+			const taken = placed.filter(Boolean).map(q => ({ x: q.x - gap, y: q.y - r * 0.8, w: 2 * gap, h: 1.6 * r }));
+			const free = b => b.x >= x0 && b.x + b.w <= x0 + pw && !taken.some(t => b.x < t.x + t.w && t.x < b.x + b.w && b.y < t.y + t.h && t.y < b.y + b.h);
+			// per row, the two most extreme measures on each side, if they are far from the line
+			const ends = [];
+			GROUPS.forEach((g, k) => [1, -1].forEach(side => ends.push(...pts.map((p, i) => i)
+				.filter(i => pts[i].g === k && pts[i].gap * side >= (narrow ? 12 : 8))
+				.sort((a, b) => Math.abs(pts[b].gap) - Math.abs(pts[a].gap)).slice(0, k === HERO ? 9 : narrow ? 1 : 2))));
+			const idx = [...(sel >= 0 ? [sel] : []), ...ends.filter(i => i !== sel)];
 			for (const i of idx) {
-				const p = pts[i], px = X(p.x), py = Y(p.y), tw = ctx.measureText(p.s).width;
-				if (named.has(p.s) && i !== sel) continue;
-				const box = [px + r + 4 * s, px - r - 4 * s - tw].map(bx => ({ x: bx, y: py - th / 2, w: tw, h: th })).find(free);
+				const p = pts[i], q = placed[i], tw = ctx.measureText(p.s).width;
+				const out = p.gap > 0 ? -1 : 1;                       // the far side of the dot first
+				const self = taken.findIndex(t => t.x === q.x - gap && t.y === q.y - r * 0.8);
+				const mine = taken.splice(self, 1);                   // a dot does not block its own code
+				// outer side only: a code between two dots could belong to either
+				const box = (p.g === HERO ? [0, -th, th] : [0]).map(dy => ({ x: q.x + out * (r + 4 * s) - (out < 0 ? tw : 0), y: q.y - th / 2 + dy, w: tw, h: th })).find(free);
+				taken.push(...mine);
 				if (!box) continue;
-				taken.push(box); named.add(p.s);
-				ctx.fillStyle = i === sel || pts[i] === star ? C.ink : C.ink2;
-				ctx.fillText(p.s, box.x, py);
+				taken.push(box);
+				ctx.textAlign = "left"; ctx.fillStyle = i === sel || p.g === HERO ? C.ink : C.ink2;
+				ctx.fillText(p.s, box.x, box.y + th / 2 + 0.5 * s);
 			}
 		}
 		if (sel >= 0 && grow === 1) {
-			const p = pts[sel], [value, context] = readout();
-			CD.label(ctx, X(p.x) + r, Y(p.y), value, context, s, { x: x0, y: y0, w: side, h: side }, X(p.x) - r);
+			const q = placed[sel], [value, context] = readout();
+			CD.label(ctx, q.x + r, q.y, value, context, s, { x: x0, y: y0, w: pw, h: ph }, q.x - r);
 		}
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-		return { X, Y, x0, y0, side };
+		return { placed, r };
 	}
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
@@ -139,14 +174,15 @@
 	function pick(e) {
 		if (!geo) return;
 		const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
-		let best = -1, bd = 24 * 24;
-		pts.forEach((p, i) => { const dx = geo.X(p.x) - mx, dy = geo.Y(p.y) - my, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } });
+		let best = -1, bd = 20 * 20;
+		geo.placed.forEach((q, i) => { if (!q) return; const d = (q.x - mx) ** 2 + (q.y - my) ** 2; if (d < bd) { bd = d; best = i; } });
 		if (best !== sel) { sel = best; schedule(); }
 	}
 	cv.addEventListener("pointermove", pick);
 	cv.addEventListener("pointerdown", pick);
 	cv.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { sel = -1; schedule(); } });
-	const order = pts.map((p, i) => i).sort((a, b) => pts[a].x - pts[b].x);
+	// keys walk the rows top to bottom, liberal to conservative within each
+	const order = pts.map((p, i) => i).sort((a, b) => pts[a].g - pts[b].g || pts[b].gap - pts[a].gap);
 	cv.addEventListener("keydown", e => {
 		if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
 			e.preventDefault();
@@ -155,7 +191,7 @@
 		}
 		if (e.key === "Escape") { sel = -1; schedule(); }
 	});
-	// the image is always the finished picture, even if the dots are still rising on screen
+	// the image is always the finished picture, even if the dots are still moving out on screen
 	CD.exporter = { draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
-	CD.measures = { pts, above, star };
+	CD.measures = { pts, GROUPS };
 })();

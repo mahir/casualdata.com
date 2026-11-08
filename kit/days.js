@@ -22,8 +22,8 @@ window.CD_DAYS = [
 	{
 		date: "2026-11-07",
 		path: "/2026-11-07/",
-		title: "On the issues, voters broke from their party",
-		dek: "Every 2026 ballot measure against the state’s vote for president."
+		title: "Voters split by issue, not by party",
+		dek: "Abortion rights beat Harris everywhere; transgender limits beat Trump everywhere."
 	},
 	{
 		date: "2026-11-08", draft: true,
