@@ -241,17 +241,18 @@
 		const p = Math.round(56 * u);
 		ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H);
 
-		// the foot, the same on every image: the {casualdata} wordmark and the date at the left, the
-		// day's address at the right, so an image seen on its own still says whose it is and where it lives
+		// the foot, the same on every image: the {casualdata} wordmark at the left and the date at the
+		// right. Each is said once: the name and the date together are the day's address.
 		const fy = H - p, mh = Math.round(30 * u);
 		const mark = await wordmarkImage(C.dark);
 		if (mark) ctx.drawImage(mark, p, fy - mh * 0.8, mh * WORDMARK_RATIO, mh);
 		ctx.textBaseline = "alphabetic";
 		ctx.font = `400 ${22 * u}px ${C.mono}`;
-		ctx.fillStyle = C.ink2;
-		ctx.fillText(day ? fmtDate(day.date).toUpperCase() : "", p + (mark ? mh * WORDMARK_RATIO + 24 * u : 0), fy);
-		ctx.textAlign = "right"; ctx.fillStyle = C.ink;
-		ctx.fillText(`casualdata.com/${id}`, W - p, fy);
+		ctx.fillStyle = C.ink;
+		// without the wordmark image the name is written out, so the image never goes unsigned
+		if (!mark) ctx.fillText("casualdata.com", p, fy);
+		ctx.textAlign = "right"; ctx.fillStyle = C.ink2;
+		ctx.fillText(day ? fmtDate(day.date).toUpperCase() : "", W - p, fy);
 		ctx.textAlign = "left";
 
 		// everything else is the visualization
