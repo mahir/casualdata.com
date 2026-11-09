@@ -223,10 +223,10 @@ Quiet, small and outlined: they read as labels until touched.
 The chart's reading, drawn in canvas beside the point it describes (`CD.label`): a square ink block with the value in Host Grotesk 600 over a mono uppercase context line in paper, 8px padding, 12px from the point. It flips left near the right edge, wraps its context at " · " breaks, and is mirrored to screen readers by a polite live region.
 
 ### Day tile (home)
+- **Two shapes only.** The newest day takes a full row: its image across two thirds at the left, and beside it the date (its label starts with a small red dot and "Latest"), the title in Display and the dek, over a Hairline rule. Every earlier day is the same tile in one even grid, newest first: four across on wide screens, three under 1200px, two under 960px (where the newest day stacks its caption under the image), one under 600px. A part-filled last row is left as it is: it is where the collection has got to.
 - **Corner Style:** square.
 - **Image:** the day's own share render in the reader's theme (`thumb.webp` / `thumb-night.webp`, 720 and 1200px), cropped to its chart at 1200:548 so the image's foot (logo, date, address) does not repeat the caption, on a Hairline well.
-- **Last row:** when the last row has room left over, its last tile widens to fill it and puts its caption beside the image, at the image's foot.
-- **Under it:** the date in the mono label, then the title. The newest tile is twice the size, its title in Display and its dek beneath; its label starts with a small red dot and "Latest".
+- **Under it:** the date in the mono label, then the title (500, 18px).
 - **Hover / Focus:** the title takes a 2px red underline at a 4px offset; keyboard focus outlines the image in ink.
 
 ### Navigation
