@@ -344,9 +344,6 @@ def do_robots():
 User-agent: *
 Allow: /
 Disallow: /next/
-Disallow: /socialbits/blog/
-Disallow: /newsknitter/preorder.php
-Disallow: /*.php$
 
 # AI search and answer engines are welcome; each day's sources and data are on its page.
 User-agent: GPTBot
@@ -361,7 +358,6 @@ User-agent: Google-Extended
 User-agent: Applebot-Extended
 User-agent: CCBot
 Allow: /
-Disallow: /socialbits/blog/
 
 Sitemap: {SITE}/sitemap.xml
 """)
