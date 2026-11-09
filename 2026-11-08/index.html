@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>These people decided it · casualdata</title>
-  <meta name="description" content="The closest races of the 2026 midterms, drawn as crowds: one person for every vote in the margin.">
+  <title>99 votes may decide a seat in Congress · casualdata</title>
+  <meta name="description" content="The closest races of the 2026 midterms, drawn as crowds: one figure for every vote of the lead, and in red, how many would flip the result by voting the other way.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="These people decided it">
-  <meta property="og:description" content="The closest races of 2026, one person per vote of margin. casualdata, 8 November 2026">
+  <meta property="og:title" content="99 votes may decide a seat in Congress">
+  <meta property="og:description" content="The closest races of 2026, one figure per vote of the lead. casualdata, 8 November 2026">
   <meta property="og:url" content="https://casualdata.com/2026-11-08/">
   <meta property="og:image" content="https://casualdata.com/2026-11-08/card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="These 99 people may decide a seat in Congress">
+  <meta property="og:image:alt" content="99 figures for the 99-vote lead in NC-5, 50 of them red: the votes that would flip the seat by switching sides">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/kit/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -33,13 +33,13 @@
 </header>
 
 <section class="cd-head">
-  <h1 class="cd-title">These 99 people may decide a seat in Congress</h1>
-  <p class="cd-dek">Each person here is one vote of the margin in one of the closest races of the midterms. The red one is you. Pick another race in the strip below.</p>
+  <h1 class="cd-title">99 votes may decide a seat in Congress</h1>
+  <p class="cd-dek">Each figure is one vote of the leader’s lead in one of the closest races of the midterms. The red ones are how many voters would have had to vote the other way to flip it. Pick another race in the strip below.</p>
   <p class="visually-hidden" id="cd-live" aria-live="polite"></p>
 </section>
 
 <main class="cd-stage" id="stage">
-  <canvas id="cv" tabindex="0" role="application" aria-roledescription="interactive chart" aria-label="The vote margin of the chosen race drawn as one person per vote, with a strip of the 25 closest races of 2026 below. Use the left and right arrow keys to change race."></canvas>
+  <canvas id="cv" tabindex="0" role="application" aria-roledescription="interactive chart" aria-label="The vote margin of the chosen race drawn as one figure per vote of the lead, with the votes that would flip it by switching sides in red, with a strip of the 25 closest races of 2026 below. Use the left and right arrow keys to change race."></canvas>
 </main>
 
 <footer class="cd-foot cd-meta">

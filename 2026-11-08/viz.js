@@ -1,5 +1,6 @@
-// 2026-11-08 — the closest races of 2026, one dot per vote of margin.
-// The field shows the chosen race's margin as a crowd; one dot in it is red: you.
+// 2026-11-08 — the closest races of 2026, one figure per vote of the leader's margin.
+// The field shows the chosen race's margin as a crowd. The red ones are how many voters would have had
+// to vote the other way to flip the result: just over half the margin.
 // The strip below lists every race in the set, smallest margin first.
 (function () {
 	const C = CD.colors;
@@ -13,12 +14,12 @@
 	let cur = Math.max(0, races.findIndex(r => r.id === q.get("r")));
 	let hover = -1;
 	let fill = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
-	// where the red "you" dot sits in each crowd: fixed per race so screenshots agree
-	const youAt = r => Math.floor(((r.margin * 7919) % 1000) / 1000 * r.margin);
+	// switching this many votes from the leader to the runner-up would flip the result
+	const flipOf = n => Math.floor(n / 2) + 1;
 
 	function readout() {
 		const r = races[hover >= 0 ? hover : cur];
-		return [`${fmt(r.margin)} votes · ${r.label}`, `${r.winner} ${r.called ? "won" : "leads"} · ${like(r.margin)}${r.final ? "" : " · still counting"}`];
+		return [`${fmt(r.margin)} votes · ${r.label}`, `${r.winner} ${r.called ? "won" : "leads"} · ${fmt(flipOf(r.margin))} switching sides would flip it${r.final ? "" : " · still counting"}`];
 	}
 
 	// a person: a round head on a rounded body (the same figure as 6 Nov)
@@ -32,35 +33,42 @@
 	// ui: true on screen, where narrow screens get ‹ › buttons beside the strip; false for the image
 	function draw(ctx, x, y, w, h, s, ui) {
 		const stripH = 54 * s, gap = 18 * s, chipRoom = 92 * s;
+		const r = races[cur], n = r.margin, MAX = 34 * s, flip = flipOf(n);
+		// the key, written into the drawing so the image explains itself: what a figure is, what red is
+		const keyW = w, twoLines = keyW < 560 * s, keyH = (twoLines ? 40 : 22) * s;
+		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+		const key = (cx, cy, col, text) => {
+			ctx.fillStyle = col; person(ctx, cx + 6 * s, cy + 1 * s, 13 * s);
+			ctx.fillStyle = col === C.red ? C.ink : C.ink2; ctx.fillText(text, cx + 18 * s, cy + 0.5 * s);
+			return cx + 18 * s + ctx.measureText(text).width;
+		};
+		const k1 = key(x, y + 7 * s, C.ink2, `ONE VOTE OF THE ${fmt(n)}-VOTE LEAD`);
+		// the red line in the longest wording that fits
+		const room = twoLines ? keyW - 18 * s : x + keyW - k1 - 46 * s;
+		const red = [`THE ${fmt(flip)} WHO WOULD FLIP IT BY VOTING THE OTHER WAY`, `THE ${fmt(flip)} WHO WOULD FLIP IT BY SWITCHING SIDES`, `${fmt(flip)} SWITCHING SIDES WOULD FLIP IT`]
+			.find(t => ctx.measureText(t).width <= room) || `${fmt(flip)} WOULD FLIP IT`;
+		if (twoLines) key(x, y + 25 * s, C.red, red);
+		else key(k1 + 28 * s, y + 7 * s, C.red, red);
 		// the field leaves room under the crowd for the reading, so the chip never covers a vote
-		const fx = x, fy = y, fw = w, fh = h - stripH - gap - chipRoom;
-		const r = races[cur], n = r.margin, MAX = 34 * s;
+		const fx = x, fy = y + keyH + 10 * s, fw = w, fh = h - stripH - gap - chipRoom - keyH - 10 * s;
 		// a grid that fills the field: choose a cell so n marks fit; a small margin stays a small crowd
 		const cell = Math.min(MAX, Math.sqrt(fw * fh / n) * 0.98);
 		// keep the crowd compact: roughly the field's shape, never wider than it
 		const cols = Math.max(1, Math.min(Math.floor(fw / cell), Math.ceil(Math.sqrt(n * fw / fh)))), rows = Math.ceil(n / cols);
 		const c2 = Math.min(MAX, fw / cols, fh / rows), ox = fx + (fw - cols * c2) / 2, oy = fy + (fh - rows * c2) / 2;
 		const figures = c2 >= 10 * s, dr = Math.max(0.5, c2 * 0.34);   // people while they are big enough to read as people, dots after
-		// the red one is never in the bottom row, which sits nearest the reading
-		const shown = Math.round(n * fill), you = rows > 1 ? youAt(r) % ((rows - 1) * cols) : youAt(r);
+		const shown = Math.round(n * fill);
 		const mark = (cx, cy) => {
 			if (figures) person(ctx, cx, cy, c2 * 0.86);
 			else if (dr < 1.6) ctx.fillRect(cx - dr, cy - dr, dr * 2, dr * 2);
 			else { ctx.beginPath(); ctx.arc(cx, cy, dr, 0, Math.PI * 2); ctx.fill(); }
 		};
-		ctx.fillStyle = C.ink2;
+		// the first `flip` votes, in reading order, are red: just over half the crowd
 		for (let i = 0; i < shown; i++) {
-			if (i === you) continue;
+			ctx.fillStyle = i < flip ? C.red : C.ink2;
 			mark(ox + (i % cols + 0.5) * c2, oy + (Math.floor(i / cols) + 0.5) * c2);
 		}
 		if (fill === 1) {
-			const cx = ox + (you % cols + 0.5) * c2, cy = oy + (Math.floor(you / cols) + 0.5) * c2;
-			ctx.fillStyle = C.red;
-			if (figures) mark(cx, cy);
-			else {
-				ctx.beginPath(); ctx.arc(cx, cy, Math.max(3 * s, dr * 1.3), 0, Math.PI * 2); ctx.fill();
-				ctx.lineWidth = 2 * s; ctx.strokeStyle = C.paper; ctx.stroke();
-			}
 			const [value, context] = readout();
 			if (hover < 0) CD.label(ctx, ox - 12 * s, oy + rows * c2 + 50 * s, value, context, s, { x: fx, y: fy, w: fw, h: fh + chipRoom });
 		}
@@ -115,7 +123,7 @@
 		CD.announce(readout().join(", "));
 		// the headline follows the chosen race; uncalled races "may" decide
 		const r = races[cur], what = r.id.endsWith("senate") ? "a Senate seat" : r.id.endsWith("governor") ? "who governs " + r.label.replace(" governor", "") : "a seat in Congress";
-		const t = `These ${fmt(r.margin)} people ${r.called ? "decided" : "may decide"} ${what}`;
+		const t = `${fmt(r.margin)} votes ${r.called ? "decided" : "may decide"} ${what}`;
 		if (titleEl.textContent !== t) titleEl.textContent = t;
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
@@ -133,7 +141,7 @@
 	function choose(i) {
 		if (i === cur) return;
 		cur = i; grow();
-		history.replaceState(null, "", `?r=${races[cur].id}`);
+		CD.state.set({ r: races[cur].id });
 	}
 	const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
 	function at(e) {
@@ -167,8 +175,11 @@
 	cv.addEventListener("pointercancel", stop);
 	cv.addEventListener("pointerleave", () => { hover = -1; schedule(); });
 	cv.addEventListener("keydown", e => {
-		if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); choose((cur + (e.key === "ArrowRight" ? 1 : -1) + races.length) % races.length); }
+		// arrows step through the races, as on every day; Escape and Home go back to the closest
+		const dir = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+		if (dir) { e.preventDefault(); choose((cur + dir + races.length) % races.length); }
+		if (e.key === "Escape" || e.key === "Home") { e.preventDefault(); choose(0); }
 	});
 	// the image is always the finished crowd, with no hover reading and no buttons
-	CD.exporter = { draw: (c, x, y, w, h, u) => { const f = fill, hv = hover; fill = 1; hover = -1; draw(c, x, y, w, h, u * 1.6, false); fill = f; hover = hv; } };
+	CD.exporter = { readout: () => { const hv = hover; hover = -1; const r = readout(); hover = hv; return r; }, draw: (c, x, y, w, h, u) => { const f = fill, hv = hover; fill = 1; hover = -1; draw(c, x, y, w, h, u * 1.6, false); fill = f; hover = hv; } };
 })();
