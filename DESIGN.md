@@ -1,6 +1,6 @@
 ---
 name: casualdata daily
-description: One interactive data visualization a day, one screen each, one red dot.
+description: One interactive data visualization a day, on a page that turns from white to black with the reader's clock.
 colors:
   paper: "#FFFFFF"
   ink: "#121212"
