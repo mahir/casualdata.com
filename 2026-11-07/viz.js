@@ -48,7 +48,7 @@
 
 	function draw(ctx, x, y, w, h, s) {
 		const narrow = w < 560 * s;
-		const T = 30 * s, B = 26 * s, padX = 6 * s;
+		const T = 48 * s, B = 36 * s, padX = 6 * s;   // room for the direction labels above and the scale below
 		const x0 = x + padX, pw = w - 2 * padX, y0 = y + T, ph = h - T - B;
 		const X = v => x0 + (LIB - v) / (LIB + CON) * pw;          // +gap (liberal) to the left
 		const rh = ph / GROUPS.length;
@@ -65,8 +65,8 @@
 		}
 		ctx.fillStyle = C.ink2; ctx.textAlign = "center";
 		ctx.fillText(narrow ? "SAME" : "SAME AS FOR PRESIDENT", zx, y0 + ph + 18 * s);
-		ctx.textAlign = "right"; ctx.fillText(narrow ? "← MORE LIBERAL" : "← MORE LIBERAL THAN THE STATE VOTED IN 2024", zx - 10 * s, y0 - 14 * s);
-		ctx.textAlign = "left"; ctx.fillText(narrow ? "CONSERVATIVE →" : "MORE CONSERVATIVE →", zx + 10 * s, y0 - 14 * s);
+		ctx.textAlign = "right"; ctx.fillText(narrow ? "← MORE LIBERAL" : "← MORE LIBERAL THAN THE STATE VOTED IN 2024", zx - 10 * s, y0 - 24 * s);
+		ctx.textAlign = "left"; ctx.fillText(narrow ? "CONSERVATIVE →" : "MORE CONSERVATIVE →", zx + 10 * s, y0 - 24 * s);
 
 		// the zero line, the one reference; headings and dots are drawn over it
 		ctx.fillStyle = C.ink; ctx.fillRect(zx - 0.75 * s, y0 - 6 * s, 1.5 * s, ph + 12 * s);
@@ -85,7 +85,7 @@
 			// heading: the issue, and how its measures leaned (beside it, or under it on phones)
 			ctx.textBaseline = "top"; ctx.textAlign = "left"; ctx.fillStyle = C.ink;
 			ctx.font = `400 ${head}px ${C.sans}`;
-			const hy = ry + 8 * s;
+			const hy = ry + 14 * s;                                // a row heading sits clear of the rule above it
 			backed(g.name, x0, hy, head);
 			const nameW = ctx.measureText(g.name).width;
 			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = k === HERO ? C.ink : C.ink2;
@@ -95,7 +95,7 @@
 			else { backed(g.sum, x0, hy + head + 4 * s, 11.5 * s); top += 4 * s + 11.5 * s; }
 
 			// a beeswarm along the axis: each dot takes the nearest free slot to the row's centre line
-			const band0 = top + 6 * s, band1 = ry + rh - 6 * s, cy = (band0 + band1) / 2, half = Math.max(r, (band1 - band0) / 2 - r * 0.5);
+			const band0 = top + 10 * s, band1 = ry + rh - 10 * s, cy = (band0 + band1) / 2, half = Math.max(r, (band1 - band0) / 2 - r * 0.5);
 			const mine = pts.map((p, i) => i).filter(i => pts[i].g === k).sort((a, b) => pts[b].gap - pts[a].gap);
 			const here = [];
 			for (const i of mine) {
@@ -124,6 +124,7 @@
 			// a code must sit clear of every other dot, or it could be read as that dot's
 			const th = 12 * s, gap = r + 5 * s;
 			const taken = placed.filter(Boolean).map(q => ({ x: q.x - gap, y: q.y - r * 0.8, w: 2 * gap, h: 1.6 * r }));
+			taken.push(...texts);                                   // and clear of the row headings and their summaries
 			const free = b => b.x >= x0 && b.x + b.w <= x0 + pw && !taken.some(t => b.x < t.x + t.w && t.x < b.x + b.w && b.y < t.y + t.h && t.y < b.y + b.h);
 			// per row, the two most extreme measures on each side, if they are far from the line
 			const ends = [];

@@ -43,7 +43,7 @@
 	--red: #E8341C;     /* the one thing, tuned per ground: 4.3:1 on white. marks and large labels only */
 	--sans: "Host Grotesk", Arial, sans-serif;
 	--mono: "Ioskeley Mono", ui-monospace, "SF Mono", Menlo, monospace;
-	--gut: clamp(16px, 2.4vw, 36px);
+	--gut: clamp(20px, 4.4vw, 72px);   /* the page margin: generous, so titles and charts never run to the edge */
 	color-scheme: light;
 }
 :root[data-theme="dark"] {
@@ -111,31 +111,36 @@ body.cd-day {
 
 /* The head is two things: the title, and one or two sentences that say how to
    read the chart. The reading itself lives in the chart (CD.label). */
+/* Spacing rhythm on a day page: tight inside a group (title and dek), generous between groups (bar to
+   head, head to chart, chart to source). The generous intervals follow the screen height, so a short
+   screen gives up air before it gives up chart. */
 .cd-head {
-	display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 10px 48px; align-items: end;
-	padding: clamp(16px, 3vh, 36px) var(--gut) clamp(14px, 2.4vh, 26px);
+	display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px clamp(32px, 6vw, 112px); align-items: end;
+	padding: clamp(22px, 5.5vh, 64px) var(--gut) clamp(26px, 6vh, 64px);
 }
 .cd-title {
 	/* light on purpose: 800 belongs to the wordmark alone */
 	margin: 0; font-weight: 400; letter-spacing: -.025em; line-height: 1;
-	font-size: clamp(28px, min(4.4vw, 6.6vh), 72px);
+	font-size: clamp(28px, min(4vw, 6.2vh), 64px); line-height: 1.02;
 	max-width: 18ch; text-wrap: balance;
 }
-.cd-dek { margin: 0; max-width: 44ch; justify-self: end; color: var(--ink-2); font-size: clamp(14px, 1.2vw, 16px); line-height: 1.45; text-wrap: pretty; }
+.cd-dek { margin: 0; max-width: 42ch; justify-self: end; color: var(--ink-2); font-size: clamp(14px, 1.15vw, 16.5px); line-height: 1.5; text-wrap: pretty; }
 
 .cd-stage { position: relative; min-height: 0; margin: 0 var(--gut); }
 .cd-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
 
 .cd-foot {
 	display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-	padding: 10px var(--gut) 14px;
+	padding: clamp(16px, 3.4vh, 34px) var(--gut) clamp(14px, 2.4vh, 22px);
 	/* sources are sentences, so they keep their own case; capitals stay for short labels */
 	text-transform: none; letter-spacing: 0; font-size: 12.5px; line-height: 1.45;
 }
 .cd-foot a { text-decoration-color: var(--ink-3); text-underline-offset: 3px; }
 
 @media (max-width: 720px) {
-	.cd-head { grid-template-columns: 1fr; }
+	/* phones: height is the scarce thing, so the head keeps its air small and gives it to the chart */
+	.cd-head { grid-template-columns: 1fr; padding-block: 18px 20px; }
+	.cd-foot { padding-block: 12px; }
 	.cd-foot .hint { display: none; }
 	.cd-dek { justify-self: start; font-size: 14px; }
 	.cd-bar { gap: 12px; }
@@ -211,9 +216,9 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 	display: block; width: 100%; height: auto; aspect-ratio: 1200 / 548; object-fit: cover; object-position: 50% 0;
 	background: var(--rule); outline: 1px solid var(--rule); outline-offset: -1px; margin-bottom: 4px;
 }
-.tile .t { font-size: 18px; font-weight: 500; letter-spacing: -.012em; line-height: 1.28; text-wrap: balance; }
+.tile .t { font-size: 18px; font-weight: 500; letter-spacing: -.012em; line-height: 1.3; text-wrap: balance; }
 .tile .dek { color: var(--ink-2); font-size: 16px; line-height: 1.45; max-width: 44ch; }
-.tile.lead { grid-column: 1 / -1; padding-bottom: clamp(8px, 1.5vw, 20px); border-bottom: 1px solid var(--rule); }
+.tile.lead { grid-column: 1 / -1; padding-bottom: clamp(24px, 3vw, 44px); border-bottom: 1px solid var(--rule); }
 .tile.lead a { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: clamp(20px, 3vw, 48px); align-items: start; }
 .tile.lead img { grid-row: 1 / span 3; margin-bottom: 0; }
 .tile.lead .cd-meta { margin-top: 2px; }

@@ -32,7 +32,7 @@
 
 	// ---------- drawing, shared by the screen and the PNG ----------
 	function draw(ctx, x, y, w, h, s, narrow) {
-		const T = 30 * s, B = 28 * s, x0 = x, pw = w, y0 = y + T, ph = h - T - B;
+		const T = 46 * s, B = 38 * s, x0 = x, pw = w, y0 = y + T, ph = h - T - B;   // room for the direction labels above and the scale below
 		const X = v => x0 + (v - XMIN) / (XMAX - XMIN) * pw;
 		const rh = ph / rows.length, Y = i => y0 + (i + 0.5) * rh;
 		const thick = Math.max(1.6 * s, Math.min(6 * s, rh * 0.34)), head = Math.max(4 * s, Math.min(11 * s, rh * 0.62));
@@ -48,13 +48,13 @@
 		ctx.fillStyle = C.ink; ctx.fillRect(zx - 0.75 * s, y0 - 8 * s, 1.5 * s, ph + 16 * s);
 		ctx.textAlign = "center"; ctx.fillStyle = C.ink2;
 		ctx.fillText(narrow ? "2024" : "2024 VOTE FOR PRESIDENT", zx, y0 + ph + 20 * s);
-		ctx.textAlign = "right"; ctx.fillText("← TOWARD THE DEMOCRATS", zx - 10 * s, y0 - 14 * s);
+		ctx.textAlign = "right"; ctx.fillText("← TOWARD THE DEMOCRATS", zx - 10 * s, y0 - 22 * s);
 		// the Republican side is narrow: shorten the label until it fits, and pin it to the edge if it still doesn't
 		ctx.textAlign = "left";
 		let rLabel = narrow ? "TOWARD R →" : "TOWARD THE REPUBLICANS →";
 		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) rLabel = "R →";
-		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) { ctx.textAlign = "right"; ctx.fillText(rLabel, x0 + pw, y0 - 14 * s); }
-		else ctx.fillText(rLabel, zx + 10 * s, y0 - 14 * s);
+		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) { ctx.textAlign = "right"; ctx.fillText(rLabel, x0 + pw, y0 - 22 * s); }
+		else ctx.fillText(rLabel, zx + 10 * s, y0 - 22 * s);
 
 		// arrows
 		rows.forEach((d, i) => {

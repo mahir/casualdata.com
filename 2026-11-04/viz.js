@@ -88,8 +88,10 @@
 
 	// ---------- drawing (shared by screen and PNG) ----------
 	function layout(x, y, w, h, s, compact) {
-		const L = 40 * s, R = compact ? 8 * s : 92 * s, B = 26 * s;
-		return { x0: x + L, y0: y, pw: w - L - R, ph: h - B, s, compact };
+		// room around the plot: latitudes at the left, cities at the right, months below, and above it
+		// a band for the day's note, which sits over the plot rather than on it
+		const L = 48 * s, R = compact ? 8 * s : 108 * s, B = 34 * s, T = compact ? 0 : 34 * s;
+		return { x0: x + L, y0: y + T, pw: w - L - R, ph: h - B - T, s, compact };
 	}
 	function draw(ctx, x, y, w, h, s, compact) {
 		const g = layout(x, y, w, h, s, compact);
@@ -136,14 +138,15 @@
 
 		// the day it was published (4 Nov): the one red line
 		const xp = X(PUB);
-		ctx.fillStyle = C.red; ctx.fillRect(xp - 1 * s, g.y0, 2 * s, g.ph + 6 * s);
+		const ty = g.compact ? g.y0 : g.y0 - 34 * s;            // the note's top: above the plot, joined to it by the red line
+		ctx.fillStyle = C.red; ctx.fillRect(xp - 1 * s, ty, 2 * s, g.ph + 6 * s + (g.y0 - ty));
 		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle";
 		// the tag carries the day's one fact, so the image says something without the title
 		const tag = g.compact ? "4 NOV" : `4 NOV · LONDON LOSES ${fmtDelta(PUB, LONDON).replace(/^−/, "").replace(" a day", "").toUpperCase()} OF LIGHT A DAY`;
 		const tw = ctx.measureText(tag).width + 12 * s, th = 20 * s;
 		const tx = Math.min(xp - tw / 2, g.x0 + g.pw - tw);
-		ctx.fillStyle = C.ink; ctx.fillRect(tx, g.y0, tw, th);
-		ctx.fillStyle = C.paper; ctx.fillText(tag, tx + 6 * s, g.y0 + th / 2 + 0.5 * s);
+		ctx.fillStyle = C.ink; ctx.fillRect(tx, ty, tw, th);
+		ctx.fillStyle = C.paper; ctx.fillText(tag, tx + 6 * s, ty + th / 2 + 0.5 * s);
 
 		// selection: thin crosshair + red dot
 		const sx = X(st.d), sy = Y(st.lat);

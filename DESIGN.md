@@ -197,6 +197,8 @@ Home is a grid of every day, newest first: three columns above 960px with the ne
 
 Breakpoints: 960px and 600px for the home grid, 720px for the phone frame (bottom bar, icon-only buttons, 44px targets), 400px for swapping the wordmark for the `{•}` symbol.
 
+**The Room to Read Rule.** Space is grouped, not spread evenly: tight inside a group (title and dek 12px apart), generous between groups. The page margin is `clamp(20px, 4.4vw, 72px)`; the head takes `clamp(22px, 5.5vh, 64px)` above and `clamp(26px, 6vh, 64px)` below; the source line sits `clamp(16px, 3.4vh, 34px)` under the chart. The generous intervals follow the screen height, so a short screen gives up air before chart; phones keep the head at 18/20px. Inside a chart the same holds: direction labels sit in their own band above the plot (about 46px), the scale in a band below (about 36px), a row heading 14px under its rule, annotations above the plot rather than on it.
+
 **The Floor Not Squeeze Rule.** A chart is never shorter than `--stage-min`. When the screen cannot fit it, the page scrolls and the phone bottom bar stays sticky in thumb reach.
 
 ## Elevation & Depth

@@ -32,7 +32,7 @@
 
 	// ui: true on screen, where narrow screens get ‹ › buttons beside the strip; false for the image
 	function draw(ctx, x, y, w, h, s, ui) {
-		const stripH = 54 * s, gap = 18 * s, chipRoom = 92 * s;
+		const stripH = 54 * s, gap = 30 * s, chipRoom = 96 * s;
 		const r = races[cur], n = r.margin, MAX = 34 * s, flip = flipOf(n);
 		// the key, written into the drawing so the image explains itself: what a figure is, what red is
 		const keyW = w, twoLines = keyW < 560 * s, keyH = (twoLines ? 40 : 22) * s;
@@ -50,7 +50,7 @@
 		if (twoLines) key(x, y + 25 * s, C.red, red);
 		else key(k1 + 28 * s, y + 7 * s, C.red, red);
 		// the field leaves room under the crowd for the reading, so the chip never covers a vote
-		const fx = x, fy = y + keyH + 10 * s, fw = w, fh = h - stripH - gap - chipRoom - keyH - 10 * s;
+		const fx = x, fy = y + keyH + 22 * s, fw = w, fh = h - stripH - gap - chipRoom - keyH - 22 * s;
 		// a grid that fills the field: choose a cell so n marks fit; a small margin stays a small crowd
 		const cell = Math.min(MAX, Math.sqrt(fw * fh / n) * 0.98);
 		// keep the crowd compact: roughly the field's shape, never wider than it

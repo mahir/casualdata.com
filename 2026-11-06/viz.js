@@ -58,7 +58,7 @@
 
 	// ---------- drawing, shared by the screen and the PNG ----------
 	function draw(ctx, x, y, w, h, s) {
-		const labelH = 64 * s, gapCols = 1.4;
+		const labelH = 84 * s, gapCols = 1.6;   // a full band for the counts and names under the groups
 		// pick the number of rows that makes people largest while every group fits
 		let best = null;
 		for (let R = 1; R <= 30; R++) {
@@ -88,7 +88,7 @@
 			boxes.push({ x: cx, w: gw, gi });
 			if (walk === 1) {
 				ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-				const ly = oy + R * cell + 22 * s;
+				const ly = oy + R * cell + 30 * s;
 				ctx.font = `400 ${Math.min(17 * s, Math.max(11 * s, gw / 7))}px ${C.sans}`; ctx.fillStyle = C.ink;
 				ctx.fillText(String(g.n), cx + cell * 0.1, ly);
 				ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = on ? C.ink : C.ink2;
@@ -104,7 +104,7 @@
 			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = C.ink; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 			const note = split ? `${margin} IN RED: THE HOUSE MARGIN` : `${margin} IN RED: MORE THAN VOTED IN 2022`;
 			const nx = Math.min(b.x + cell * 0.1, x + w - ctx.measureText(note).width);   // stay inside the picture
-			ctx.fillText(note, nx, oy + R * cell + 52 * s);
+			ctx.fillText(note, nx, oy + R * cell + 64 * s);
 		}
 
 		if (sel >= 0 && walk === 1) {
