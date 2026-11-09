@@ -90,9 +90,11 @@ body.cd-day {
 	height: auto; min-height: 100dvh;
 	display: grid; grid-template-rows: auto auto minmax(var(--stage-min), 1fr) auto auto; grid-template-columns: minmax(0, 1fr);
 }
+/* One height on every page (64px, 57px on phones), whatever sits in it: contents are centred, never
+   allowed to stretch the band */
 .cd-bar {
 	display: flex; align-items: center; gap: 20px;
-	padding: 14px var(--gut);
+	min-height: 64px; padding: 0 var(--gut);
 	border-bottom: 1px solid var(--ink);
 }
 .cd-bar .cd-meta { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -157,7 +159,7 @@ span.cd-arrow { color: var(--ink-3); }
 .cd-daynav { display: none; }
 
 @media (max-width: 720px) {
-	.cd-bar { padding-block: 6px; }
+	.cd-bar { min-height: 57px; }
 	.cd-arrow, .cd-all { display: none; }
 	.cd-btn { min-width: 44px; min-height: 44px; justify-content: center; }
 	.cd-mark { min-height: 44px; }
@@ -231,7 +233,7 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 @media (max-width: 600px) {
 	.cd-days { grid-template-columns: minmax(0, 1fr); }
 }
-.cd-textlink { font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); padding: 14px 0; }
+.cd-textlink { font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); padding: 10px 0; }
 .cd-textlink:hover { text-decoration-color: var(--ink); }
 .cd-homefoot {
 	margin-top: clamp(56px, 9vh, 112px); padding: 18px var(--gut) 24px; border-top: 1px solid var(--ink);

@@ -230,7 +230,7 @@ The chart's reading, drawn in canvas beside the point it describes (`CD.label`):
 - **Hover / Focus:** the title takes a 2px red underline at a 4px offset; keyboard focus outlines the image in ink.
 
 ### Navigation
-- **Top bar:** the logo (20px tall), the date in the mono label (ink weight for the date, Graphite for the subject), and the actions on the right, over a 1px ink rule. On home the right side is a plain mono text link to the archive, never a button, so nothing outranks the days.
+- **Top bar:** one height on every page, 64px (57px on phones) including its rule, with everything centred in it so no control can stretch it; the logo (20px tall), the date in the mono label (ink weight for the date, Graphite for the subject), and the actions on the right, over a 1px ink rule. On home the right side is a plain mono text link to the archive, never a button, so nothing outranks the days.
 - **Day stepper (desktop):** typographic ‹ and › in Host Grotesk 22px either side of the date, each in a 34px circular target that takes a Hairline disc on hover; a missing neighbour shows as a Stone arrow that is not a link; on the newest published day the missing › is announced as "The next day comes tomorrow".
 - **Phone bottom bar (≤720px):** previous day · All days · Share · next day, cells at least 52px tall, mono 13px uppercase, a Hairline divider before All days, sticky to the bottom over the paper with the safe-area inset. Share moves here from the top bar as the one solid pill (44px). On the newest day the next cell reads "Tomorrow" in Graphite.
 
