@@ -1,0 +1,24 @@
+# casualdata.com: one data visualization a day. Every page is open to search and answer engines.
+User-agent: *
+Allow: /
+Disallow: /next/
+Disallow: /socialbits/blog/
+Disallow: /newsknitter/preorder.php
+Disallow: /*.php$
+
+# AI search and answer engines are welcome; each day's sources and data are on its page.
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+Allow: /
+Disallow: /socialbits/blog/
+
+Sitemap: https://casualdata.com/sitemap.xml

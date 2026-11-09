@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>casualdata daily</title>
+  <link>https://casualdata.com/</link>
+  <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2014.</description>
+  <language>en</language>
+  <lastBuildDate>Sun, 08 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>99 votes may decide a seat in Congress</title>
+    <link>https://casualdata.com/2026-11-08/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-08/</guid>
+    <pubDate>Sun, 08 Nov 2026 07:00:00 +0000</pubDate>
+    <description>The closest races of the 2026 midterms, drawn as crowds: one figure for every vote of the lead, and in red, how many would flip the result by voting the other way.</description>
+    <enclosure url="https://casualdata.com/2026-11-08/card.png" type="image/png" length="0"/>
+  </item>
+  <item>
+    <title>Voters split by issue, not by party</title>
+    <link>https://casualdata.com/2026-11-07/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-07/</guid>
+    <pubDate>Sat, 07 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Every 2026 ballot measure on a party issue, grouped by issue, against how the same state voted for president. Abortion rights ran ahead of Democrats everywhere; transgender limits ran ahead of Republicans everywhere.</description>
+    <enclosure url="https://casualdata.com/2026-11-07/card.png" type="image/png" length="0"/>
+  </item>
+  <item>
+    <title>If the country were 100 people, 51 of them stayed home</title>
+    <link>https://casualdata.com/2026-11-06/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-06/</guid>
+    <pubDate>Fri, 06 Nov 2026 07:00:00 +0000</pubDate>
+    <description>The 2026 midterm electorate as a town of 100 people: who voted, for which party, and who stayed home.</description>
+    <enclosure url="https://casualdata.com/2026-11-06/card.png" type="image/png" length="0"/>
+  </item>
+  <item>
+    <title>Nearly every Senate race moved toward the Democrats</title>
+    <link>https://casualdata.com/2026-11-05/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-05/</guid>
+    <pubDate>Thu, 05 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Each 2026 Senate race against the same state's 2024 vote for president. 30 of 31 moved toward the Democrats. The exception was Maine.</description>
+    <enclosure url="https://casualdata.com/2026-11-05/card.png" type="image/png" length="0"/>
+  </item>
+  <item>
+    <title>Where the light goes in November</title>
+    <link>https://casualdata.com/2026-11-04/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-04/</guid>
+    <pubDate>Wed, 04 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Hours of daylight for every latitude, every day of the year. Point anywhere to read it.</description>
+    <enclosure url="https://casualdata.com/2026-11-04/card.png" type="image/png" length="0"/>
+  </item>
+</channel>
+</rss>

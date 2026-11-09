@@ -1,0 +1,27 @@
+# casualdata
+
+> casualdata daily publishes one new interactive data visualization every day, each on its own dated page at casualdata.com/YYYY-MM-DD/ with its data frozen in the page and its sources named. casualdata has made data visualization from everyday ("casual") data since 2005; its 2007–2014 art projects are kept at casualdata.com/work/.
+
+Made by Mahir Yavuz. Each day states one finding in its title; the description below it says what the chart shows. The numbers behind each day are in that day's data.js, with sources and timestamps.
+
+## Daily visualizations (newest first)
+
+- [99 votes may decide a seat in Congress](https://casualdata.com/2026-11-08/) (8 November 2026): The closest races of the 2026 midterms, drawn as crowds: one figure for every vote of the lead, and in red, how many would flip the result by voting the other way. Source: State results and AP via NYT, 8 Nov 2026 · not final. Data: https://casualdata.com/2026-11-08/data.js
+- [Voters split by issue, not by party](https://casualdata.com/2026-11-07/) (7 November 2026): Every 2026 ballot measure on a party issue, grouped by issue, against how the same state voted for president. Abortion rights ran ahead of Democrats everywhere; transgender limits ran ahead of Republicans everywhere. Source: Ballotpedia, 8 Nov 2026 · 2024: state results. Data: https://casualdata.com/2026-11-07/data.js
+- [If the country were 100 people, 51 of them stayed home](https://casualdata.com/2026-11-06/) (6 November 2026): The 2026 midterm electorate as a town of 100 people: who voted, for which party, and who stayed home. Source: UF Election Lab turnout estimate, 6 Nov 2026; AP House vote counts via NPR, 6 Nov 2026. Data: https://casualdata.com/2026-11-06/data.js
+- [Nearly every Senate race moved toward the Democrats](https://casualdata.com/2026-11-05/) (5 November 2026): Each 2026 Senate race against the same state's 2024 vote for president. 30 of 31 moved toward the Democrats. The exception was Maine. Source: ABC News vote shares, 5 Nov 3:57 pm ET · 2024: MIT Election Lab. Data: https://casualdata.com/2026-11-05/data.js
+- [Where the light goes in November](https://casualdata.com/2026-11-04/) (4 November 2026): Hours of daylight for every latitude, every day of the year. Point anywhere to read it. Source: Computed from solar geometry, sunrise to sunset at sea level.
+
+## Work 2007–2014
+
+- [News Knitter](https://casualdata.com/newsknitter/) (2007): News Knitter is a data visualization project which focuses on knitted garments as an alternative medium to visualize large scale data.
+- [Value Machine](https://casualdata.com/valuemachine/) (2008): Value Machine is an interactive visualisation project which focuses on ‘conversations’ happening in the blogosphere and attempts to reveal the hypothetical economic values of these conversations.
+- [Newshaper](https://casualdata.com/newshaper/) (2009): Newshaper is a tabletop interactive system which deals with re-contextualization of daily news items gathered from live news feeds.
+- [Social Bits](https://casualdata.com/socialbits/) (2010): Social Bits Research Group: Research on artistic output of social interactions.
+- [Sense of Patterns](https://casualdata.com/senseofpatterns/) (2011): Sense of Patterns is a series of printed visualizations designed by Mahir Yavuz
+- [12 Eylül 2010 Referandum Sonuçları](https://casualdata.com/extra/referandum2010/) (2010): 12 Eylül 2010 Referandum Sonuçları ve Grafikleri Üzerine | A short article about 2010 referendum results in turkey.
+
+## Optional
+
+- [RSS feed of every day](https://casualdata.com/feed.xml)
+- [Sitemap](https://casualdata.com/sitemap.xml)
