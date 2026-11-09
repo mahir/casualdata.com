@@ -2,7 +2,7 @@
 // Margins are Republican minus Democrat, in points of the two-party vote for the Senate
 // and of the total vote for president (as compiled for The midterm tide).
 // Every arrow starts at one spine (each state's own 2024 vote) and runs as far as the state
-// moved, so the picture is the count itself: thirty arrows left, one red arrow right.
+// moved, so the picture is the count itself: thirty arrows left, one arrow right in the accent (green: a chart about parties never uses red).
 (function () {
 	const C = CD.colors;
 	const rows = window.SENATE.map(d => {
@@ -60,7 +60,7 @@
 		rows.forEach((d, i) => {
 			const yy = Y(i), on = i === sel, odd = d.move > 0;
 			const tip = X(d.move * grow), dir = odd ? 1 : -1;
-			const col = odd ? C.red : on ? C.ink : C.ink2;
+			const col = odd ? C.green : on ? C.ink : C.ink2;
 			const hd = Math.min(head, Math.abs(tip - zx));
 			if (on) { ctx.fillStyle = C.rule; ctx.fillRect(x, yy - rh / 2, w, rh); }
 			ctx.fillStyle = col;

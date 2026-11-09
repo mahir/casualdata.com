@@ -41,6 +41,7 @@
 	--ink-3: #8E8B84;   /* rules and axis ticks only; 3:1 on white for chart marks */
 	--rule: #E6E4DF;
 	--red: #E8341C;     /* the one thing, tuned per ground: 4.3:1 on white. marks and large labels only */
+	--green: #0E9F6E;   /* the one thing on a chart about parties, where red would read as Republican: 3.4:1 on white */
 	--sans: "Host Grotesk", Arial, sans-serif;
 	--mono: "Ioskeley Mono", ui-monospace, "SF Mono", Menlo, monospace;
 	--gut: clamp(20px, 4.4vw, 72px);   /* the page margin: generous, so titles and charts never run to the edge */
@@ -54,6 +55,7 @@
 	--ink-3: #66635E;
 	--rule: #2A2927;
 	--red: #FF5A3D;     /* 6.2:1 on the black page */
+	--green: #3DDC97;   /* 10.9:1 on the black page */
 	color-scheme: dark;
 }
 

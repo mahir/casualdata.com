@@ -26,7 +26,7 @@
 	const readColors = () => {
 		const cs = getComputedStyle(document.documentElement);
 		const v = n => cs.getPropertyValue(n).trim();
-		Object.assign(C, { paper: v("--paper"), ink: v("--ink"), ink2: v("--ink-2"), ink3: v("--ink-3"), rule: v("--rule"), red: v("--red") });
+		Object.assign(C, { paper: v("--paper"), ink: v("--ink"), ink2: v("--ink-2"), ink3: v("--ink-3"), rule: v("--rule"), red: v("--red"), green: v("--green") });
 		C.dark = document.documentElement.dataset.theme === "dark";
 	};
 	readColors();

@@ -1,6 +1,6 @@
 // 2026-11-09 — every House seat, placed by its pre-election rating and shaded by who won it.
 // Seven groups, from solid Democratic to solid Republican. A dark square is a seat a Democrat won
-// or leads, a light one a Republican. The one red idea: seats rated Republican that went to a
+// or leads, a light one a Republican. The one accent idea, in green (a chart about parties never uses red): seats rated Republican that went to a
 // Democrat. No seat went the other way, and every toss-up went to a Democrat.
 (function () {
 	const C = CD.colors;
@@ -52,7 +52,7 @@
 			return px + nw + 10 * s + Math.max(ctx.measureText(l1).width, ctx.measureText(l2).width);
 		};
 		const open = upsets.length - upCalled;
-		const end = pair(x, y, String(upsets.length), C.red, "SEATS RATED REPUBLICAN", `WENT TO DEMOCRATS · ${open} NOT YET CALLED`);
+		const end = pair(x, y, String(upsets.length), C.green, "SEATS RATED REPUBLICAN", `WENT TO DEMOCRATS · ${open} NOT YET CALLED`);
 		if (stacked) pair(x, y + 48 * s, String(reverse), C.ink, "RATED DEMOCRATIC OR TOSS-UP", "WENT TO REPUBLICANS");
 		else pair(Math.max(end + 40 * s, x + w * 0.5), y, String(reverse), C.ink, "SEATS RATED DEMOCRATIC OR TOSS-UP", "WENT TO REPUBLICANS");
 		return (stacked ? 96 : 48) * s;
@@ -60,7 +60,7 @@
 
 	// the key, flowing onto as many lines as it needs; returns its height. dry: measure only
 	function key(ctx, x, y, w, s, dry) {
-		const items = [[C.ink, "DEMOCRAT WON"], [C.ink3, "REPUBLICAN WON"], [C.red, "DEMOCRAT WON, RATED REPUBLICAN"], [null, "NOT YET CALLED"]];
+		const items = [[C.ink, "DEMOCRAT WON"], [C.ink3, "REPUBLICAN WON"], [C.green, "DEMOCRAT WON, RATED REPUBLICAN"], [null, "NOT YET CALLED"]];
 		const q = 10 * s, lh = 18 * s;
 		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
 		let cx = x, cy = y;
@@ -137,11 +137,11 @@
 				oy += LH + down.rows[k] * cell + GAPY;
 			});
 		}
-		// the squares; on load the upsets start as forecast, a Republican's, and turn red one by one
+		// the squares; on load the upsets start as forecast, a Republican's, and turn green one by one
 		const turned = Math.round(upsets.length * grow);
 		seats.forEach((r, i) => {
 			const c = cells[i], up = isUpset(r);
-			ctx.fillStyle = up ? (upsets.indexOf(i) < turned ? C.red : C.ink3) : r.won === "D" ? C.ink : C.ink3;
+			ctx.fillStyle = up ? (upsets.indexOf(i) < turned ? C.green : C.ink3) : r.won === "D" ? C.ink : C.ink3;
 			ctx.fillRect(c.x + inset, c.y + inset, side, side);
 			if (r.status !== "called" && side >= 7 * s) {
 				ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(c.x + cell / 2, c.y + cell / 2, Math.max(1.2 * s, side * 0.16), 0, Math.PI * 2); ctx.fill();
@@ -194,7 +194,7 @@
 			});
 			return best;
 		},
-		// the arrow keys walk the red seats, from lean to solid Republican
+		// the arrow keys walk the green seats, from lean to solid Republican
 		step: (from, dir) => {
 			const k = upsets.indexOf(from), n = upsets.length;
 			if (k >= 0) return upsets[(k + dir + n) % n];
@@ -202,6 +202,6 @@
 			return from < 0 || next === undefined ? upsets[dir > 0 ? 0 : n - 1] : dir > 0 ? next : upsets[(upsets.indexOf(next) - 1 + n) % n];
 		}
 	});
-	// the image is always the finished picture, even while the squares are still turning red
+	// the image is always the finished picture, even while the squares are still turning green
 	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
 })();

@@ -2,7 +2,7 @@
 // Each measure's gap: the share that took the side Democrats campaigned for, minus Harris's share
 // of the state's two-party vote for president in 2024. A positive gap means the state voted more
 // liberally on the issue than it voted for president; negative, more conservatively.
-// Left is liberal, as on 5 Nov. One row per issue; the abortion row is the one red idea.
+// Left is liberal, as on 5 Nov. One row per issue; the abortion row is the one accent idea (green: a chart about parties never uses red).
 (function () {
 	const C = CD.colors;
 	const GROUPS = [
@@ -27,7 +27,7 @@
 			: lib > n - lib ? `${lib} OF ${n} MORE LIBERAL` : lib < n - lib ? `${n - lib} OF ${n} MORE CONSERVATIVE` : `SPLIT ${lib}–${n - lib}`;
 		g.short = lib === n ? `ALL ${n} ←` : lib === 0 ? `ALL ${n} →` : lib > n - lib ? `${lib}/${n} ←` : `${n - lib}/${n} →`;
 	});
-	const HERO = 0;                                              // the abortion row carries the red
+	const HERO = 0;                                              // the abortion row carries the accent
 	const LIB = 26, CON = 20;                                    // points; left = more liberal
 
 	let sel = -1;                                                // the chosen measure, -1 = the overview; read from ?m= below
@@ -112,7 +112,7 @@
 			for (const q of here) {
 				const red = k === HERO, on = q.i === sel;
 				ctx.beginPath(); ctx.arc(q.x, q.y, red || on ? r * 1.15 : r, 0, Math.PI * 2);
-				ctx.fillStyle = red ? C.red : on ? C.ink : C.ink2; ctx.fill();
+				ctx.fillStyle = red ? C.green : on ? C.ink : C.ink2; ctx.fill();
 				ctx.lineWidth = 1.5 * s; ctx.strokeStyle = on && !red ? C.ink : C.paper; ctx.stroke();
 				// the chosen dot gets a ring, so it reads as chosen in a row of look-alikes
 				if (on) { ctx.beginPath(); ctx.arc(q.x, q.y, r * 1.15 + 4 * s, 0, Math.PI * 2); ctx.lineWidth = 1.5 * s; ctx.strokeStyle = C.ink; ctx.stroke(); }

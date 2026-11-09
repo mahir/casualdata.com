@@ -8,12 +8,14 @@ colors:
   ink-3: "#8E8B84"
   rule: "#E6E4DF"
   red: "#E8341C"
+  green: "#0E9F6E"
   paper-night: "#0E0E0E"
   ink-night: "#EDEBE6"
   ink-2-night: "#A8A59E"
   ink-3-night: "#66635E"
   rule-night: "#2A2927"
   red-night: "#FF5A3D"
+  green-night: "#3DDC97"
   brace-night: "#77746E"
 typography:
   display:
@@ -144,11 +146,12 @@ This file documents the daily frame (`kit/`). The 2007–2014 archive pages (`/w
 
 ## Colors
 
-A white or black page, ink, three warm greys, and one red per ground. The two theme sets swap in full on `:root[data-theme="dark"]`; canvas drawings read the same tokens through `CD.colors` and redraw when the theme turns.
+A white or black page, ink, three warm greys, and one red per ground, with a green that stands in for it on charts about political parties. The two theme sets swap in full on `:root[data-theme="dark"]`; canvas drawings read the same tokens through `CD.colors` and redraw when the theme turns.
 
 ### Primary
 - **Signal Red** (red, day): the one point that matters in each chart (the red line, the red dot, the red arrow, the red people), the dot in the `{•}` symbol, and large labels. At 4.3:1 on white it is below body-text contrast, so it is never used for running text.
 - **Night Signal Red** (red-night): the same role on the black page, lifted to stay as loud there (6.2:1).
+- **Party-Day Green / Night Party-Day Green** (green, green-night): takes Signal Red's place as the one accent on any chart whose data is about political parties, where red would read as Republican (and blue as Democratic). 3.4:1 on white and 10.9:1 on black: marks and large labels only, like the red. It is never used on other charts, and never beside red.
 
 ### Neutral
 - **Day Paper / Night Paper** (paper, paper-night): the page, the share panel, the phone bottom bar, and the text inside ink chips and solid buttons.
@@ -160,6 +163,8 @@ A white or black page, ink, three warm greys, and one red per ground. The two th
 
 ### Named Rules
 **The One Red Rule.** Each chart has exactly one red idea: one line, one arrow, one row, one group of people, one "you". Everything else in the drawing is ink, Graphite, Stone or Hairline. If a second thing wants to be red, it is not the point.
+
+**The No Party Colors Rule.** On a chart about political parties the accent is Party-Day Green, never red, and blue is never used: readers take red for Republican and blue for Democratic, so a red highlight tells the wrong story at first glance. The parties themselves stay in ink and greys, named in the key. The user's decision on 2026-11-09; 5, 7 and 9 Nov 2026 follow it.
 
 **The Marks Not Text Rule.** Red fills marks, dots and underlines and sets large labels; it is never the color of a sentence, a source line or small mono text.
 
@@ -254,7 +259,7 @@ An ink pill with paper mono label text, centred 24px from the bottom, rising 20p
 
 ### Do:
 - **Do** read every color from the tokens (`var(--…)` in CSS, `CD.colors` in canvas) and redraw on the `cd-theme` event.
-- **Do** give each chart exactly one red idea and draw everything else in ink, Graphite, Stone and Hairline.
+- **Do** give each chart exactly one red idea (green on a chart about political parties) and draw everything else in ink, Graphite, Stone and Hairline.
 - **Do** put the chart's point in words inside the drawing, with `CD.label` beside the point.
 - **Do** keep short labels in uppercase Ioskeley Mono at 11.5–12px and sentences in Host Grotesk in their own case.
 - **Do** give phone controls 44px minimum targets and keep previous day, All days, Share and next day in the bottom bar.
