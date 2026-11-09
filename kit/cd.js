@@ -32,7 +32,7 @@
 	readColors();
 	document.addEventListener("cd-theme", readColors);
 	CD.colors = C;
-	CD.wordmark = `<img class="wm wm-d" src="/kit/wordmark.svg" alt="casualdata"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="casualdata">`;
+	CD.wordmark = `<img class="wm wm-d" src="/kit/wordmark.svg" alt="casualdata"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="casualdata"><img class="sym wm-d" src="/kit/mark.svg" alt="casualdata"><img class="sym wm-l" src="/kit/mark-light.svg" alt="casualdata">`;   // the symbol stands in under 400px, as in the top bar
 
 	// The reading sits in the chart, next to the point it describes: an ink chip with
 	// the value on top and the context under it. (px, py) is the point; box = {x, y, w, h}

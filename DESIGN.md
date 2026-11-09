@@ -197,6 +197,8 @@ Home is a grid of every day, newest first: three columns above 960px with the ne
 
 Breakpoints: 960px and 600px for the home grid, 720px for the phone frame (bottom bar, icon-only buttons, 44px targets), 400px for swapping the wordmark for the `{•}` symbol.
 
+**The One Column Head Rule.** Under 1024px the head is one column: the dek goes under the title at up to 60ch, never into a narrow column beside it.
+
 **The Room to Read Rule.** Space is grouped, not spread evenly: tight inside a group (title and dek 12px apart), generous between groups. The page margin is `clamp(20px, 4.4vw, 72px)`; the head takes `clamp(22px, 5.5vh, 64px)` above and `clamp(26px, 6vh, 64px)` below; the source line sits `clamp(16px, 3.4vh, 34px)` under the chart. The generous intervals follow the screen height, so a short screen gives up air before chart; phones keep the head at 18/20px. Inside a chart the same holds: direction labels sit in their own band above the plot (about 46px), the scale in a band below (about 36px), a row heading 14px under its rule, annotations above the plot rather than on it.
 
 **The Floor Not Squeeze Rule.** A chart is never shorter than `--stage-min`. When the screen cannot fit it, the page scrolls and the phone bottom bar stays sticky in thumb reach.
@@ -225,7 +227,7 @@ Quiet, small and outlined: they read as labels until touched.
 The chart's reading, drawn in canvas beside the point it describes (`CD.label`): a square ink block with the value in Host Grotesk 600 over a mono uppercase context line in paper, 8px padding, 12px from the point. It flips left near the right edge, wraps its context at " · " breaks, and is mirrored to screen readers by a polite live region.
 
 ### Day tile (home)
-- **Two shapes only.** The newest day takes a full row: its image across two thirds at the left, and beside it the date (its label starts with a small red dot and "Latest"), the title in Display and the dek, over a Hairline rule. Every earlier day is the same tile in one even grid, newest first: four across on wide screens, three under 1200px, two under 960px (where the newest day stacks its caption under the image), one under 600px. A part-filled last row is left as it is: it is where the collection has got to.
+- **Two shapes only.** The newest day takes a full row: its image across two thirds at the left, and beside it, as one block at the top of the column (12px apart), the date (its label starts with a small red dot and "Latest"), the title in Display and the dek, over a Hairline rule. Every earlier day is the same tile in one even grid, newest first: four across on wide screens, three under 1200px, two under 960px (where the newest day stacks its caption under the image), one under 600px. A part-filled last row is left as it is: it is where the collection has got to.
 - **Corner Style:** square.
 - **Image:** the day's own share render in the reader's theme (`thumb.webp` / `thumb-night.webp`, 720 and 1200px), cropped to its chart at 1200:548 so the image's foot (logo, date, address) does not repeat the caption, on a Hairline well.
 - **Under it:** the date in the mono label, then the title (500, 18px).
