@@ -30,5 +30,11 @@ window.CD_DAYS = [
 		path: "/2026-11-08/",
 		title: "99 votes may decide a seat in Congress",
 		dek: "The closest races of 2026, one figure per vote of the lead."
+	},
+	{
+		date: "2026-11-09",
+		path: "/2026-11-09/",
+		title: "Every forecast miss went the same way",
+		dek: "All 435 House seats by their rating before the election, and who won them."
 	}
 ];
