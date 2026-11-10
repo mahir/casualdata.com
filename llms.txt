@@ -1,6 +1,6 @@
 # casualdata
 
-> casualdata daily publishes one new interactive data visualization every day, each on its own dated page at casualdata.com/YYYY-MM-DD/ with its data frozen in the page and its sources named. casualdata has made data visualization from everyday ("casual") data since 2005; its 2007–2014 art projects are kept at casualdata.com/work/.
+> casualdata daily publishes one new interactive data visualization every day, each on its own dated page at casualdata.com/YYYY-MM-DD/ with its data frozen in the page and its sources named. casualdata has made data visualization from everyday ("casual") data since 2005; its 2007–2011 art projects are kept at casualdata.com/work/.
 
 Made by Mahir Yavuz. Each day states one finding in its title; the description below it says what the chart shows. The numbers behind each day are in that day's data.js, with sources and timestamps.
 
@@ -13,7 +13,7 @@ Made by Mahir Yavuz. Each day states one finding in its title; the description b
 - [Nearly every Senate race moved toward the Democrats](https://casualdata.com/2026-11-05/) (5 November 2026): Each 2026 Senate race against the same state's 2024 vote for president. 30 of 31 moved toward the Democrats. The exception was Maine. Source: ABC News vote shares, 5 Nov 3:57 pm ET · 2024: MIT Election Lab. Data: https://casualdata.com/2026-11-05/data.js
 - [Where the light goes in November](https://casualdata.com/2026-11-04/) (4 November 2026): Hours of daylight for every latitude, every day of the year. Point anywhere to read it. Source: Computed from solar geometry, sunrise to sunset at sea level.
 
-## Work 2007–2014
+## Work 2007–2011
 
 - [News Knitter](https://casualdata.com/newsknitter/) (2007): News Knitter is a data visualization project which focuses on knitted garments as an alternative medium to visualize large scale data.
 - [Value Machine](https://casualdata.com/valuemachine/) (2008): Value Machine is an interactive visualisation project which focuses on ‘conversations’ happening in the blogosphere and attempts to reveal the hypothetical economic values of these conversations.

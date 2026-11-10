@@ -7,11 +7,14 @@ It is idempotent. For every published page it rewrites one block in <head>, betw
 <!-- seo --> and <!-- /seo -->: the canonical link, Open Graph and Twitter tags the page
 does not already set by hand, the feed link and JSON-LD structured data. It also writes
 the home grid as static HTML (so crawlers that run no JavaScript still find every day),
-and the site files sitemap.xml, robots.txt, feed.xml and llms.txt.
+and the site files sitemap.xml, robots.txt, feed.xml and llms.txt. On the daily pages it
+also stamps each stylesheet and script address with a hash of the file (?v=...), so a
+browser never pairs a new page with a cached old file.
 
 Day metadata comes from kit/days.js and each day's own index.html and data.js; archive
 metadata from the ARCHIVE table below. Python 3 standard library only.
 """
+import hashlib
 import html
 import json
 import os
@@ -26,14 +29,14 @@ NAME = "casualdata"
 TAGLINE = "A new data visualization every day."
 SITE_DESC = ("casualdata publishes one new interactive data visualization every day: a chart, map or "
              "picture of the day's news and data, each on its own dated page with its sources. "
-             "It also keeps casualdata's data visualization art projects from 2007 to 2014.")
+             "It also keeps casualdata's data visualization art projects from 2007 to 2011.")
 ORG_ID = SITE + "/#org"
 SITE_ID = SITE + "/#website"
 LOGO = SITE + "/img/og/logo.png"
 
 # Archive pages: path -> name, year, share image, parent page, language.
 ARCHIVE = {
-    "work/index.html": dict(name="Work 2007–2014", kind="collection", img="nk", title="Work 2007–2014 · casualdata"),
+    "work/index.html": dict(name="Work 2007–2011", kind="collection", img="nk", title="Work 2007–2011 · casualdata"),
     "newsknitter/index.html": dict(name="News Knitter", year="2007", img="nk"),
     "newsknitter/300dpi/index.html": dict(name="News Knitter press images", year="2007", img="nk",
                                           parent="newsknitter/index.html", title="Press images · News Knitter · casualdata"),
@@ -76,6 +79,22 @@ def write(p, s):
         with open(path, "w", encoding="utf-8") as f:
             f.write(s)
         print("wrote", p)
+
+
+def stamp(page, p, skip=()):
+    """Version the page's local stylesheet and script addresses by content: /kit/cd.css?v=1a2b3c4d.
+    Pages caches files for ten minutes, so without this a browser can pair a new page with an old
+    file. The address only changes when the file does."""
+    def one(m):
+        ref = m.group(2)
+        if ref in skip:
+            return f'{m.group(1)}"{ref}"'
+        f = os.path.join(ROOT, ref.lstrip("/")) if ref.startswith("/") else os.path.join(ROOT, os.path.dirname(p), ref)
+        if not os.path.exists(f):
+            return m.group(0)
+        with open(f, "rb") as fh:
+            return f'{m.group(1)}"{ref}?v={hashlib.sha1(fh.read()).hexdigest()[:8]}"'
+    return re.sub(r'(<(?:script|link)\b[^>]*?\b(?:src|href)=)"((?!https?:|//)[^"?]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"', one, page)
 
 
 def url_of(p):
@@ -234,7 +253,9 @@ def do_day(info, prev_next):
         lines.append(f'<link rel="prev" href="{prev}">')
     if nxt:
         lines.append(f'<link rel="next" href="{nxt}">')
-    write(info["path"], put_block(page, lines))
+    # kit/days.js changes every day and a day page only reads its neighbours from it, so it stays
+    # unstamped here: stamping it would rewrite every day page daily.
+    write(info["path"], stamp(put_block(page, lines), info["path"], skip=("/kit/days.js",)))
 
 
 def tile(d, i):
@@ -280,7 +301,7 @@ def do_home(pub):
     alt = f"The latest casualdata visualization: {latest['title']}" if latest else NAME
     lines = tags(page, SITE + "/", "casualdata · a new data visualization every day", SITE_DESC, img, alt, "website",
                  extra_ld=[ORG, WEBSITE, home, items])
-    write(p, put_block(page, lines))
+    write(p, stamp(put_block(page, lines), p))
 
 
 def do_archive(p, a):
@@ -298,16 +319,16 @@ def do_archive(p, a):
     desc = meta(page, "name", "description") or ""
     url = url_of(p)
     image = f"{SITE}/img/og/{a['img']}.jpg" if a.get("img") else None
-    trail = [("casualdata", SITE + "/"), ("Work 2007–2014", SITE + "/work/")]
+    trail = [("casualdata", SITE + "/"), ("Work 2007–2011", SITE + "/work/")]
     if a.get("parent"):
         trail.append((ARCHIVE[a["parent"]]["name"], url_of(a["parent"])))
     if a.get("kind") == "collection":
-        node = {"@type": "CollectionPage", "@id": url + "#page", "url": url, "name": "casualdata work, 2007–2014",
+        node = {"@type": "CollectionPage", "@id": url + "#page", "url": url, "name": "casualdata work, 2007–2011",
                 "description": desc, "isPartOf": {"@id": SITE_ID}, "publisher": {"@id": ORG_ID}, "inLanguage": "en",
                 "mainEntity": {"@type": "ItemList", "itemListElement": [
                     {"@type": "ListItem", "position": i + 1, "url": url_of(w), "name": ARCHIVE[w]["name"]}
                     for i, w in enumerate(WORKS)]}}
-        trail = trail[:1] + [("Work 2007–2014", url)]
+        trail = trail[:1] + [("Work 2007–2011", url)]
     else:
         trail.append((a["name"], url))
         node = {"@type": "Article" if lang == "tr" else "CreativeWork", "@id": url + "#work", "url": url,
@@ -395,7 +416,7 @@ def do_llms(pub):
     lines = ["# casualdata", "",
              "> casualdata daily publishes one new interactive data visualization every day, each on its own "
              "dated page at casualdata.com/YYYY-MM-DD/ with its data frozen in the page and its sources named. "
-             "casualdata has made data visualization from everyday (\"casual\") data since 2005; its 2007–2014 "
+             "casualdata has made data visualization from everyday (\"casual\") data since 2005; its 2007–2011 "
              "art projects are kept at casualdata.com/work/.", "",
              "Made by Mahir Yavuz. Each day states one finding in its title; the description below it says what the "
              "chart shows. The numbers behind each day are in that day's data.js, with sources and timestamps.", "",
@@ -403,7 +424,7 @@ def do_llms(pub):
     for d in reversed(pub):
         src = f" Source: {d['source']}." if d["source"] else ""
         lines.append(f"- [{d['title']}]({d['url']}) ({human_date(d['date'])}): {d['desc']}{src}" + (f" Data: {SITE}/{d['date']}/data.js" if d["has_data"] else ""))
-    lines += ["", "## Work 2007–2014", ""]
+    lines += ["", "## Work 2007–2011", ""]
     for p in WORKS:
         a = ARCHIVE[p]
         desc = meta(read(p), "name", "description") or ""

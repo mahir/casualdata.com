@@ -135,7 +135,7 @@ casualdata daily is a sheet of paper that turns over with the day. By the reader
 
 The frame is flat, ruled and quiet: a 1px ink rule under the top bar, a grotesk title set light and large, a two-sentence dek saying how to read the chart, and then the chart takes the rest of the screen. Short labels are uppercase mono, so dates, counts, axes and buttons read as one register of small facts. Charts carry their own words: the reading sits inside the drawing in an ink chip beside the point, and every exported image carries the `{casualdata}` wordmark and the date at its foot.
 
-This file documents the daily frame (`kit/`). The 2007–2014 archive pages (`/work/` and the project folders, on `css/casualdata.css`) follow [DESIGN-archive.md](DESIGN-archive.md), not this file.
+This file documents the daily frame (`kit/`). The 2007–2011 archive pages (`/work/` and the project folders, on `css/casualdata.css`) follow [DESIGN-archive.md](DESIGN-archive.md), not this file.
 
 **Key Characteristics:**
 - Two grounds, chosen by the reader's local hour; every token has a day and a night value and every drawing works on both.
