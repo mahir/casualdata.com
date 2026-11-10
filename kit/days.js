@@ -36,5 +36,11 @@ window.CD_DAYS = [
 		path: "/2026-11-09/",
 		title: "Every forecast miss went the same way",
 		dek: "All 435 House seats by their rating before the election, and who won them."
+	},
+	{
+		date: "2026-11-10",
+		path: "/2026-11-10/",
+		title: "CO₂ has been higher at every climate summit than at the one before",
+		dek: "Carbon dioxide in the air in the month each UN climate summit opened, Berlin 1995 to Antalya 2026."
 	}
 ];

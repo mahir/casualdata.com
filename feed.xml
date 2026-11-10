@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Mon, 09 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 10 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>CO₂ has been higher at every climate summit than at the one before</title>
+    <link>https://casualdata.com/2026-11-10/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-10/</guid>
+    <pubDate>Tue, 10 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Carbon dioxide in the air in the month each of the 31 UN climate summits opened, from Berlin in 1995 (360 ppm) to Antalya in 2026 (430 ppm), measured at Mauna Loa with the seasonal cycle removed: it was higher at every summit than at the one before.</description>
+    <enclosure url="https://casualdata.com/2026-11-10/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Every forecast miss went the same way</title>
     <link>https://casualdata.com/2026-11-09/</link>
