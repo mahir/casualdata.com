@@ -25,3 +25,7 @@
 # The nightly loops' working files (notes, ideas, QA reports, playbooks).
 # Kept local: Pages would publish anything committed here next to the site.
 /.daily/
+
+# The product notes (audiences, decisions and the reasoning behind them).
+# Kept local: Pages would publish anything committed here next to the site.
+/PRODUCT.md
