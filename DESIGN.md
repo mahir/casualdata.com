@@ -182,7 +182,7 @@ A white or black page, ink, three warm greys, and one red per ground, with a gre
 - **Display** (400, fluid to 72px, line-height 1, tracking -0.025em): the day title and the lead tile's title on home (which runs to 46px); balanced, at most about 18–20ch.
 - **Headline** (500, 16px, 1.25, −0.01em): the home sentence ("A new data visualization every day."), the page's `h1`, in the top bar between the logo and the archive link. At 600px and below the three do not fit one row, so it takes its own row under the bar's rule at 18px.
 - **Title** (500, 19px, 1.28): tile titles on home; share-panel rows use 600 at 17px.
-- **Body** (400, 16px, 1.4–1.45): deks and the home footer text, at most 44–60ch; the day dek steps down to 14px on phones.
+- **Body** (400, 16px, 1.4–1.45): deks, at most 44–60ch; the day dek steps down to 14px on phones.
 - **Label** (Ioskeley Mono 400, 12px, 0.02em, uppercase; buttons and panel headings 0.04em): dates, counts, the top-bar date, buttons, the toast. Source footers use the mono at 12.5px but keep sentence case, because sources are sentences.
 - **Chart label** (Ioskeley Mono 400, 11.5px, uppercase): axes, row tags, counts drawn in canvas.
 - **Reading value** (Host Grotesk 600, 17px): the number in the reading chip, over an 11px mono context line.

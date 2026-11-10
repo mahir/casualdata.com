@@ -259,8 +259,9 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 	margin-top: clamp(56px, 9vh, 112px); padding: 18px var(--gut) 24px; border-top: 1px solid var(--ink);
 	display: flex; justify-content: space-between; align-items: baseline; gap: 12px 32px; flex-wrap: wrap;
 }
-.cd-homefoot .about { margin: 0; max-width: 60ch; color: var(--ink-2); font-size: 15px; }
-.cd-homefoot .about a { color: var(--ink); text-underline-offset: 3px; }
+.cd-homefoot .cd-meta { margin: 0; line-height: 1.6; }
+.cd-homefoot a { color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); white-space: nowrap; padding: 10px 0; }
+.cd-homefoot a:hover { text-decoration-color: var(--ink); }
 
 /* ---------- panels: share ---------- */
 dialog.cd-panel {
