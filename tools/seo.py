@@ -58,11 +58,15 @@ WORKS = ["newsknitter/index.html", "valuemachine/index.html", "newshaper/index.h
          "socialbits/index.html", "senseofpatterns/index.html", "extra/referandum2010/index.html"]
 NOINDEX = ["404.html"]
 
+# Mahir Yavuz, by the same @id his own site gives him, so search and answer engines read both as one person.
+MAKER_URL = "https://mahiryavuz.com/"
+MAKER = {"@type": "Person", "@id": MAKER_URL + "#person", "name": "Mahir Yavuz", "url": MAKER_URL}
+
 ORG = {
     "@type": "Organization", "@id": ORG_ID, "name": NAME, "alternateName": "{casualdata}",
     "url": SITE + "/", "logo": {"@type": "ImageObject", "url": LOGO, "width": 512, "height": 512},
     "foundingDate": "2005", "description": SITE_DESC,
-    "founder": {"@type": "Person", "name": "Mahir Yavuz"},
+    "founder": MAKER,
     "knowsAbout": ["data visualization", "information design", "data journalism", "generative art"],
 }
 
@@ -334,7 +338,7 @@ def do_archive(p, a):
         node = {"@type": "Article" if lang == "tr" else "CreativeWork", "@id": url + "#work", "url": url,
                 "name": a["name"], "headline": a["name"], "description": desc, "dateCreated": a["year"],
                 "datePublished": a["year"], "genre": "data visualization", "inLanguage": lang,
-                **({"image": image} if image else {}), "creator": [{"@id": ORG_ID}, {"@type": "Person", "name": "Mahir Yavuz"}],
+                **({"image": image} if image else {}), "creator": [{"@id": ORG_ID}, MAKER],
                 "author": {"@id": ORG_ID}, "publisher": {"@id": ORG_ID}, "isPartOf": {"@id": SITE + "/work/"}}
     lines = tags(page, url, title.replace(" · casualdata", ""), desc, image, a["name"],
                  "website" if a.get("kind") else "article", lang=lang,
@@ -418,7 +422,7 @@ def do_llms(pub):
              "dated page at casualdata.com/YYYY-MM-DD/ with its data frozen in the page and its sources named. "
              "casualdata has made data visualization from everyday (\"casual\") data since 2005; its 2007–2011 "
              "art projects are kept at casualdata.com/work/.", "",
-             "Made by Mahir Yavuz. Each day states one finding in its title; the description below it says what the "
+             f"Made by [Mahir Yavuz]({MAKER_URL}). Each day states one finding in its title; the description below it says what the "
              "chart shows. The numbers behind each day are in that day's data.js, with sources and timestamps.", "",
              "## Daily visualizations (newest first)", ""]
     for d in reversed(pub):

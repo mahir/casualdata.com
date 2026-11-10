@@ -2,7 +2,7 @@
 
 > casualdata daily publishes one new interactive data visualization every day, each on its own dated page at casualdata.com/YYYY-MM-DD/ with its data frozen in the page and its sources named. casualdata has made data visualization from everyday ("casual") data since 2005; its 2007–2011 art projects are kept at casualdata.com/work/.
 
-Made by Mahir Yavuz. Each day states one finding in its title; the description below it says what the chart shows. The numbers behind each day are in that day's data.js, with sources and timestamps.
+Made by [Mahir Yavuz](https://mahiryavuz.com/). Each day states one finding in its title; the description below it says what the chart shows. The numbers behind each day are in that day's data.js, with sources and timestamps.
 
 ## Daily visualizations (newest first)
 
