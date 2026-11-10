@@ -156,7 +156,7 @@ A white or black page, ink, three warm greys, and one red per ground, with a gre
 ### Neutral
 - **Day Paper / Night Paper** (paper, paper-night): the page, the share panel, the phone bottom bar, and the text inside ink chips and solid buttons.
 - **Ink / Night Ink** (ink, ink-night): titles, body, the top-bar and footer rules, button outlines, the reading chip's ground, and the chart marks the reader has selected.
-- **Graphite** (ink-2, ink-2-night): secondary text (deks, the intro's second sentence, labels, sources) and unselected chart marks; 7.2:1 by day and 8.1:1 by night.
+- **Graphite** (ink-2, ink-2-night): secondary text (deks, labels, sources) and unselected chart marks; 7.2:1 by day and 8.1:1 by night.
 - **Stone** (ink-3, ink-3-night): axis ticks, quiet chart marks, link underlines in the foot and the disabled stepper arrow. About 3.3:1 on either page: enough for marks, not for text.
 - **Hairline** (rule, rule-night): row dividers in lists, the highlight band behind a hovered chart row, the arrow hover disc and the empty image well of a tile.
 - **Brace Grey, night** (brace-night): the braces of the wordmark and symbol on the black page only. On white the braces use Stone.
@@ -180,7 +180,7 @@ A white or black page, ink, three warm greys, and one red per ground, with a gre
 
 ### Hierarchy
 - **Display** (400, fluid to 72px, line-height 1, tracking -0.025em): the day title and the lead tile's title on home (which runs to 46px); balanced, at most about 18–20ch.
-- **Headline** (500, fluid 20–26px, 1.25): the home intro line, its second sentence in Graphite.
+- **Headline** (500, 16px, 1.25, −0.01em): the home sentence ("A new data visualization every day."), the page's `h1`, in the top bar between the logo and the archive link. At 600px and below the three do not fit one row, so it takes its own row under the bar's rule at 18px.
 - **Title** (500, 19px, 1.28): tile titles on home; share-panel rows use 600 at 17px.
 - **Body** (400, 16px, 1.4–1.45): deks and the home footer text, at most 44–60ch; the day dek steps down to 14px on phones.
 - **Label** (Ioskeley Mono 400, 12px, 0.02em, uppercase; buttons and panel headings 0.04em): dates, counts, the top-bar date, buttons, the toast. Source footers use the mono at 12.5px but keep sentence case, because sources are sentences.
@@ -196,7 +196,7 @@ A white or black page, ink, three warm greys, and one red per ground, with a gre
 
 The day page is a single-column grid of five rows: top bar, head, stage, foot, and on phones the bottom bar. The stage takes the height left over (`1fr`) but never less than its floor, `--stage-min` (clamp 240px, 40dvh, 420px); below that the page scrolls instead of squeezing the chart. The head is two columns (title about 1.6 : dek 1, dek aligned right and bottom) on wide screens and one column at 720px and below.
 
-Horizontal rhythm is one fluid gutter (clamp 16px, 2.4vw, 36px) used for every edge: bar, head, stage margin, foot, home grid and panel. Vertical padding in the head and intro is set in `vh` clamps so the day fits one screen on laptops.
+Horizontal rhythm is one fluid gutter (clamp 16px, 2.4vw, 36px) used for every edge: bar, head, stage margin, foot, home grid and panel. Vertical padding in the head and above the home grid is set in `vh` clamps so the day fits one screen on laptops.
 
 Home is a grid of every day, newest first: three columns above 960px with the newest tile spanning two columns and two rows, two columns from 960px (the lead spans two columns, one row), one column at 600px and below. Column gap clamps 16–28px, row gap 28–48px; the footer sits 56–112px below the grid.
 

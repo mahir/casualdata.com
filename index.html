@@ -38,12 +38,11 @@
 
 <header class="cd-bar">
   <a class="cd-mark" href="/" aria-current="page" aria-label="casualdata"><img class="wm wm-d" src="/kit/wordmark.svg" alt="" width="110" height="20"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="" width="110" height="20"><img class="sym wm-d" src="/kit/mark.svg" alt="" width="23" height="20"><img class="sym wm-l" src="/kit/mark-light.svg" alt="" width="23" height="20"></a>
-  <p class="cd-meta" style="margin:0" id="count">6 days so far</p>
+  <h1 class="cd-tagline">A new data visualization every day.</h1>
   <a class="cd-textlink" href="/work/">Work 2007–2014</a>
 </header>
 
 <main>
-  <h1 class="cd-intro">A new data visualization every day.</h1>
   <ol class="cd-days" id="days" role="list">
     <li class="tile lead"><a href="/2026-11-09/">
       <img srcset="/2026-11-09/thumb.webp 720w, /2026-11-09/thumb-1200.webp 1200w" sizes="(max-width: 960px) 100vw, 66vw" src="/2026-11-09/thumb.webp" width="1200" height="630" alt="" loading="lazy">
@@ -80,7 +79,7 @@
 </main>
 
 <footer class="cd-homefoot">
-  <p class="about">A new data visualization every day. Made by casualdata since 2005. The <a href="/work/">work from 2007 to 2014</a> is in the archive.</p>
+  <p class="about">Made by casualdata since 2005. The <a href="/work/">work from 2007 to 2014</a> is in the archive.</p>
   <p class="cd-meta">All data is somehow casual, 2005–today.</p>
 </footer>
 
@@ -92,7 +91,6 @@
   const list = CD.days.slice().reverse();
   const dark = () => document.documentElement.dataset.theme === "dark";
   const srcset = d => { const n = dark() ? "thumb-night" : "thumb"; return `${d.path}${n}.webp 720w, ${d.path}${n}-1200.webp 1200w`; };
-  document.getElementById("count").textContent = `${list.length} days so far`;
   const grid = document.getElementById("days");
   grid.innerHTML = list.map((d, i) => `
     <li class="tile${i === 0 ? " lead" : ""}"><a href="${d.path}">

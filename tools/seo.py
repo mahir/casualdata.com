@@ -261,11 +261,10 @@ def do_home(pub):
     page = read(p)
     latest = pub[-1] if pub else None
     newest = list(reversed(pub))
-    # Static grid and count, replaced by the page script when JavaScript runs.
+    # Static grid, replaced by the page script when JavaScript runs.
     grid = "\n".join(tile(d, i) for i, d in enumerate(newest))
     page = re.sub(r'(<ol class="cd-days" id="days" role="list">).*?(</ol>)', lambda m: m.group(1) + "\n" + grid + "\n  " + m.group(2),
                   page, count=1, flags=re.S)
-    page = re.sub(r'(<p class="cd-meta" style="margin:0" id="count">).*?(</p>)', lambda m: f"{m.group(1)}{len(pub)} days so far{m.group(2)}", page, count=1)
     page = set_title(page, "casualdata · a new data visualization every day")
     page = re.sub(r'<meta name="description" content="[^"]*">',
                   f'<meta name="description" content="{esc(SITE_DESC)}">', page, count=1)
