@@ -29,7 +29,7 @@ window.CD_DAYS = [
 		date: "2026-11-08",
 		path: "/2026-11-08/",
 		title: "99 votes may decide a seat in Congress",
-		dek: "The closest races of 2026, one figure per vote of the lead."
+		dek: "The five closest races of 2026, one figure per vote of the lead."
 	},
 	{
 		date: "2026-11-09",
