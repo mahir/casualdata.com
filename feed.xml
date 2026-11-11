@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Tue, 10 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 11 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>No El Niño week on record was as far above normal as the last seven</title>
+    <link>https://casualdata.com/2026-11-11/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-11/</guid>
+    <pubDate>Wed, 11 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Weekly sea-surface temperature in the central Pacific (Niño 3.4), in degrees above the 1991–2020 normal: for seven weeks running, to the week of 4 November 2026, it has been above +3.0 °C, the highest week before this year in NOAA's record, which starts in 1981.</description>
+    <enclosure url="https://casualdata.com/2026-11-11/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>CO₂ has been higher at every climate summit than at the one before</title>
     <link>https://casualdata.com/2026-11-10/</link>

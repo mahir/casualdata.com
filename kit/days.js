@@ -42,5 +42,11 @@ window.CD_DAYS = [
 		path: "/2026-11-10/",
 		title: "CO₂ has been higher at every climate summit than at the one before",
 		dek: "Carbon dioxide in the air in the month each UN climate summit opened, Berlin 1995 to Antalya 2026."
+	},
+	{
+		date: "2026-11-11",
+		path: "/2026-11-11/",
+		title: "No El Niño week on record was as far above normal as the last seven",
+		dek: "Weekly sea-surface temperature in the central Pacific, in degrees above normal: 2026 against the years of the four biggest earlier El Niños since 1981."
 	}
 ];
