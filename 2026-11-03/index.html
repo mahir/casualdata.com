@@ -20,6 +20,22 @@
   <link rel="preload" href="/fonts/ioskeley-mono-regular.woff2" as="font" type="font/woff2" crossorigin>
   <script src="/kit/theme.js?v=116912da"></script>
   <link rel="stylesheet" href="/kit/cd.css?v=d523b8f7">
+  <style>
+    /* This day's map is the page: the chart takes the full width and, on wide screens, the height of
+       the title too, which sits over its open water. One title, one line under it, one line of source. */
+    .cd-map .cd-stage { margin: 0; }
+    .cd-map .cd-head { display: block; padding-block: clamp(18px, 3.6vh, 36px) 14px; }
+    .cd-map .cd-title { font-size: clamp(24px, min(2.5vw, 4.6vh), 38px); line-height: 1.07; max-width: none; }
+    .cd-map .cd-dek { margin-top: 10px; max-width: none; font-size: 14px; line-height: 1.45; }
+    .cd-map .cd-foot { padding-block: 10px 12px; font-size: 12px; }
+    @media (min-width: 1024px) {
+      .cd-map .cd-bar { grid-row: 1; }
+      .cd-map .cd-stage { grid-row: 2 / 4; grid-column: 1; }
+      .cd-map .cd-head { grid-row: 2; grid-column: 1; z-index: 1; pointer-events: none; }
+      .cd-map .cd-foot { grid-row: 4; }
+      .cd-map .cd-text { width: min(31vw, 430px); }
+    }
+  </style>
   <!-- seo -->
   <meta property="article:published_time" content="2026-11-03T07:00:00Z">
   <link rel="canonical" href="https://casualdata.com/2026-11-03/">
@@ -36,7 +52,7 @@
   <link rel="next" href="https://casualdata.com/2026-11-04/">
   <!-- /seo -->
 </head>
-<body class="cd-day" data-day="2026-11-03">
+<body class="cd-day cd-map" data-day="2026-11-03">
 
 <header class="cd-bar">
   <a class="cd-mark" href="/" aria-label="casualdata"><img class="wm wm-d" src="/kit/wordmark.svg" alt="" width="110" height="20"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="" width="110" height="20"><img class="sym wm-d" src="/kit/mark.svg" alt="" width="23" height="20"><img class="sym wm-l" src="/kit/mark-light.svg" alt="" width="23" height="20"></a>
@@ -48,8 +64,10 @@
 </header>
 
 <section class="cd-head">
+  <div class="cd-text">
   <h1 class="cd-title">In the time it took to win this year’s Route du Rhum, the first winner had sailed 28% of the way</h1>
-  <p class="cd-dek">Where the winner of each of the 13 solo races from Saint-Malo to Guadeloupe since 1978 would be after 6 days 13 hours, this year’s winning time, at their own average speed. Pick a year for its sailor, boat and time.</p>
+  <p class="cd-dek">Where each of the 13 winners since 1978 would be after 6 days 13 hours, this year’s winning time, at their own average speed.</p>
+  </div>
   <p class="visually-hidden" id="cd-live" aria-live="polite"></p>
 </section>
 
@@ -58,13 +76,13 @@
 </main>
 
 <footer class="cd-foot cd-meta">
-  <span data-source="Race times: routedurhum.com and French Wikipedia, read 12 Nov 2026. Coastline: Natural Earth">Calculated, not logged positions: each winner’s average speed over the race’s 3,542 nautical miles, held for 6d 13h 27m 40s. Laperche finished on 8 Nov 2026. Times: routedurhum.com and French Wikipedia, read 12 Nov 2026. Coast: Natural Earth.</span>
+  <span data-source="Race times: routedurhum.com and French Wikipedia, read 12 Nov 2026. Coastline: Natural Earth">Calculated from each winner’s average speed over 3,542 nautical miles, not logged positions. Sources: routedurhum.com, Wikipedia, Natural Earth.</span>
   <span class="hint">←→ years</span>
 </footer>
 
 <script src="/kit/days.js"></script>
 <script src="/kit/cd.js?v=08d47eff"></script>
-<script src="data.js?v=c2c4705f"></script>
-<script src="viz.js?v=73cc3ce8"></script>
+<script src="data.js?v=38627511"></script>
+<script src="viz.js?v=67ddbc01"></script>
 </body>
 </html>
