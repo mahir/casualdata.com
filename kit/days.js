@@ -48,5 +48,11 @@ window.CD_DAYS = [
 		path: "/2026-11-11/",
 		title: "No El Niño week on record was as far above normal as the last seven",
 		dek: "Weekly sea-surface temperature in the central Pacific, in degrees above normal: 2026 against the years of the four biggest earlier El Niños since 1981."
+	},
+	{
+		date: "2026-11-12",
+		path: "/2026-11-12/",
+		title: "India more than halved its child pneumonia deaths. Nigeria’s have barely moved",
+		dek: "Estimated deaths of children under five from pneumonia in 2015 and 2024, for the six countries that lose the most."
 	}
 ];

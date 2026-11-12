@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Wed, 11 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 12 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>India more than halved its child pneumonia deaths. Nigeria’s have barely moved</title>
+    <link>https://casualdata.com/2026-11-12/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-12/</guid>
+    <pubDate>Thu, 12 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Estimated deaths of children under five from pneumonia in 2015 and 2024, for the six countries that lose the most: India’s fell from about 179,000 to about 70,000, while Nigeria’s stayed near 150,000. UNICEF estimates.</description>
+    <enclosure url="https://casualdata.com/2026-11-12/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>No El Niño week on record was as far above normal as the last seven</title>
     <link>https://casualdata.com/2026-11-11/</link>
