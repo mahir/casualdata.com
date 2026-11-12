@@ -157,6 +157,23 @@ body.cd-day {
 	.cd-btn { padding: 8px 10px; }
 }
 
+/* ---------- the chart is the page (body.cd-day.cd-full; every day from 13 Nov 2026) ----------
+   One title, one sentence under it, one line of source, and the chart takes everything else: the full
+   width, and on wide screens the height of the title too, which then lies over the chart's top left.
+   The day's code asks CD.headBox(stage) where the title block is and keeps its marks clear of it. */
+.cd-full .cd-stage { margin: 0; }
+.cd-full .cd-head { display: block; padding-block: clamp(18px, 3.6vh, 36px) 14px; }
+.cd-full .cd-title { font-size: clamp(24px, min(2.5vw, 4.6vh), 38px); line-height: 1.07; max-width: none; }
+.cd-full .cd-dek { margin-top: 10px; max-width: none; font-size: 14px; line-height: 1.45; }
+.cd-full .cd-foot { padding-block: 10px 12px; font-size: 12px; }
+@media (min-width: 1024px) {
+	.cd-full .cd-bar { grid-row: 1; }
+	.cd-full .cd-stage { grid-row: 2 / 4; grid-column: 1; }
+	.cd-full .cd-head { grid-row: 2; grid-column: 1; z-index: 1; pointer-events: none; }
+	.cd-full .cd-foot { grid-row: 4; }
+	.cd-full .cd-text { width: min(31vw, 430px); }
+}
+
 /* ---------- moving between days ---------- */
 /* The date in the top bar sits between the previous and next day (desktop); on phones those move to
    a bar at the bottom, in thumb reach, with All days between them. */

@@ -116,6 +116,14 @@
 		});
 	};
 
+	// On a cd-full day the title block lies over the chart on wide screens. Returns its box in the
+	// stage's own pixels ({x, y, w, h}), or null when it sits above the chart (phones, tablets).
+	CD.headBox = stage => {
+		const el = document.querySelector(".cd-head .cd-text"); if (!el) return null;
+		const r = stage.getBoundingClientRect(), b = el.getBoundingClientRect();
+		return b.bottom > r.top + 8 && b.top < r.bottom ? { x: b.left - r.left, y: b.top - r.top, w: b.width, h: b.height } : null;
+	};
+
 	// A visually hidden live region that repeats the reading for screen readers.
 	CD.announce = text => { const el = document.getElementById("cd-live"); if (el && el.textContent !== text) el.textContent = text; };
 

@@ -30,7 +30,7 @@ Pages use relative asset paths, so serve from the repo root and open `/<project>
 
 ## Layout
 
-**Since 2026-11-06 the root is casualdata daily**, one data visualization a day: `/index.html` is its front page, each day lives in `/YYYY-MM-DD/` (`index.html`, `viz.js`, `data.js`, `card.png`), and the shared code is in `kit/` (see [NEXT.md](NEXT.md)). Every page follows the reader's clock: white by day, black by night (`kit/theme.js`, fixed by the user on 2026-11-08). On 2026-11-08 the user asked for a new, much better design system and brand for daily; everything but day/night is open (see PRODUCT.md). The 2007–2011 homepage described below is now `/work/index.html`, and the archive pages' wordmarks link there. `/next/` only redirects to `/`.
+**Since 2026-11-06 the root is casualdata daily**, one data visualization a day: `/index.html` is its front page, each day lives in `/YYYY-MM-DD/` (`index.html`, `viz.js`, `data.js`, `card.png`), and the shared code is in `kit/` (see [NEXT.md](NEXT.md)). Every page follows the reader's clock: white by day, black by night (`kit/theme.js`, fixed by the user on 2026-11-08). **Days from 2026-11-13 on use the `cd-full` layout** (the user's decision on 2026-11-12, after finding 3 Nov's first version a small chart under too much text): one title, one sentence of dek, one line of source, and the chart fills the rest of the page; `/2026-11-03/` is the model and NEXT.md, "The layout of a day", has the rules. On 2026-11-08 the user asked for a new, much better design system and brand for daily; everything but day/night is open (see PRODUCT.md). The 2007–2011 homepage described below is now `/work/index.html`, and the archive pages' wordmarks link there. `/next/` only redirects to `/`.
 
 ### The archive (2007–2011)
 

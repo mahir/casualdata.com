@@ -241,8 +241,7 @@
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, Hh);
 		// where the title block lies over the canvas (wide screens), the map keeps clear of it
-		const hb = headEl.getBoundingClientRect(), over = hb.bottom > r.top + 8 && hb.top < r.bottom;
-		geo = draw(ctx, 0, 0, W, Hh, 1, false, { head: over ? { x: hb.left - r.left, y: hb.top - r.top, w: hb.width, h: hb.height } : null });
+		geo = draw(ctx, 0, 0, W, Hh, 1, false, { head: CD.headBox(stage) });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };

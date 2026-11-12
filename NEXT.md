@@ -30,9 +30,21 @@ This branch (`daily`) turns casualdata.com into a site that publishes one intera
 - **Drafts.** A day with `draft: true` in `kit/days.js` is left out of the home grid and the stepper, and its top bar says "Draft". Its URL still works, and adding `?drafts` to any page lists every draft. Remove the flag to publish it.
 - **Data is frozen into the day.** Each day's numbers live in its own `data.js`, with sources and timestamps in comments, so the page never depends on another site. `.impeccable/tools/build_data.py` (local only) turned the research files for 6–8 Nov into those `data.js` files.
 
+## The layout of a day: the chart is the page (the user's decision, 12 Nov 2026)
+
+After 3 Nov's first version the user found the visual "very small" with "so much text on the page: two big titles, many footnotes, subtext". Every day made from 13 Nov 2026 on uses the layout of `/2026-11-03/`, which is the model to copy. Days published before that keep the old frame.
+
+- `<body class="cd-day cd-full">`, and the title and dek sit together in `<div class="cd-text">` inside `.cd-head`. The styles are the `.cd-full` block in `kit/cd.css`.
+- **One title.** The `<h1>` is the only statement of the point on the page. The sentence in the drawing is drawn **only in shared images** (when `exporting` is true), because those have no title.
+- **One sentence of dek,** 150 characters at most, saying what is plotted. No instructions ("pick a year…"): the canvas label and the key hint carry those.
+- **One line of source,** 170 characters at most: the one caveat a reader needs, then the source names. Addresses, fetch times and method go in the comments of `data.js`, not on the page.
+- **The chart fills the stage** edge to edge (no side margin). At 1024 px and wider the stage also takes the height of the head, and the title block (430 px at most) lies over the chart's top left. `CD.headBox(stage)` returns that block's box, or null on narrow screens where the title sits above the chart. The drawing keeps its marks clear of the box and may use the room under it for a list, a key or the reading; the rest of the canvas is the plot, fitted to the marks, not to a fixed frame.
+- **No small print in the drawing on the page:** labels on marks, yes; a second explanatory line, no. The reading appears beside the mark it describes.
+- The page check warns when the chart takes less than 42% of the screen's height on a phone, 50% on a tablet or 70% on a desktop, when the dek or source line is over its length, and when the page has no `cd-full` class.
+
 ## Adding a day
 
-1. Copy the latest day's folder to a folder named for the new date (for example `2026-11-06/`) and change `data-day`, the title, dek, meta tags and `data-source`.
+1. Copy the latest day's folder that uses the `cd-full` layout (`/2026-11-03/` is the first; see "The layout of a day") to a folder named for the new date (for example `2026-11-06/`) and change `data-day`, the title, dek, meta tags and `data-source`.
 2. Write `viz.js`: draw into the stage canvas, make the drawing function reusable for export, and wire the reader's reading through `CD.selection` and `CD.bindSelection` (`kit/cd.js`): pointing previews, a click, tap or arrow key pins, Escape and Home go back to the overview, and only the pinned reading goes into the link. Add `readout` to `CD.exporter` so the share panel can name what is shared.
 3. Add the day to `kit/days.js`.
 4. Render its images with `node tools/cards.js YYYY-MM-DD` (a local server on port 8000 must be running). It writes `/YYYY-MM-DD/card.png`, 1200×630 in the day theme, through the same `CD.render` the share sheet uses (the page's `og:image` tags point at it), and, when `cwebp` is installed, the home grid's four thumbnails from a day and a night render. Render them again whenever the day's data changes.
