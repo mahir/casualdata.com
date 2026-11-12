@@ -2,6 +2,12 @@
 // The permanent URL of a day is its date: casualdata.com/YYYY-MM-DD/
 window.CD_DAYS = [
 	{
+		date: "2026-11-03",
+		path: "/2026-11-03/",
+		title: "In the time it took to win this year’s Route du Rhum, the first winner had sailed 28% of the way",
+		dek: "Where the winner of each of the 13 solo races from Saint-Malo to Guadeloupe since 1978 would be after 6 days 13 hours, this year’s winning time, at their own average speed."
+	},
+	{
 		date: "2026-11-04",
 		path: "/2026-11-04/",
 		title: "Where the light goes in November",

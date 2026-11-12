@@ -80,5 +80,13 @@
     <description>Hours of daylight for every latitude, every day of the year. Point anywhere to read it.</description>
     <enclosure url="https://casualdata.com/2026-11-04/card.png" type="image/png" length="0"/>
   </item>
+  <item>
+    <title>In the time it took to win this year’s Route du Rhum, the first winner had sailed 28% of the way</title>
+    <link>https://casualdata.com/2026-11-03/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-03/</guid>
+    <pubDate>Tue, 03 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Tom Laperche won the 2026 Route du Rhum in 6 days 13 hours 27 minutes. A map of where each of the 13 winners since 1978 would be after that long, at their own average speed: the first, Mike Birch, 998 nautical miles out with 2,544 to go.</description>
+    <enclosure url="https://casualdata.com/2026-11-03/card.png" type="image/png" length="0"/>
+  </item>
 </channel>
 </rss>
