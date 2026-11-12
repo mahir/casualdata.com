@@ -51,10 +51,15 @@
 		}
 	}
 
-	function draw(ctx, x, y, w, h, s, exporting) {
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the title and dek
+	// are HTML, and the plot takes the whole canvas beside or under them. A shared image has no title,
+	// so there the drawing also carries the sentence and the small line.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function draw(ctx, x, y, w, h, s, exporting, page) {
 		const mono = `400 ${11.5 * s}px ${C.mono}`, bigF = `600 ${16 * s}px ${C.sans}`, px1 = Math.max(1, s);
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round"; ctx.lineCap = "round";
-		const wide = w >= 760 * s;
+		const head = page && page.head, gut = page ? page.gut : 0;
+		const wide = page ? !!head : w >= 760 * s;
 		// on the page a narrow frame has the title just above, so the reading leaves out its first part
 		// (what is counted); a wide frame keeps the sentence beside it; a narrow image needs it said
 		const [value, full] = readout();
@@ -78,7 +83,7 @@
 		// a wide frame too short to hold the reading under the sentence (a phone on its side) also gives
 		// the reading the sentence's place
 		const under = wide && headH + 18 * s + 82 * s <= h;
-		const showHead = under || sel < 0;
+		const showHead = !page && (under || sel < 0);
 		if (showHead) {
 			ctx.fillStyle = C.ink; ctx.font = `600 ${fs}px ${C.sans}`;
 			lines.forEach((l, i) => ctx.fillText(l, x, y + fs * 0.86 + i * fs * 1.12));
@@ -87,8 +92,11 @@
 		}
 
 		// ---- the chart's frame: a column of labels each side, a band for the years on top, one for zero below
-		const cx = wide ? x + colW + 48 * s : x, cw = x + w - cx;
-		const top = wide ? y : y + blockH + 12 * s;
+		// on the page: right of the title block on a wide screen; on a narrow one the whole canvas, which
+		// gives up a band at the top for the reading while a country is picked
+		const cx = page ? (head ? head.x + head.w + 44 * s : x + gut) : wide ? x + colW + 48 * s : x;
+		const cw = x + w - gut - cx;
+		const top = page ? y + (head ? 8 * s : sel >= 0 ? 96 * s : 2 * s) : wide ? y : y + blockH + 12 * s;
 		const names = cw >= 480 * s;          // the 2015 labels carry the name too where there is room
 		const BAND = 24 * s, BOT = 28 * s, GAP = 16 * s;
 		const ptop = top + BAND, bottom = y + h - BOT;
@@ -154,12 +162,14 @@
 		// ---- the reader's country: the reading, and on the page the way back to all six
 		let back = null;
 		if (sel >= 0) {
-			if (wide) CD.label(ctx, x - 12 * s, -1e4, value, context, s, { x, y: under ? y + headH + 18 * s : y, w: colW, h: h });
+			if (head) CD.label(ctx, head.x - 12 * s, -1e4, value, context, s, { x: head.x, y: head.y + head.h + 26 * s, w: head.w, h });
+			else if (page) CD.label(ctx, x + gut - 12 * s, -1e4, value, context, s, { x: x + gut, y: y + 2 * s, w: w - 2 * gut, h });
+			else if (wide) CD.label(ctx, x - 12 * s, -1e4, value, context, s, { x, y: under ? y + headH + 18 * s : y, w: colW, h: h });
 			else CD.label(ctx, x - 12 * s, -1e4, value, context, s, { x, y, w, h: h });
 			if (!exporting) {
 				ctx.font = mono;
 				const t = "ALL SIX", tw = ctx.measureText(t).width, bw = tw + 18 * s, bh = 21 * s;
-				const bx = x + w - bw, by = bottom + 6 * s;
+				const bx = x + w - bw - gut, by = bottom + 6 * s;
 				ctx.strokeStyle = C.ink; ctx.lineWidth = px1; ctx.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
 				ctx.fillStyle = C.ink; ctx.fillText(t, bx + 9 * s, by + 14.5 * s);
 				back = { x: bx - 24, y: by - 18, w: bw + 24, h: bh + 30 };
@@ -170,6 +180,7 @@
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, Hh = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -177,11 +188,11 @@
 		if (r.width !== W || r.height !== Hh) { W = r.width; Hh = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(Hh * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, Hh);
-		geo = draw(ctx, 0, 0, W, Hh, 1, false);
+		geo = draw(ctx, 0, 0, W, Hh, 1, false, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 
@@ -210,5 +221,5 @@
 		},
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : N - 1) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true) };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
 })();
