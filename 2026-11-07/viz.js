@@ -46,10 +46,40 @@
 			`${pts1(p.gap)} more ${p.gap > 0 ? "liberal" : "conservative"} than the state's 2024 vote · ${result(p)}`];
 	}
 
-	function draw(ctx, x, y, w, h, s) {
-		const narrow = w < 560 * s;
-		const T = 48 * s, B = 36 * s, padX = 6 * s;   // room for the direction labels above and the scale below
-		const x0 = x + padX, pw = w - 2 * padX, y0 = y + T, ph = h - T - B;
+	// The reading as the page shows it away from the dot: the state as the value, and the measure,
+	// wrapped to the width, ahead of the gap and the result. Returns the chip's lines and its height.
+	function pageReading(ctx, width, s) {
+		const p = pts[sel], [, context] = readout();
+		ctx.save(); ctx.font = `400 ${11 * s}px ${C.mono}`;
+		const fit = t => ctx.measureText(t.toUpperCase()).width + 16 * s <= width;
+		const parts = [];
+		for (const word of p.label.split(" ")) {
+			const t = parts.length ? parts[parts.length - 1] + " " + word : word;
+			if (parts.length && fit(t)) parts[parts.length - 1] = t; else parts.push(word);
+		}
+		parts.push(...context.split(" · "));
+		let lines = 0, cur = "";                             // CD.label joins the parts that fit on a line
+		for (const part of parts) { const t = cur ? cur + " · " + part : part; if (cur && !fit(t)) { lines++; cur = part; } else cur = t; }
+		ctx.restore();
+		return { value: p.stateName, context: parts.join(" · "), h: (49 + 15 * lines) * s };
+	}
+
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the stage has no
+	// side margin, so the rows keep the page's own (gut), and on a wide screen they run the full height
+	// to the right of the title block, with the reading in the column under it; on a narrow one the
+	// rows give up a band at the top for the reading while a measure is picked. A shared image
+	// (page = null) is framed as before.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function draw(ctx, x, y, w, h, s, page) {
+		const tb = page && page.head, gut = page ? page.gut : 0;
+		const T0 = (page ? tb ? 44 : 40 : 48) * s, B = 36 * s, padX = 6 * s;
+		// the band is given only where the rows stay tall enough to read; a short screen keeps the reading by its dot
+		let band = page && !tb && sel >= 0 ? pageReading(ctx, x + w - 2 * gut, s).h + 8 * s : 0;
+		if ((h - T0 - B - band) / GROUPS.length < 64 * s) band = 0;
+		const T = T0 + band;   // room for the direction labels above and the scale below
+		const x0 = page ? (tb ? tb.x + tb.w + 44 * s : x + gut) : x + padX;
+		const pw = page ? x + w - gut - x0 : w - 2 * padX, y0 = y + T, ph = h - T - B;
+		const narrow = (page ? pw : w) < 560 * s;
 		const X = v => x0 + (LIB - v) / (LIB + CON) * pw;          // +gap (liberal) to the left
 		const rh = ph / GROUPS.length;
 		const head = Math.max(15 * s, Math.min(24 * s, rh * 0.2));
@@ -85,17 +115,21 @@
 			// heading: the issue, and how its measures leaned (beside it, or under it on phones)
 			ctx.textBaseline = "top"; ctx.textAlign = "left"; ctx.fillStyle = C.ink;
 			ctx.font = `400 ${head}px ${C.sans}`;
-			const hy = ry + 14 * s;                                // a row heading sits clear of the rule above it
+			// on a short phone the rows are too low for a summary line: the heading moves up and the short
+			// summary (count and direction) sits at its right
+			const tight = page && rh < 66 * s, edge = (tight ? 6 : 10) * s;
+			const hy = ry + (tight ? 6 : 14) * s;                  // a row heading sits clear of the rule above it
 			backed(g.name, x0, hy, head);
 			const nameW = ctx.measureText(g.name).width;
 			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = k === HERO ? C.ink : C.ink2;
 			const beside = !narrow && x0 + nameW + 24 * s + ctx.measureText(g.sum).width < x0 + pw;
 			let top = hy + head;
-			if (beside) { ctx.textAlign = "right"; backed(g.sum, x0 + pw, hy + (head - 11.5 * s) * 0.6, 11.5 * s); }
+			if (tight) { ctx.textAlign = "right"; backed(g.short, x0 + pw, hy + (head - 11.5 * s) * 0.6, 11.5 * s); }
+			else if (beside) { ctx.textAlign = "right"; backed(g.sum, x0 + pw, hy + (head - 11.5 * s) * 0.6, 11.5 * s); }
 			else { backed(g.sum, x0, hy + head + 4 * s, 11.5 * s); top += 4 * s + 11.5 * s; }
 
 			// a beeswarm along the axis: each dot takes the nearest free slot to the row's centre line
-			const band0 = top + 10 * s, band1 = ry + rh - 10 * s, cy = (band0 + band1) / 2, half = Math.max(r, (band1 - band0) / 2 - r * 0.5);
+			const band0 = top + edge, band1 = ry + rh - edge, cy = (band0 + band1) / 2, half = Math.max(r, (band1 - band0) / 2 - r * 0.5);
 			const mine = pts.map((p, i) => i).filter(i => pts[i].g === k).sort((a, b) => pts[b].gap - pts[a].gap);
 			const here = [];
 			for (const i of mine) {
@@ -141,7 +175,7 @@
 				const box = (p.g === HERO ? [0, -th, th] : [0]).map(dy => ({ x: q.x + out * (r + 4 * s) - (out < 0 ? tw : 0), y: q.y - th / 2 + dy, w: tw, h: th })).find(free);
 				taken.push(...mine);
 				if (!box) continue;
-				taken.push(box);
+				taken.push(page ? { x: box.x - 3 * s, y: box.y, w: box.w + 6 * s, h: box.h } : box);   // on the page two codes never touch
 				ctx.textAlign = "left"; ctx.fillStyle = i === sel || p.g === HERO ? C.ink : C.ink2;
 				ctx.fillText(p.s, box.x, box.y + th / 2 + 0.5 * s);
 			}
@@ -150,7 +184,18 @@
 			const q = placed[sel], [value, context] = readout();
 			// the chip keeps clear of the headings and of every other dot
 			const dots = placed.map((o, i) => o && i !== sel ? { x: o.x - r - 2 * s, y: o.y - r - 2 * s, w: 2 * r + 4 * s, h: 2 * r + 4 * s } : null).filter(Boolean);
-			CD.label(ctx, q.x + r + 4 * s, q.y, value, context, s, { x: x0, y: y0, w: pw, h: ph }, q.x - r - 4 * s, [...texts, ...dots]);
+			// on the page the reading sits where it covers no dot: under the title block on a wide
+			// screen, in the band above the rows on a narrow one. A shared image has it beside the dot.
+			if (page && (tb || band)) {
+				const bx = tb ? tb.x : x + gut, bw = tb ? tb.w : w - 2 * gut, rd = pageReading(ctx, bw, s);
+				const fits = tb && (ctx.font = `600 ${17 * s}px ${C.sans}`, ctx.measureText(value).width + 16 * s <= bw)
+					&& (ctx.font = `400 ${11 * s}px ${C.mono}`, context.toUpperCase().split(" · ").every(part => ctx.measureText(part).width + 16 * s <= bw));
+				CD.label(ctx, bx - 12 * s, -1e4, fits ? value : rd.value, fits ? context : rd.context, s, { x: bx, y: tb ? tb.y + tb.h + 26 * s : y + 2 * s, w: bw, h });
+			}
+			else {
+				const rd = page ? pageReading(ctx, pw, s) : { value, context };   // on a short phone: by the dot, wrapped to fit
+				CD.label(ctx, q.x + r + 4 * s, q.y, rd.value, rd.context, s, { x: x0, y: y0, w: pw, h: ph }, q.x - r - 4 * s, [...texts, ...dots]);
+			}
 		}
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		return { placed, r };
@@ -158,6 +203,7 @@
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -165,11 +211,11 @@
 		if (r.width !== W || r.height !== H) { W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1);
+		geo = draw(ctx, 0, 0, W, H, 1, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 	if (grow < 1) {
@@ -193,6 +239,6 @@
 		step: (from, dir) => { const k = order.indexOf(from), n = order.length; return order[k < 0 ? (dir > 0 ? 0 : n - 1) : (k + dir + n) % n]; }
 	});
 	// the image is always the finished picture, even if the dots are still moving out on screen
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, null); grow = g; } };
 	CD.measures = { pts, GROUPS };
 })();

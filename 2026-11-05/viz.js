@@ -31,9 +31,23 @@
 	}
 
 	// ---------- drawing, shared by the screen and the PNG ----------
-	function draw(ctx, x, y, w, h, s, narrow) {
-		const T = 46 * s, B = 38 * s, x0 = x, pw = w, y0 = y + T, ph = h - T - B;   // room for the direction labels above and the scale below
-		const X = v => x0 + (v - XMIN) / (XMAX - XMIN) * pw;
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the title and dek
+	// are HTML, so the drawing leaves out the count and its small line, and the arrows take the whole
+	// canvas beside the title block (wide screens) or under it (narrow ones). A shared image has no
+	// title, so there the drawing carries the count too, in the frame it always had.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function draw(ctx, x, y, w, h, s, narrow, page) {
+		const hb = page && page.head, gut = page ? page.gut : 0;
+		const x0 = hb ? hb.x + hb.w + 44 * s : x + gut, pw = x + w - gut - x0;
+		// on the page the side right of the spine is only as wide as what stands there: Maine's arrow and
+		// its note, the direction label, and the reading for the chosen state
+		const R = page ? Math.min(narrow ? 126 * s : 296 * s, pw * 0.45) : 0;
+		const xmax = page ? -XMIN * R / (pw - R) : XMAX;
+		// where the reading does not fit beside the spine (phones) it stands above the plot, in the band
+		// of the direction labels, so it covers no arrow and the rows never shift
+		const band = !!page && !hb && R < 290 * s;
+		const T = (band ? 62 : page ? 44 : 46) * s, B = (page ? 34 : 38) * s, y0 = y + T, ph = h - T - B;   // room for the direction labels above and the scale below
+		const X = v => x0 + (v - XMIN) / (xmax - XMIN) * pw;
 		const rh = ph / rows.length, Y = i => y0 + (i + 0.5) * rh;
 		const thick = Math.max(1.6 * s, Math.min(6 * s, rh * 0.34)), head = Math.max(4 * s, Math.min(11 * s, rh * 0.62));
 		const zx = X(0);
@@ -48,21 +62,24 @@
 		ctx.fillStyle = C.ink; ctx.fillRect(zx - 0.75 * s, y0 - 8 * s, 1.5 * s, ph + 16 * s);
 		ctx.textAlign = "center"; ctx.fillStyle = C.ink2;
 		ctx.fillText(narrow ? "2024" : "2024 VOTE FOR PRESIDENT", zx, y0 + ph + 20 * s);
-		ctx.textAlign = "right"; ctx.fillText("← TOWARD THE DEMOCRATS", zx - 10 * s, y0 - 22 * s);
+		const dirs = !(band && sel >= 0 && grow === 1);          // the reading takes the direction labels' place on phones
+		if (dirs) { ctx.textAlign = "right"; ctx.fillText("← TOWARD THE DEMOCRATS", zx - 10 * s, y0 - 22 * s); }
 		// the Republican side is narrow: shorten the label until it fits, and pin it to the edge if it still doesn't
 		ctx.textAlign = "left";
 		let rLabel = narrow ? "TOWARD R →" : "TOWARD THE REPUBLICANS →";
 		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) rLabel = "R →";
-		if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) { ctx.textAlign = "right"; ctx.fillText(rLabel, x0 + pw, y0 - 22 * s); }
+		if (!dirs) ;
+		else if (zx + 10 * s + ctx.measureText(rLabel).width > x0 + pw) { ctx.textAlign = "right"; ctx.fillText(rLabel, x0 + pw, y0 - 22 * s); }
 		else ctx.fillText(rLabel, zx + 10 * s, y0 - 22 * s);
 
 		// arrows
+		const noted = [];                                         // rows with a note standing right of the spine
 		rows.forEach((d, i) => {
 			const yy = Y(i), on = i === sel, odd = d.move > 0;
 			const tip = X(d.move * grow), dir = odd ? 1 : -1;
 			const col = odd ? C.green : on ? C.ink : C.ink2;
 			const hd = Math.min(head, Math.abs(tip - zx));
-			if (on) { ctx.fillStyle = C.rule; ctx.fillRect(x, yy - rh / 2, w, rh); }
+			if (on) { ctx.fillStyle = C.rule; ctx.fillRect(hb ? x0 - 16 * s : x, yy - rh / 2, x + w - (hb ? x0 - 16 * s : x), rh); }
 			ctx.fillStyle = col;
 			ctx.fillRect(Math.min(zx, tip - dir * hd), yy - thick / 2, Math.abs(tip - dir * hd - zx), thick);
 			ctx.beginPath(); ctx.moveTo(tip, yy); ctx.lineTo(tip - dir * hd, yy - hd * 0.6); ctx.lineTo(tip - dir * hd, yy + hd * 0.6); ctx.closePath();
@@ -79,15 +96,18 @@
 				if (!odd && tip - 6 * s - ctx.measureText(tag).width < x0) {    // no room past a long arrow: the note goes across the spine
 					tag = d.s;
 					ctx.textAlign = "left"; ctx.fillText("STILL COUNTING", zx + 10 * s, yy + 0.5 * s); ctx.textAlign = "right";
+					noted.push(i);
 				}
 				ctx.fillText(tag, tip + dir * 6 * s, yy + 0.5 * s);
 			}
 		});
 
 		// the count, written into the picture so the image carries it without a title
+		// (shared images only: on the page the title says it)
 		if (grow === 1) {
 			const maine = rows.findIndex(d => d.move > 0);
 			const bx = zx + 18 * s, by = y0 + ph * 0.3, room = x0 + pw - bx;
+			if (!page) {
 			const line = narrow ? `${toD} of ${rows.length}` : `${toD} of ${rows.length} moved left`;
 			ctx.textBaseline = "alphabetic"; ctx.textAlign = "left"; ctx.fillStyle = C.ink;
 			ctx.font = `400 ${100}px ${C.sans}`;
@@ -97,7 +117,10 @@
 			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = C.ink2;
 			if (narrow) { ctx.fillText("MOVED LEFT", bx, by + 20 * s); ctx.fillText(`TYPICAL ${median.toFixed(0)} PTS`, bx, by + 35 * s); }
 			else ctx.fillText(`TYPICAL MOVE ${median.toFixed(0)} POINTS`, bx, by + 20 * s);
+			}
 			if (maine >= 0 && sel !== maine) {
+				noted.push(maine);
+				ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textAlign = "left";
 				ctx.fillStyle = C.ink; ctx.textBaseline = "middle";
 				ctx.fillText(narrow ? "THE ONE" : "THE ONLY ONE THAT MOVED RIGHT", X(rows[maine].move) + 34 * s, Y(maine) + 0.5 * s);
 			}
@@ -106,15 +129,23 @@
 		// the reading for the chosen state
 		if (sel >= 0 && grow === 1) {
 			const d = rows[sel], [value, context] = readout(), tip = X(d.move);
-			CD.label(ctx, Math.max(tip, zx) + 28 * s, Y(sel), value, context, s, { x: x0, y: y0, w: pw, h: ph }, Math.min(tip, zx) - 28 * s);
+			if (band) CD.label(ctx, x + gut - 12 * s, -1e4, value, context, s, { x: x + gut, y: y + 2 * s, w: w - 2 * gut, h });
+			else if (page) {
+				// beside its arrow, right of the spine, moved up or down a little where a neighbour's note stands
+				let py = Y(sel);
+				for (const j of noted) if (j !== sel && Math.abs(Y(j) - py) < 26 * s + rh / 2) py = Y(j) + (sel < j ? -1 : 1) * (27 * s + rh / 2);
+				CD.label(ctx, Math.max(tip, zx) + 28 * s, py, value, context, s, { x: x0, y: y + 2 * s, w: x + w - 8 * s - x0, h: y0 + ph - y - 2 * s }, Math.min(tip, zx) - 28 * s);
+			}
+			else CD.label(ctx, Math.max(tip, zx) + 28 * s, Y(sel), value, context, s, { x: x0, y: y0, w: pw, h: ph }, Math.min(tip, zx) - 28 * s);
 		}
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-		return { x0, pw, y0, ph, rh };
+		return { x0, pw, y0, ph, rh, left: hb ? x0 - 16 * s : x };
 	}
 
 	// ---------- screen ----------
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 
 	function paint() {
@@ -123,11 +154,11 @@
 		if (r.width !== W || r.height !== H) { W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1, W < 560);
+		geo = draw(ctx, 0, 0, W, H, 1, W < 560, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 
@@ -142,11 +173,12 @@
 		at: e => {
 			if (!geo) return -1;
 			const r = cv.getBoundingClientRect(), i = Math.floor((e.clientY - r.top - geo.y0) / geo.rh);
+			if (e.clientX - r.left < geo.left) return -1;        // the column under the title is not the plot
 			return i >= 0 && i < rows.length ? i : -1;
 		},
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : rows.length - 1) : (from + dir + rows.length) % rows.length
 	});
 
 	// the image is always the finished picture, even if the arrows are still growing on screen
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false, null); grow = g; } };
 })();

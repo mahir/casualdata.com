@@ -59,7 +59,14 @@
 		return out;
 	}
 
-	function draw(ctx, x, y, w, h, s) {
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the title and dek
+	// are HTML, so the drawing has no sentence and no small line, only the lines, their names, the scale
+	// and the old record's rule; the plot takes the whole canvas. A shared image has no title, so there
+	// the drawing also carries the sentence and the small line, as before.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin };
+	// page is null in a shared image.
+	function draw(ctx, x, y, w, h, s, page) {
+		const head = page && page.head, pg = page ? page.gut : 0;
 		const mono = `400 ${11.5 * s}px ${C.mono}`, px1 = Math.max(1, s);
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round"; ctx.lineCap = "round";
 
@@ -67,14 +74,18 @@
 		// red end label, a row under it for the months
 		ctx.font = mono;
 		const gut = ctx.measureText("0000").width + 9 * s, BOT = 24 * s;
-		const pw = w - gut, bottom = y + h - BOT;
-		const xOf = d => x + (d - 1) / 364 * pw;
+		// on the page the scale's names have a column of their own at the left, so they never lie on the
+		// first weeks of the lines; the plot starts after it (px). In an image px is x.
+		const scaleW = page ? ctx.measureText("NORMAL").width + 8 * s : 0;
+		const px = x + pg + scaleW;
+		const pw = w - gut - 2 * pg - scaleW, bottom = y + h - BOT;
+		const xOf = d => px + (d - 1) / 364 * pw;
 
 		// ---- the takeaway and what a mark is. It sits in the empty top-left corner of the plot when
 		// nothing is there (wide frames); otherwise above the plot.
 		// compact (a short frame: a small phone, a phone on its side): 1 sets the sentence on one line,
 		// smaller if it must; 2 also leaves out the note on what a mark is (the page's dek and foot say it)
-		const head = (maxW, compact = 0) => {
+		const sentence = (maxW, compact = 0) => {
 			let lines = [SENT.join(" ")], fs = 34 * s;
 			ctx.font = `600 ${fs}px ${C.sans}`;
 			const w1 = ctx.measureText(lines[0]).width;
@@ -88,17 +99,23 @@
 			const bh = lines.length * fs * 1.1 + 8 * s + (note.length ? note.length * 16 * s : 14 * s);
 			return { lines, fs, note, w: bw, h: bh };
 		};
-		const BAND = 46 * s;
+		// (on a narrow page the band is a little taller: it also holds the reader's reading)
+		const BAND = (page && !head ? 58 : 46) * s;
+		const over = v => head && v - 14 * s < head.y + head.h + 12 * s && v + 14 * s > head.y - 12 * s;          // a height the title block covers
+		const headR = head ? head.x + head.w + 20 * s : px;
 		// the old record's label ends just before the red line reaches the rule
 		ctx.font = mono;
 		// the value always; the date in full where it fits before the red line, else the year, else nothing
-		const recRoom = xOf(firstAt.doy) - 14 * s - x;
+		// (the plot's height is not known yet in an image; on the page it is, and the rule may pass the title block)
+		const recLeft = page && over(bottom - (REC.a - LO) / (HI - LO) * (bottom - (y + BAND)) - 8 * s) ? headR : px;
+		const recRoom = xOf(firstAt.doy) - 14 * s - recLeft;
 		const recText = [`OLD RECORD ${deg(REC.a)} °C · ${dmy(REC.date).toUpperCase()}`, `OLD RECORD ${deg(REC.a)} °C · ${REC.date.slice(0, 4)}`, `OLD RECORD ${deg(REC.a)} °C`].find((r, i) => i === 2 || ctx.measureText(r).width <= recRoom);
 		const recW = ctx.measureText(recText).width;
-		const recX = Math.max(x, xOf(firstAt.doy) - 14 * s - recW);
+		const recX = Math.max(recLeft, xOf(firstAt.doy) - 14 * s - recW);
 
-		let H = head(Math.min(w, 520 * s)), top = y, inside = false;
-		{
+		let H = null, top = y, inside = false;
+		if (!page) {
+			H = sentence(Math.min(w, 520 * s));
 			// would it fit inside? Above the +2 line and its label, clear of every line and of the record's label
 			const yOfIn = v => bottom - (v - LO) / (HI - LO) * (bottom - (y + BAND));
 			const xr = x + H.w + 14 * s;
@@ -107,35 +124,51 @@
 			inside = y + H.h <= yOfIn(hi) - 20 * s && xr <= recX;
 		}
 		let compact = 0;
-		if (!inside) {
-			H = head(w); top = y + H.h + 4 * s;
+		if (!page && !inside) {
+			H = sentence(w); top = y + H.h + 4 * s;
 			// the plot keeps at least 150 px of height where the head can give it
-			while (compact < 2 && bottom - (top + BAND) < 150 * s) { H = head(w, ++compact); top = y + H.h + 4 * s; }
+			while (compact < 2 && bottom - (top + BAND) < 150 * s) { H = sentence(w, ++compact); top = y + H.h + 4 * s; }
 		}
 		const ptop = top + BAND;
 		const yOf = v => bottom - (v - LO) / (HI - LO) * (bottom - ptop);
-		const headBox = { x, y, w: H.w, h: H.h };
+		// the words at the top left: the drawn sentence in an image, the page's title block on a wide screen
+		const headBox = page ? (head ? { x: head.x, y: y, w: head.w, h: head.y - y + head.h } : { x, y, w: 0, h: 0 }) : { x, y, w: H.w, h: H.h };
 
-		ctx.fillStyle = C.ink;
-		ctx.font = `600 ${H.fs}px ${C.sans}`;
-		H.lines.forEach((l, i) => ctx.fillText(l, x, y + H.fs * 0.84 + i * H.fs * 1.1));
-		let ty = y + H.lines.length * H.fs * 1.1 + 8 * s;
-		// in a narrow frame the reader's reading takes the place of the small line under the sentence
-		const swap = !inside && sel >= 0 && grow >= 1, swapY = ty;
-		if (!swap) {
-			ctx.font = mono; ctx.fillStyle = C.ink2;
-			H.note.forEach((l, i) => ctx.fillText(l, x, ty + 11 * s + i * 16 * s));
+		let swap = false, swapY = y;
+		if (!page) {
+			ctx.fillStyle = C.ink;
+			ctx.font = `600 ${H.fs}px ${C.sans}`;
+			H.lines.forEach((l, i) => ctx.fillText(l, x, y + H.fs * 0.84 + i * H.fs * 1.1));
+			let ty = y + H.lines.length * H.fs * 1.1 + 8 * s;
+			// in a narrow frame the reader's reading takes the place of the small line under the sentence
+			swap = !inside && sel >= 0 && grow >= 1; swapY = ty;
+			if (!swap) {
+				ctx.font = mono; ctx.fillStyle = C.ink2;
+				H.note.forEach((l, i) => ctx.fillText(l, x, ty + 11 * s + i * 16 * s));
+			}
 		}
 
 		// ---- the scale: +1 and +2 as hairlines, zero as "normal", the old record as a dashed rule
 		ctx.font = mono;
-		for (const v of [1, 2]) {
-			ctx.fillStyle = C.rule; ctx.fillRect(x, Math.round(yOf(v)), pw, px1);
+		// on the page each name stands before its line, in the column at the left; a line the title block
+		// lies over starts, name first, to the right of the block
+		const SCALE = [[2, `${deg(2).slice(0, 2)} °C`], [1, `${deg(1).slice(0, 2)} °C`], [0, "NORMAL"]].map(([v, t]) => {
+			const cut = page && over(yOf(v)), tx = cut ? headR : x + pg;
+			return { v, t, cut, tx, x0: cut ? tx + ctx.measureText(t).width + 7 * s : px };
+		});
+		for (const o of SCALE) {
+			ctx.fillStyle = o.v ? C.rule : C.ink3; ctx.fillRect(o.x0, Math.round(yOf(o.v)), px + pw - o.x0, px1);
 		}
-		ctx.fillStyle = C.ink3; ctx.fillRect(x, Math.round(yOf(0)), pw, px1);
 		// the scale's names go on after the lines, each on a patch of page, so a line never runs through one
 		const scaleNames = () => {
 			ctx.font = mono; ctx.textAlign = "left";
+			if (page) {
+				for (const o of SCALE) {
+					if (o.cut) { ctx.fillStyle = C.paper; ctx.fillRect(o.tx - 4 * s, yOf(o.v) - 9 * s, o.x0 - o.tx + 4 * s, 18 * s); }
+					ctx.fillStyle = C.ink2; ctx.fillText(o.t, o.tx, yOf(o.v) + 4 * s);
+				}
+				return;
+			}
 			for (const [v, t] of [[2, `${deg(2).slice(0, 2)} °C`], [1, `${deg(1).slice(0, 2)} °C`], [0, "NORMAL"]]) {
 				const tw = ctx.measureText(t).width;
 				ctx.fillStyle = C.paper; ctx.fillRect(x, yOf(v) - 17 * s, tw + 5 * s, 16 * s);
@@ -143,7 +176,7 @@
 			}
 		};
 		ctx.strokeStyle = C.ink; ctx.lineWidth = px1; ctx.setLineDash([4 * s, 4 * s]); ctx.lineCap = "butt";
-		ctx.beginPath(); ctx.moveTo(recX, yOf(REC.a)); ctx.lineTo(x + pw, yOf(REC.a)); ctx.stroke();
+		ctx.beginPath(); ctx.moveTo(recX, yOf(REC.a)); ctx.lineTo(px + pw, yOf(REC.a)); ctx.stroke();
 		ctx.setLineDash([]); ctx.lineCap = "round";
 		ctx.fillStyle = C.ink; ctx.fillText(recText, recX, yOf(REC.a) - 6 * s);
 		const recBox = { x: recX, y: yOf(REC.a) - 18 * s, w: recW, h: 20 * s };
@@ -157,7 +190,7 @@
 			if (m % every === 0) { ctx.fillStyle = C.ink2; ctx.textAlign = "left"; ctx.fillText(MON[m], x0 + 4 * s, bottom + 17 * s); }
 			acc += n;
 		});
-		ctx.fillStyle = C.ink3; ctx.fillRect(x, bottom, pw, px1);
+		ctx.fillStyle = C.ink3; ctx.fillRect(px, bottom, pw, px1);
 		ctx.textAlign = "left";
 
 		// ---- the four earlier years, each named at its end
@@ -177,7 +210,7 @@
 		ends.forEach(e => {
 			const Y = Math.max(yOf(e.w.a) + 4 * s, prev + 13.5 * s); prev = Y;
 			ctx.fillStyle = e.yr.weeks.some(wk => wk.d === REC.date) ? C.ink : C.ink2;
-			ctx.fillText(String(e.yr.year), x + pw + 7 * s, Y);
+			ctx.fillText(String(e.yr.year), px + pw + 7 * s, Y);
 		});
 
 		// ---- the one red thing: 2026, to the latest week
@@ -188,19 +221,27 @@
 		const tip = now.weeks[shownTo], tx = xOf(tip.doy), tyy = yOf(tip.a);
 		ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(tx, tyy, 4.5 * s, 0, 7); ctx.fill();
 		const done = grow >= 1;
-		const geo = { x, pw, top: inside ? y : top, head: headBox };
+		// (on a narrow page a tap in the band over the plot, where the reading sits, goes back to the overview)
+		const geo = { x: px, pw, top: page ? (head ? y : y + 52 * s) : inside ? y : top, head: headBox };
 		if (!done) return geo;
 
 		// its end label, over the line's highest point, set to the right edge
-		const big = 22 * s, ex = x + w, ey = yOf(peak) - 10 * s;
+		const big = 22 * s, ex = x + w - pg, ey = yOf(peak) - 10 * s;
 		ctx.textAlign = "right";
 		ctx.font = `600 ${big}px ${C.sans}`; ctx.fillStyle = C.red;
 		// (in a narrow frame the reader's reading takes this label's place as well: there is no room for both)
-		const showEnd = !swap;
-		const numT = `${deg(last.a)} °C`; if (showEnd) ctx.fillText(numT, ex, ey);
+		const numT = `${deg(last.a)} °C`;
 		const endW = ctx.measureText(numT).width;
+		// on the page the label is the line's name and its latest value; the week is in the source line
+		const endT = page ? String(now.year) : `${now.year} · WEEK OF ${dm(last.d).toUpperCase()}`;
+		// on a narrow page the reading sits in the band over the plot, at the left; the end label gives
+		// way where the widest reading would meet it (a phone), for every week alike
+		const band = page && !head && sel >= 0;
+		ctx.font = mono;
+		const showEnd = page ? !(band && x + pg + 330 * s > ex - Math.max(endW, ctx.measureText(endT).width)) : !swap;
+		ctx.font = `600 ${big}px ${C.sans}`; ctx.fillStyle = C.red;
+		if (showEnd) ctx.fillText(numT, ex, ey);
 		ctx.font = mono; ctx.fillStyle = C.ink;
-		const endT = `${now.year} · WEEK OF ${dm(last.d).toUpperCase()}`;
 		if (showEnd) ctx.fillText(endT, ex, ey - big * 0.86 - 4 * s);
 		const endBox = { x: ex - Math.max(endW, ctx.measureText(endT).width), y: ey - big - 18 * s, w: Math.max(endW, ctx.measureText(endT).width), h: big + 20 * s };
 		ctx.textAlign = "left";
@@ -228,6 +269,7 @@
 			// keep the chip off the sentence, the end label and, where it can, the lines near the point
 			const dots = years.map(yr => at(yr, sel)).filter(Boolean).map(o => ({ x: xOf(o.doy) - 6 * s, y: yOf(o.a) - 6 * s, w: 12 * s, h: 12 * s }));
 			if (swap) CD.label(ctx, x - 12 * s, -1e4, value, context, s, { x, y: swapY, w, h: bottom - swapY });
+			else if (band) CD.label(ctx, x + pg - 12 * s, -1e4, value, context, s, { x: x + pg, y: y + 2 * s, w: w - 2 * pg, h: bottom - y });
 			else {
 				// in a wide frame it sits beside the hairline, in the place that covers the fewest points
 				// of the lines and none of the words
@@ -237,7 +279,7 @@
 				const pts = []; years.forEach(yr => yr.weeks.forEach(o => pts.push([xOf(o.doy), yOf(o.a)])));
 				let bestSpot = null, bestCost = Infinity;
 				for (const cx of [hx + 12 * s, hx - 12 * s - cw]) {
-					if (cx < x || cx + cw > x + w) continue;
+					if (cx < x + pg || cx + cw > x + w - pg) continue;
 					for (let cy = bottom - 8 * s - ch; cy >= y; cy -= 8 * s) {
 						const m = 6 * s;
 						let cost = pts.filter(q => q[0] > cx - m && q[0] < cx + cw + m && q[1] > cy - m && q[1] < cy + ch + m).length;
@@ -256,6 +298,7 @@
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, Hh = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -263,11 +306,11 @@
 		if (r.width !== W || r.height !== Hh) { W = r.width; Hh = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(Hh * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, Hh);
-		geo = draw(ctx, 0, 0, W, Hh, 1);
+		geo = draw(ctx, 0, 0, W, Hh, 1, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 	if (grow < 1) {
@@ -281,7 +324,7 @@
 	const pick = CD.selection({ initial: sel, key: "w", encode: weekDate, onChange: i => { sel = i; schedule(); } });
 	CD.bindSelection(cv, pick, {
 		// anywhere on the chart picks the nearest week, so a thumb can drag along the year;
-		// the sentence is the way back to the overview
+		// the title block (wide screens) or the band over the plot is the way back to the overview
 		at: e => {
 			if (!geo) return -1;
 			const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
@@ -293,5 +336,5 @@
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : last.k) : (from + dir + SLOTS) % SLOTS
 	});
 	// the image is always the finished picture, even while the red line is still being drawn
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, null); grow = g; } };
 })();

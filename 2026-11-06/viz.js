@@ -57,17 +57,51 @@
 	}
 
 	// ---------- drawing, shared by the screen and the PNG ----------
-	function draw(ctx, x, y, w, h, s) {
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the title and dek
+	// are HTML and the town takes the whole canvas, under and beside the title block on a wide screen.
+	// A shared image is drawn as it always was.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function draw(ctx, x, y, w, h, s, page) {
 		const labelH = 84 * s, gapCols = 1.6;   // a full band for the counts and names under the groups
+		const head = page && page.head, gut = page ? page.gut : 0;
+		// on the page a band above the people is kept free for the reading, so it never covers anyone
+		const chipH = 49 * s, band = page ? chipH + 16 * s : 0;
+		const colsFor = R => groups.reduce((a, g) => a + Math.ceil(g.n / R), 0) + gapCols * (groups.length - 1);
+		// where the town sits for a given size: centred, or (beside a title block) against the right edge;
+		// under a title block it stands on the label band, otherwise it is centred in the height
+		const place = (R, cell, right) => {
+			const totalW = colsFor(R) * cell;
+			return { ox: right ? x + w - gut - totalW : x + (w - totalW) / 2,
+				oy: head ? y + h - labelH - R * cell : y + band + (h - labelH - band - R * cell) / 2 };
+		};
+		// does any group, or the reading above it, reach into the title block?
+		const hits = (R, cell, right) => {
+			const { ox, oy } = place(R, cell, right);
+			let gx = ox;
+			for (const g of groups) {
+				const top = oy + (R - Math.min(g.n, R)) * cell - band;
+				if (gx < head.x + head.w + 24 * s && top < head.y + head.h + 10 * s) return true;
+				gx += (Math.ceil(g.n / R) + gapCols) * cell;
+			}
+			return false;
+		};
 		// pick the number of rows that makes people largest while every group fits
 		let best = null;
 		for (let R = 1; R <= 30; R++) {
-			const cols = groups.reduce((a, g) => a + Math.ceil(g.n / R), 0) + gapCols * (groups.length - 1);
-			const cell = Math.min((h - labelH) / R, w / cols);
-			if (!best || cell > best.cell) best = { R, cell, cols };
+			const cols = colsFor(R);
+			const max = Math.min((h - labelH - band) / R, (w - 2 * gut) / cols);
+			for (const right of head ? [false, true] : [false]) {
+				let cell = max;
+				if (head && hits(R, cell, right)) {       // shrink until the town is clear of the title block
+					let lo = 0;
+					for (let i = 0; i < 24; i++) { const mid = (lo + cell) / 2; if (hits(R, mid, right)) cell = mid; else lo = mid; }
+					cell = lo;
+				}
+				if (!best || cell > best.cell) best = { R, cell, cols, right };
+			}
 		}
 		const { R, cell } = best;
-		const totalW = best.cols * cell, ox = x + (w - totalW) / 2, oy = y + (h - labelH - R * cell) / 2;
+		const { ox, oy } = place(R, cell, best.right);
 		const boxes = [];
 		let cx = ox, pi = 0;
 		groups.forEach((g, gi) => {
@@ -103,13 +137,15 @@
 			const b = boxes[groups.findIndex(g => g.k === lead)];
 			ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = C.ink; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 			const note = split ? `${margin} IN RED: THE HOUSE MARGIN` : `${margin} IN RED: MORE THAN VOTED IN 2022`;
-			const nx = Math.min(b.x + cell * 0.1, x + w - ctx.measureText(note).width);   // stay inside the picture
+			const nx = Math.min(b.x + cell * 0.1, x + w - gut - ctx.measureText(note).width);   // stay inside the picture
 			ctx.fillText(note, nx, oy + R * cell + 64 * s);
 		}
 
 		if (sel >= 0 && walk === 1) {
 			const b = boxes[sel], [value, context] = readout();
-			CD.label(ctx, b.x + b.w, oy + R * cell * 0.4, value, context, s, { x, y, w, h }, b.x);
+			// on the page the reading stands over its group, in the band kept free above the people
+			if (page) CD.label(ctx, b.x + cell * 0.1 - 12 * s, oy, value, context, s, { x: x + gut, y: oy - band + 4 * s, w: w - 2 * gut, h: chipH }, x + w - gut + 12 * s);
+			else CD.label(ctx, b.x + b.w, oy + R * cell * 0.4, value, context, s, { x, y, w, h }, b.x);
 		}
 		ctx.textAlign = "left";
 		return { boxes, oy, cell, R };
@@ -118,6 +154,7 @@
 	// ---------- screen ----------
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -125,11 +162,11 @@
 		if (r.width !== W || r.height !== H) { W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1);
+		geo = draw(ctx, 0, 0, W, H, 1, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 	if (walk < 1) {
@@ -150,6 +187,6 @@
 	});
 
 	// the image is always the finished picture, even if people are still walking on screen
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const k = walk; walk = 1; draw(c, x, y, w, h, u * 1.6); walk = k; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const k = walk; walk = 1; draw(c, x, y, w, h, u * 1.6, null); walk = k; } };
 	CD.town = { groups, margin, perPerson };
 })();

@@ -87,14 +87,27 @@
 	}
 
 	// ---------- drawing (shared by screen and PNG) ----------
-	function layout(x, y, w, h, s, compact) {
-		// room around the plot: latitudes at the left, cities at the right, months below, and above it
-		// a band for the day's note, which sits over the plot rather than on it
-		const L = 48 * s, R = compact ? 8 * s : 108 * s, B = 34 * s, T = compact ? 0 : 34 * s;
+	// Two frames (NEXT.md, "The layout of a day"). On the page the map is the page: the title and dek
+	// are HTML, and the map runs from the top bar to the months, to the screen's right edge on a phone.
+	// A shared image has no title, so there the 4 Nov note also carries the day's one fact.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function layout(x, y, w, h, s, compact, page) {
+		// room around the plot: latitudes at the left, cities at the right, months below
+		const B = 34 * s;
+		if (page) {
+			// wide: right of the title block, full height. Narrow: the whole canvas under a band that
+			// holds the reading and the 4 Nov note, so neither covers the map
+			const L = page.head ? page.head.x + page.head.w + 76 * s : page.gut + 34 * s;
+			const R = compact ? 0 : 108 * s, T = page.head ? 0 : 58 * s;
+			return { x0: x + L, y0: y + T, pw: w - L - R, ph: h - B - T, s, compact };
+		}
+		// in an image: above the plot a band for the day's note, which sits over the plot rather than on it
+		const L = 48 * s, R = compact ? 8 * s : 108 * s, T = compact ? 0 : 34 * s;
 		return { x0: x + L, y0: y + T, pw: w - L - R, ph: h - B - T, s, compact };
 	}
-	function draw(ctx, x, y, w, h, s, compact) {
-		const g = layout(x, y, w, h, s, compact);
+	function draw(ctx, x, y, w, h, s, compact, page) {
+		const g = layout(x, y, w, h, s, compact, page);
+		const head = page && page.head, band = page && !head;
 		const X = d => g.x0 + (d + 0.5) / DAYS * g.pw;
 		const Y = lat => g.y0 + (90 - lat) / 180 * g.ph;
 		const Yr = r => g.y0 + (r + 0.5) / ROWS * g.ph;
@@ -138,11 +151,12 @@
 
 		// the day it was published (4 Nov): the one red line
 		const xp = X(PUB);
-		const ty = g.compact ? g.y0 : g.y0 - 34 * s;            // the note's top: above the plot, joined to it by the red line
+		// the note's top: above the plot, joined to it by the red line (on a wide page, at the plot's top)
+		const ty = band ? g.y0 - 28 * s : head || g.compact ? g.y0 : g.y0 - 34 * s;
 		ctx.fillStyle = C.red; ctx.fillRect(xp - 1 * s, ty, 2 * s, g.ph + 6 * s + (g.y0 - ty));
 		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.textBaseline = "middle";
 		// the tag carries the day's one fact, so the image says something without the title
-		const tag = g.compact ? "4 NOV" : `4 NOV · LONDON LOSES ${fmtDelta(PUB, LONDON).replace(/^−/, "").replace(" a day", "").toUpperCase()} OF LIGHT A DAY`;
+		const tag = page || g.compact ? "4 NOV" : `4 NOV · LONDON LOSES ${fmtDelta(PUB, LONDON).replace(/^−/, "").replace(" a day", "").toUpperCase()} OF LIGHT A DAY`;
 		const tw = ctx.measureText(tag).width + 12 * s, th = 20 * s;
 		const tx = Math.min(xp - tw / 2, g.x0 + g.pw - tw);
 		ctx.fillStyle = C.ink; ctx.fillRect(tx, ty, tw, th);
@@ -158,15 +172,19 @@
 		ctx.fillStyle = C.red; ctx.fill();
 		ctx.lineWidth = 2 * s; ctx.strokeStyle = C.paper; ctx.stroke();
 
-		// the reading, next to the dot
+		// the reading: on the page off the map (under the title on a wide screen, in the band above the
+		// map on a narrow one); in an image next to the dot
 		const [value, context] = readout();
-		CD.label(ctx, sx, sy, value, context, s, { x: g.x0, y: g.y0, w: g.pw, h: g.ph });
+		if (head) CD.label(ctx, head.x - 12 * s, -1e4, value, context, s, { x: head.x, y: head.y + head.h + 26 * s, w: head.w, h });
+		else if (band) CD.label(ctx, x + page.gut - 12 * s, -1e4, value, context, s, { x: x + page.gut, y: y + 2 * s, w: tx - 8 * s - x - page.gut, h });
+		else CD.label(ctx, sx, sy, value, context, s, { x: g.x0, y: g.y0, w: g.pw, h: g.ph });
 		return g;
 	}
 
 	// ---------- screen ----------
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 
 	function paint() {
@@ -176,11 +194,11 @@
 		if (r.width !== W || r.height !== H) { W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1, W < 560);
+		geo = draw(ctx, 0, 0, W, H, 1, W < 560, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.addEventListener("cd-theme", schedule);
 	document.fonts.ready.then(schedule);
 
@@ -206,6 +224,6 @@
 
 	CD.exporter = {
 		readout,
-		draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.8, false)
+		draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.8, false, null)
 	};
 })();

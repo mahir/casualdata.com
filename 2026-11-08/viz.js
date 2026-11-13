@@ -1,6 +1,6 @@
 // 2026-11-08 — the five closest races of 2026, each lead drawn as a crowd: one figure per vote.
 // All five crowds share one figure size, so they compare at a glance. On a wide stage they stand side
-// by side; on a narrow one they stack. The rest of the set is one line of text under them.
+// by side; on a narrow one they stack. The rest of the set is one line of text.
 // Pointing at a crowd (or the arrow keys) reads it out in that line: who leads whom, and what
 // everyday crowd is that size.
 (function () {
@@ -44,50 +44,82 @@
 		return lines;
 	}
 
-	function draw(ctx, x, y, w, h, s) {
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the title and dek
+	// are HTML, so the drawing is only the crowds, their labels and the reading. A shared image has no
+	// title, so there the drawing also carries the key line. `page` is null in a shared image.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	//   head (wide screens): the crowds stand across the whole canvas; those that start under the title
+	//     block begin below it, the others at the top, so the smallest crowds sit under the title.
+	//   no head (phones, tablets): the crowds take the whole canvas under the title.
+	//   In both, the one line under the crowds is the rest of the set, or the reading of the chosen race.
+	function draw(ctx, x, y, w, h, s, page) {
 		const mono = `400 ${11.5 * s}px ${C.mono}`, num = px => `600 ${px * s}px ${C.sans}`;
-		const wide = w >= 720 * s, lh = 16 * s;
+		const head = page && page.head, gut = page ? page.gut : 0, lh = 16 * s;
 		ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
 
-		// the key, written into the drawing so the image explains itself
-		ctx.font = mono;
-		const key = wrap(ctx, "THE FIVE CLOSEST RACES OF 2026 · ONE FIGURE IS ONE VOTE OF THE LEAD", w - 18 * s);
-		ctx.fillStyle = C.ink; person(ctx, x + 6 * s, y + 7 * s, 13 * s);
-		ctx.fillStyle = C.ink2; key.forEach((t, i) => ctx.fillText(t, x + 18 * s, y + 11 * s + i * lh));
-		const top = y + key.length * lh + 18 * s;
+		// the plot's frame
+		const px0 = x + gut, pw = w - 2 * gut;
+		let top = head ? y + Math.max(2 * s, head.y - 2 * s) : y + 2 * s;
+		// where a crowd under the title block starts, and how far right the block reaches
+		const topHead = head ? y + head.y + head.h + 24 * s : 0, headRight = head ? x + head.x + head.w + 28 * s : -Infinity;
+		if (!page) {
+			// the key, written into the drawing so the image explains itself
+			ctx.font = mono;
+			const key = wrap(ctx, "THE FIVE CLOSEST RACES OF 2026 · ONE FIGURE IS ONE VOTE OF THE LEAD", w - 18 * s);
+			ctx.fillStyle = C.ink; person(ctx, x + 6 * s, y + 7 * s, 13 * s);
+			ctx.fillStyle = C.ink2; key.forEach((t, i) => ctx.fillText(t, x + 18 * s, y + 11 * s + i * lh));
+			top = y + key.length * lh + 18 * s;
+		}
 
-		// the line under the crowds: the rest of the set, or the reading of the chosen race
-		const foot = wrap(ctx, (sel < 0 ? restLine : reading(races[sel])).toUpperCase(), w);
-		const footH = (wide ? 1 : 3) * lh + 14 * s;          // room is kept for the longest reading, so nothing jumps
-		const fieldH = y + h - footH - top;
-
-		// each crowd's label: the number, then the race and who leads
-		const sub = r => wide ? [r.label.toUpperCase(), `${short(r.winner).toUpperCase()} ${r.called ? "WON" : "LEADS"}`] : [`${r.label.toUpperCase()} · ${short(r.winner).toUpperCase()} ${r.called ? "WON" : "LEADS"}`];
-		const numPx = wide ? 26 : 17, labelH = wide ? (numPx + 6) * s + 2 * lh + 8 * s : 26 * s;
-		const labelW = races.map(r => {
-			ctx.font = num(numPx); const a = ctx.measureText(fmt(r.margin)).width;
-			ctx.font = mono; return Math.max(a, ...sub(r).map(t => ctx.measureText(t).width));
-		});
-
-		// one figure size for all five: the largest cell at which every crowd and label fits
+		// one figure size for all five: the largest cell at which every crowd and label fits.
+		// Side by side where the plot is wide enough, stacked where it is not.
 		const MAX = 22 * s, MIN = 2 * s, gapMin = 24 * s, blockGap = 14 * s;
-		let c = MAX, lay = null;
-		for (; c >= MIN; c -= 0.25 * s) {
-			if (wide) {
-				const R = Math.floor((fieldH - labelH) / c);
-				if (R < 1) continue;
-				const cols = races.map(r => Math.ceil(r.margin / R)), colW = cols.map((n, i) => Math.max(n * c, labelW[i]));
-				const total = colW.reduce((a, b) => a + b, 0);
-				if (total + gapMin * (races.length - 1) > w) continue;
-				const gap = Math.min(72 * s, (w - total) / (races.length - 1));
-				let cx = x; lay = races.map((r, i) => { const b = { x: cx, y: top, w: colW[i], cols: cols[i], fx: cx, fy: top + labelH }; cx += colW[i] + gap; return b; });
-				break;
-			} else {
-				const cols = Math.floor(w / c), rows = races.map(r => Math.ceil(r.margin / cols));
-				if (rows.reduce((a, b) => a + b, 0) * c + races.length * labelH + blockGap * (races.length - 1) > fieldH) continue;
-				let cy = top; lay = races.map((r, i) => { const b = { x, y: cy, w, cols, fx: x, fy: cy + labelH }; cy += labelH + rows[i] * c + blockGap; return b; });
-				break;
+		const modes = head ? [true, false] : [pw >= 720 * s];
+		let wide, footH, sub, numPx, labelH, c, lay = null;
+		for (wide of modes) {
+			footH = (wide ? 1 : 3) * lh + 14 * s;          // room is kept for the longest reading, so nothing jumps
+			const ground = y + h - footH, fieldH = ground - top;
+			// each crowd's label: the number, then the race and who leads
+			const W = wide;
+			sub = r => W ? [r.label.toUpperCase(), `${short(r.winner).toUpperCase()} ${r.called ? "WON" : "LEADS"}`] : [`${r.label.toUpperCase()} · ${short(r.winner).toUpperCase()} ${r.called ? "WON" : "LEADS"}`];
+			numPx = wide ? 26 : 17; labelH = wide ? (numPx + 6) * s + 2 * lh + 8 * s : 26 * s;
+			const labelW = races.map(r => {
+				ctx.font = num(numPx); const a = ctx.measureText(fmt(r.margin)).width;
+				ctx.font = mono; return Math.max(a, ...sub(r).map(t => ctx.measureText(t).width));
+			});
+			for (c = MAX; c >= MIN; c -= 0.25 * s) {
+				if (wide) {
+					const Rf = Math.floor((fieldH - labelH) / c), Rh = head ? Math.floor((ground - topHead - labelH) / c) : Rf;
+					if (Rf < 1) continue;
+					// place left to right; the gap then opens to fill the width, which can move a crowd out from
+					// under the title block, so place again until it settles
+					let gap = gapMin, best = null;
+					for (let pass = 0; pass < 4; pass++) {
+						let cx = px0, ok = true;
+						const tryLay = races.map((r, i) => {
+							const under = cx < headRight, R = under ? Rh : Rf;
+							if (R < 1) { ok = false; return null; }
+							const cols = Math.ceil(r.margin / R), cw = Math.max(cols * c, labelW[i]), ty = under ? topHead : top;
+							const b = { x: cx, y: ty, w: cw, cols, fx: cx, fy: ty + labelH }; cx += cw + gap; return b;
+						});
+						const total = cx - gap - px0;
+						if (!ok || total > pw + 0.01) break;
+						best = tryLay;
+						const g = Math.min(72 * s, gap + (pw - total) / (races.length - 1));
+						if (g - gap < 0.01) break;
+						gap = g;
+					}
+					if (!best) continue;
+					lay = best;
+					break;
+				} else {
+					const cols = Math.floor(pw / c), rows = races.map(r => Math.ceil(r.margin / cols));
+					if (rows.reduce((a, b) => a + b, 0) * c + races.length * labelH + blockGap * (races.length - 1) > ground - (head ? topHead : top)) continue;
+					let cy = head ? topHead : top; lay = races.map((r, i) => { const b = { x: px0, y: cy, w: pw, cols, fx: px0, fy: cy + labelH }; cy += labelH + rows[i] * c + blockGap; return b; });
+					break;
+				}
 			}
+			if (lay) break;
 		}
 		if (!lay) return { boxes: [] };
 		const figures = c >= 8 * s, dr = Math.max(0.5, c * 0.34);   // people while they are big enough to read as people, dots after
@@ -116,17 +148,19 @@
 				if (figures) person(ctx, cx, cy, c * 0.86);
 				else { ctx.beginPath(); ctx.arc(cx, cy, dr, 0, Math.PI * 2); ctx.fill(); }
 			}
-			boxes.push({ x: b.x - 6 * s, y: b.y - 6 * s, w: (wide ? b.w : w) + 12 * s, h: labelH + rows * c + 12 * s, i });
+			boxes.push({ x: b.x - 6 * s, y: b.y - 6 * s, w: b.w + 12 * s, h: labelH + rows * c + 12 * s, i });
 		});
 
-		// foot line
+		// foot line: the rest of the set, or the reading of the chosen race
 		ctx.font = mono; ctx.textAlign = "left"; ctx.fillStyle = sel < 0 ? C.ink2 : C.ink;
-		foot.forEach((t, i) => ctx.fillText(t, x, y + h - footH + 14 * s + (i + 1) * lh - 4 * s));
+		const foot = wrap(ctx, (sel < 0 ? restLine : reading(races[sel])).toUpperCase(), pw);
+		foot.forEach((t, i) => ctx.fillText(t, px0, y + h - footH + 14 * s + (i + 1) * lh - 4 * s));
 		return { boxes };
 	}
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -134,12 +168,12 @@
 		if (rr.width !== W || rr.height !== H) { W = rr.width; H = rr.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1);
+		geo = draw(ctx, 0, 0, W, H, 1, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		const r = readout();
 		CD.announce(r ? r.join(", ") : races.map(r => `${r.label}: ${fmt(r.margin)} votes, ${r.winner} ${r.called ? "won" : "leads"}`).join(". ") + ". " + restLine + ".");
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 	// the crowds fill in once, on load
@@ -161,6 +195,6 @@
 	// the image is always the finished crowds, showing the pinned race if there is one
 	CD.exporter = {
 		readout: () => { const s0 = sel; sel = pick.pinned; const r = readout(); sel = s0; return r; },
-		draw: (c, x, y, w, h, u) => { const f = fill, s0 = sel; fill = 1; sel = pick.pinned; draw(c, x, y, w, h, u * 1.6); fill = f; sel = s0; }
+		draw: (c, x, y, w, h, u) => { const f = fill, s0 = sel; fill = 1; sel = pick.pinned; draw(c, x, y, w, h, u * 1.6, null); fill = f; sel = s0; }
 	};
 })();

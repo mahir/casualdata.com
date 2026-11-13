@@ -57,29 +57,45 @@
 	}
 	const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 
-	function draw(ctx, x, y, w, h, s) {
+	// Two frames (NEXT.md, "The layout of a day"). On the page the chart is the page: the title and dek
+	// are HTML, and the columns take the whole canvas, running under the title block on a wide screen.
+	// A shared image has no title, so there the drawing also carries the sentence and the small line.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function draw(ctx, x, y, w, h, s, page) {
 		const mono = `400 ${11.5 * s}px ${C.mono}`;
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-
-		// the takeaway, written into the drawing
-		let lines = [SENT.join(" ")], fs = 34 * s;
-		if (co2(ctx, lines[0], 0, 0, fs, true) > w) { lines = SENT; fs = 28 * s; }
-		const widest = Math.max(...lines.map(l => co2(ctx, l, 0, 0, fs, true)));
-		if (widest > w) fs *= w / widest;
-		ctx.fillStyle = C.ink;
-		lines.forEach((l, i) => co2(ctx, l, x, y + fs * 0.86 + i * fs * 1.14, fs));
-		let hy = y + lines.length * fs * 1.14 + 6 * s;
-		ctx.font = mono; ctx.fillStyle = C.ink2;
-		const note = wrap(ctx, NOTE, w);
-		note.forEach((l, i) => ctx.fillText(l, x, hy + 12 * s + i * 16 * s));
-		hy += note.length * 16 * s;
+		const head = page && page.head;
+		let hy = y;
+		if (page) { x += page.gut; w -= 2 * page.gut; }
+		else {
+			// the takeaway, written into the drawing
+			let lines = [SENT.join(" ")], fs = 34 * s;
+			if (co2(ctx, lines[0], 0, 0, fs, true) > w) { lines = SENT; fs = 28 * s; }
+			const widest = Math.max(...lines.map(l => co2(ctx, l, 0, 0, fs, true)));
+			if (widest > w) fs *= w / widest;
+			ctx.fillStyle = C.ink;
+			lines.forEach((l, i) => co2(ctx, l, x, y + fs * 0.86 + i * fs * 1.14, fs));
+			hy = y + lines.length * fs * 1.14 + 6 * s;
+			ctx.font = mono; ctx.fillStyle = C.ink2;
+			const note = wrap(ctx, NOTE, w);
+			note.forEach((l, i) => ctx.fillText(l, x, hy + 12 * s + i * 16 * s));
+			hy += note.length * 16 * s;
+		}
 
 		// the plot: a band for the two end labels and the reading, the columns, the baseline, two rows of labels
 		const BOT = 42 * s, base = y + h - BOT, top = hy + 10 * s;
-		const band = Math.min(86 * s, (base - top) * 0.42);
-		const colH = Math.max(10, base - top - band);
+		const band = Math.min((page ? 72 : 86) * s, (base - top) * 0.42);   // the page needs no air under a sentence
 		const slot = w / SLOTS, cw = Math.max(2 * s, slot * 0.74);
 		const cx = c => x + (yearOf(c) - Y0) * slot + (slot - cw) / 2;
+		let colH = Math.max(10, base - top - band);
+		// on a wide page the early columns run under the title block: the scale is the tallest that keeps
+		// them, and the first summit's label, clear of it
+		const headR = head ? head.x + head.w + 20 * s : 0;
+		if (head) for (const c of cops) {
+			if (cx(c) >= headR) break;
+			const room = base - (head.y + head.h + (cx(c) < cx(cops[0]) + 110 * s ? 62 : 18) * s);
+			colH = Math.max(10, Math.min(colH, room * (MAX - BASE) / (c.ppm - BASE)));
+		}
 		const yOf = v => base - (v - BASE) / (MAX - BASE) * colH;
 		const done = grow === 1;
 		const level = sel >= 0 && done ? yOf(cops[sel].ppm) : null;
@@ -129,7 +145,8 @@
 		const baseNote = [`COLUMNS RISE FROM ${BASE} PPM, THE LEVEL BEFORE INDUSTRY`, `FROM ${BASE} PPM, BEFORE INDUSTRY`].find(t => ctx.measureText(t).width <= w);
 		if (baseNote) ctx.fillText(baseNote, x, base + 36 * s);
 
-		if (!done) return { x, w, slot, top: hy };
+		const geo = { x, w, slot, top: hy, head, sky: c => page ? yOf(c.ppm) - 70 * s : -Infinity };
+		if (!done) return geo;
 
 		// the reading: an ink chip flagged up and to the left of the picked column, over the empty corner
 		let chip = null, value, context;
@@ -137,15 +154,17 @@
 			[value, context] = readout();
 			ctx.font = `600 ${17 * s}px ${C.sans}`; const vw = ctx.measureText(value).width;
 			ctx.font = `400 ${11 * s}px ${C.mono}`;
-			// the context wraps at its " · " breaks, as CD.label wraps it
+			// the context wraps at its " · " breaks, as CD.label wraps it; beside the title block the chip
+			// has only the width to its right
+			const room = head ? x + w - headR : w;
 			const rows = [];
 			for (const p of context.toUpperCase().split(" · ")) {
 				const t = rows.length ? rows[rows.length - 1] + " · " + p : p;
-				if (rows.length && ctx.measureText(t).width + 16 * s > w) rows.push(p); else if (rows.length) rows[rows.length - 1] = t; else rows.push(p);
+				if (rows.length && ctx.measureText(t).width + 16 * s > room) rows.push(p); else if (rows.length) rows[rows.length - 1] = t; else rows.push(p);
 			}
 			const tw = Math.max(...rows.map(r => ctx.measureText(r).width));
-			const cwid = Math.min(w, Math.max(vw, tw) + 16 * s), chh = (49 + 15 * (rows.length - 1)) * s;
-			const px = Math.max(x, cx(cops[sel]) + cw - cwid);
+			const cwid = Math.min(room, Math.max(vw, tw) + 16 * s), chh = (49 + 15 * (rows.length - 1)) * s;
+			const px = Math.max(head ? headR : x, cx(cops[sel]) + cw - cwid);
 			const over = cops.filter(c => cx(c) < px + cwid && cx(c) + cw > px);
 			const py = Math.max(hy + 4 * s, Math.min(...over.map(c => yOf(c.ppm))) - 10 * s - chh);
 			chip = { x: px, y: py, w: cwid, h: chh };
@@ -181,11 +200,12 @@
 		}
 		if (chip) CD.label(ctx, chip.x - 12 * s, chip.y - 1e4, value, context, s, { x: chip.x, y: chip.y, w: chip.w + 1, h: chip.h + 60 * s });
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-		return { x, w, slot, top: hy };
+		return geo;
 	}
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -193,11 +213,11 @@
 		if (r.width !== W || r.height !== H) { W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1);
+		geo = draw(ctx, 0, 0, W, H, 1, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 	if (grow < 1) {
@@ -209,18 +229,20 @@
 	if (s0 >= 0) sel = s0;
 	const pick = CD.selection({ initial: sel, key: "cop", encode: i => cops[i].n, onChange: i => { sel = i; schedule(); } });
 	CD.bindSelection(cv, pick, {
-		// anywhere under the sentence picks the nearest summit, so a thumb can drag along the years;
-		// the sentence itself is the way back to the overview
+		// anywhere near the columns picks the nearest summit, so a thumb can drag along the years;
+		// the title block and the empty sky well above a column are the way back to the overview
 		at: e => {
 			if (!geo) return -1;
 			const r = cv.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
 			if (my < geo.top) return -1;
+			const hd = geo.head;
+			if (hd && mx < hd.x + hd.w && my < hd.y + hd.h) return -1;
 			let best = -1, bd = Infinity;
 			cops.forEach((c, i) => { const d = Math.abs(geo.x + (yearOf(c) - Y0 + 0.5) * geo.slot - mx); if (d < bd) { bd = d; best = i; } });
-			return best;
+			return my < geo.sky(cops[best]) ? -1 : best;
 		},
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : N - 1) : (from + dir + N) % N
 	});
 	// the image is always the finished picture, even while the columns are still rising
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, null); grow = g; } };
 })();

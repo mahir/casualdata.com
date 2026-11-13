@@ -29,10 +29,10 @@
 	let sel = -1;
 	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 
-	function readout() {
-		if (sel < 0) return [`${upsets.length} seats rated Republican went to Democrats`,
+	function readout(i = sel) {
+		if (i < 0) return [`${upsets.length} seats rated Republican went to Democrats`,
 			`${reverse === 0 ? "none" : reverse} rated Democratic or toss-up went to Republicans · ${upsets.length - upCalled} of the ${upsets.length} not yet called`];
-		const r = seats[sel], g = GROUPS.find(g => g.key === r.rating);
+		const r = seats[i], g = GROUPS.find(g => g.key === r.rating);
 		const verb = r.status === "called" ? "won" : r.status === "runoff" ? "led the first round" : "leads";
 		const how = !r.l ? `${verb} unopposed` : `${verb} by ${fmt(r.m)} vote${r.m === 1 ? "" : "s"} over ${r.l} (${party(r.lp)})`;
 		const st = r.status === "called" ? "" : r.status === "runoff" ? " · goes to a runoff" : " · not yet called";
@@ -77,14 +77,55 @@
 		return cy - y + lh;
 	}
 
-	function draw(ctx, x, y, w, h, s) {
-		const hh = head(ctx, x, y, w, s);
-		const kh = key(ctx, x, 0, w, s, true);
-		key(ctx, x, y + h - kh, w, s, false);
-		const gy = y + hh + 22 * s, gh = h - hh - 22 * s - kh - 16 * s;
+	// the tallest reading chip (CD.label) any seat needs in a box bw wide, so a band can be kept for it
+	let chipMemo = null;
+	function chipHeight(ctx, bw, s) {
+		if (chipMemo && chipMemo.bw === bw && chipMemo.s === s) return chipMemo.h;
+		ctx.font = `400 ${11 * s}px ${C.mono}`;
+		let most = 1;
+		seats.forEach((r, i) => {
+			let n = 1, line = "";
+			for (const p of readout(i)[1].toUpperCase().split(" · ")) {
+				const t = line ? line + " · " + p : p;
+				if (line && ctx.measureText(t).width + 16 * s > bw) { n++; line = p; } else line = t;
+			}
+			most = Math.max(most, n);
+		});
+		chipMemo = { bw, s, h: (49 + 15 * (most - 1)) * s };
+		return chipMemo.h;
+	}
+
+	// Two frames (NEXT.md, "The layout of a day"). On the page the grid is the page: the title and dek
+	// are HTML, so the two large counts are not drawn. A shared image has no title, so there the
+	// drawing carries the counts, the grid and the key, as before.
+	// page = { head: the title block's box where it lies over the canvas, or null; gut: the page margin }
+	function draw(ctx, x, y, w, h, s, exporting, page) {
+		const hd = page && page.head, gut = page ? page.gut : 0;
+		const picked = sel >= 0 && grow === 1;
+		let gx, gw, gy, gh, chip = null;
+		if (!page) {
+			const hh = head(ctx, x, y, w, s);
+			const kh = key(ctx, x, 0, w, s, true);
+			key(ctx, x, y + h - kh, w, s, false);
+			gx = x; gw = w; gy = y + hh + 22 * s; gh = h - hh - 22 * s - kh - 16 * s;
+		} else if (hd) {
+			// a wide screen: the key, then the reading, in the column under the title; the grid takes
+			// the rest of the canvas at full height
+			const ky = y + hd.y + hd.h + 26 * s, kh = key(ctx, x + hd.x, ky, hd.w, s, false);
+			chip = { x: x + hd.x, y: ky + kh + 20 * s, w: hd.w, h: y + h - ky - kh - 20 * s };
+			gx = x + hd.x + hd.w + 44 * s; gw = x + w - gut - gx; gy = y + hd.y + 3 * s; gh = y + h - 10 * s - gy;
+		} else {
+			// a narrow screen: the title sits above the canvas. A band on top holds the key, and the
+			// reading takes the key's place while a seat is picked, so no square moves or is covered
+			const kh = key(ctx, x + gut, 0, w - 2 * gut, s, true);
+			const band = Math.max(kh, chipHeight(ctx, w - 2 * gut, s));
+			if (picked) chip = { x: x + gut, y: y + 2 * s, w: w - 2 * gut, h: band };
+			else key(ctx, x + gut, y + 2 * s, w - 2 * gut, s, false);
+			gx = x + gut; gw = w - 2 * gut; gy = y + 2 * s + band + 12 * s; gh = y + h - 4 * s - gy;
+		}
 		ctx.font = `400 ${11.5 * s}px ${C.mono}`;
 		const labW = Math.max(ctx.measureText("TOSS-UP").width, ctx.measureText("LIKELY").width) + 2 * s;
-		const CAP = 30 * s;
+		const CAP = (page ? 44 : 30) * s;
 
 		// across: one block of columns per rating, its name above and its count below
 		const TOP = 34 * s, BOT = 36 * s, GAPX = 14 * s;
@@ -93,7 +134,7 @@
 			const cols = GROUPS.map(g => Math.ceil(g.n / R));
 			let cell = Math.min(CAP, (gh - TOP - BOT) / R);
 			const width = c => cols.reduce((a, k) => a + Math.max(k * c, labW), 0) + GAPX * (GROUPS.length - 1);
-			while (cell > 2 && width(cell) > w) cell -= 0.25;
+			while (cell > 2 && width(cell) > gw) cell -= 0.25;
 			if (cell > across.cell) across = { cell, R, cols, width: width(cell) };
 		}
 		// down: one block of rows per rating, its name and count on a line above
@@ -101,7 +142,7 @@
 		let down = { cell: 0 };
 		for (let K = 9; K <= 60; K++) {
 			const rows = GROUPS.map(g => Math.ceil(g.n / K)), total = rows.reduce((a, b) => a + b, 0);
-			const cell = Math.min(CAP, w / K, (gh - GROUPS.length * LH - (GROUPS.length - 1) * GAPY) / total);
+			const cell = Math.min(CAP, gw / K, (gh - GROUPS.length * LH - (GROUPS.length - 1) * GAPY) / total);
 			if (cell > down.cell) down = { cell, K, rows, total };
 		}
 		const horizontal = across.cell >= down.cell * 0.9;
@@ -112,7 +153,7 @@
 		const texts = [];
 		if (horizontal) {
 			const R = across.R, blockH = R * cell;
-			const oy = gy + Math.max(0, (gh - TOP - BOT - blockH) / 2), ox0 = x + Math.max(0, (w - across.width) / 2);
+			const oy = gy + (hd ? 0 : Math.max(0, (gh - TOP - BOT - blockH) / 2)), ox0 = gx + Math.max(0, (gw - across.width) / 2);
 			let ox = ox0;
 			GROUPS.forEach((g, k) => {
 				const bw = Math.max(across.cols[k] * cell, labW);
@@ -127,8 +168,8 @@
 			});
 		} else {
 			const K = down.K, blockH = down.total * cell + GROUPS.length * LH + (GROUPS.length - 1) * GAPY;
-			let oy = gy + Math.max(0, (gh - blockH) / 2);
-			const ox = x + Math.max(0, (w - K * cell) / 2);
+			let oy = gy + (page ? 0 : Math.max(0, (gh - blockH) / 2));
+			const ox = gx + Math.max(0, (gw - K * cell) / 2);
 			GROUPS.forEach((g, k) => {
 				ctx.fillStyle = C.ink; const t = `${g.a}${g.b ? " " + g.b : ""}`; ctx.fillText(t, ox, oy + 13 * s);
 				ctx.fillStyle = C.ink2; ctx.fillText(`D ${g.d} · R ${g.r}`, ox + ctx.measureText(t).width + 12 * s, oy + 13 * s);
@@ -147,11 +188,12 @@
 				ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(c.x + cell / 2, c.y + cell / 2, Math.max(1.2 * s, side * 0.16), 0, Math.PI * 2); ctx.fill();
 			}
 		});
-		if (sel >= 0 && grow === 1) {
+		if (picked) {
 			const c = cells[sel], [value, context] = readout();
 			ctx.lineWidth = 2 * s; ctx.strokeStyle = C.ink;
 			ctx.strokeRect(c.x - 2 * s, c.y - 2 * s, cell + 4 * s, cell + 4 * s);
-			CD.label(ctx, c.x + cell + 2 * s, c.y + cell / 2, value, context, s, { x, y: gy, w, h: gh }, c.x - 2 * s, texts);
+			if (chip) CD.label(ctx, chip.x - 12 * s, -1e4, value, context, s, chip);
+			else CD.label(ctx, c.x + cell + 2 * s, c.y + cell / 2, value, context, s, { x, y: gy, w, h: gh }, c.x - 2 * s, texts);
 		}
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		return { cells, cell };
@@ -159,6 +201,7 @@
 
 	const cv = document.getElementById("cv"), stage = document.getElementById("stage");
 	const ctx = cv.getContext("2d");
+	const headEl = document.querySelector(".cd-head");
 	let geo = null, W = 0, H = 0, raf = 0;
 	function paint() {
 		raf = 0;
@@ -166,11 +209,11 @@
 		if (r.width !== W || r.height !== H) { W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, W, H);
-		geo = draw(ctx, 0, 0, W, H, 1);
+		geo = draw(ctx, 0, 0, W, H, 1, false, { head: CD.headBox(stage), gut: parseFloat(getComputedStyle(headEl).paddingLeft) || 16 });
 		CD.announce(readout().join(", "));
 	}
 	const schedule = () => { if (!raf) raf = requestAnimationFrame(paint); };
-	new ResizeObserver(schedule).observe(stage);
+	new ResizeObserver(schedule).observe(stage); new ResizeObserver(schedule).observe(headEl);
 	document.fonts.ready.then(schedule);
 	document.addEventListener("cd-theme", schedule);
 	if (grow < 1) {
@@ -203,5 +246,5 @@
 		}
 	});
 	// the image is always the finished picture, even while the squares are still turning green
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6); grow = g; } };
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();
