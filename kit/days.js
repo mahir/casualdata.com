@@ -60,5 +60,11 @@ window.CD_DAYS = [
 		path: "/2026-11-12/",
 		title: "India more than halved its child pneumonia deaths. Nigeria’s have barely moved",
 		dek: "Estimated deaths of children under five from pneumonia in 2015 and 2024, for the six countries that lose the most."
+	},
+	{
+		date: "2026-11-13",
+		path: "/2026-11-13/",
+		title: "A 1960 equation put the world’s population at infinity on 13 November 2026. Until the mid-1990s the world was ahead of it",
+		dek: "Each dot is a year from 1700 to 2026: the world’s population against the years left until that date."
 	}
 ];
