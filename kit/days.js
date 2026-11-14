@@ -66,5 +66,11 @@ window.CD_DAYS = [
 		path: "/2026-11-13/",
 		title: "A 1960 equation put the world’s population at infinity on 13 November 2026. Until the mid-1990s the world was ahead of it",
 		dek: "Each dot is a year from 1700 to 2026: the world’s population against the years left until that date."
+	},
+	{
+		date: "2026-11-14",
+		path: "/2026-11-14/",
+		title: "Same city, same ground stop: Dallas-Fort Worth lost 34% of its departures, Love Field 9%",
+		dek: "Each column is a US airport: the share of its departures on 13 November 2026 that were cancelled, from the least to the most."
 	}
 ];

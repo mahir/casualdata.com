@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Fri, 13 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 14 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Same city, same ground stop: Dallas-Fort Worth lost 34% of its departures, Love Field 9%</title>
+    <link>https://casualdata.com/2026-11-14/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-14/</guid>
+    <pubDate>Sat, 14 Nov 2026 07:00:00 +0000</pubDate>
+    <description>On 13 November 2026 the FAA halted departures across the US for hours. The share of the day’s departures cancelled at each of 84 US airports, from 6% to LaGuardia’s 41%: Dallas-Fort Worth 34%, Dallas Love Field 9%. With the counts of cancelled and delayed flights.</description>
+    <enclosure url="https://casualdata.com/2026-11-14/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>A 1960 equation put the world’s population at infinity on 13 November 2026. Until the mid-1990s the world was ahead of it</title>
     <link>https://casualdata.com/2026-11-13/</link>
