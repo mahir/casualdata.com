@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Sat, 14 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 15 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Wales lost to New Zealand 34 times in a row. On 14 November they won, 35–28</title>
+    <link>https://casualdata.com/2026-11-15/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-15/</guid>
+    <pubDate>Sun, 15 Nov 2026 07:00:00 +0000</pubDate>
+    <description>All 39 rugby union matches between Wales and New Zealand, 1905 to 2026, as bars either side of zero: four Welsh wins and 35 defeats, 34 of them in a row from 1963 to 2025, before Wales won 35–28 in Cardiff on 14 November 2026. With each match’s date, ground and score.</description>
+    <enclosure url="https://casualdata.com/2026-11-15/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Same city, same ground stop: Dallas-Fort Worth lost 34% of its departures, Love Field 9%</title>
     <link>https://casualdata.com/2026-11-14/</link>

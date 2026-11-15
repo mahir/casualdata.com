@@ -72,5 +72,11 @@ window.CD_DAYS = [
 		path: "/2026-11-14/",
 		title: "Same city, same ground stop: Dallas-Fort Worth lost 34% of its departures, Love Field 9%",
 		dek: "Each column is a US airport: the share of its departures on 13 November 2026 that were cancelled, from the least to the most."
+	},
+	{
+		date: "2026-11-15",
+		path: "/2026-11-15/",
+		title: "Wales lost to New Zealand 34 times in a row. On 14 November they won, 35–28",
+		dek: "Every Wales v New Zealand rugby union match since 1905: bars up for a Welsh win, down for a defeat, as tall as the margin in points."
 	}
 ];
