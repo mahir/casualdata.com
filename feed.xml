@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Sun, 15 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 16 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Since 2018, Türkiye’s electricity was under a third fossil in only three months: April to June 2026</title>
+    <link>https://casualdata.com/2026-11-16/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-16/</guid>
+    <pubDate>Mon, 16 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Türkiye’s electricity, each month from January 2018 to September 2026, as a grid of 105 squares shaded by the share made from coal, gas and oil. Only April, May and June 2026 were under a third (29.3%, 27.3% and 31.6%); the next lowest month was April 2020 at 34.3%. With each month’s mix of fossil, hydro, wind and solar and other renewables.</description>
+    <enclosure url="https://casualdata.com/2026-11-16/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Wales lost to New Zealand 34 times in a row. On 14 November they won, 35–28</title>
     <link>https://casualdata.com/2026-11-15/</link>

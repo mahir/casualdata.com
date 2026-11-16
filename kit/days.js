@@ -78,5 +78,11 @@ window.CD_DAYS = [
 		path: "/2026-11-15/",
 		title: "Wales lost to New Zealand 34 times in a row. On 14 November they won, 35–28",
 		dek: "Every Wales v New Zealand rugby union match since 1905: bars up for a Welsh win, down for a defeat, as tall as the margin in points."
+	},
+	{
+		date: "2026-11-16",
+		path: "/2026-11-16/",
+		title: "Since 2018, Türkiye’s electricity was under a third fossil in only three months: April to June 2026",
+		dek: "Share of Türkiye’s electricity made from coal, gas and oil, each month from January 2018 to September 2026."
 	}
 ];
