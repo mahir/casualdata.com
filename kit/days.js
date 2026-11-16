@@ -82,7 +82,7 @@ window.CD_DAYS = [
 	{
 		date: "2026-11-16",
 		path: "/2026-11-16/",
-		title: "Since 2018, Türkiye’s electricity was under a third fossil in only three months: April to June 2026",
+		title: "Türkiye made less than a third of its electricity from fossil fuels in April, May and June 2026. No other month since 2018 did",
 		dek: "Share of Türkiye’s electricity made from coal, gas and oil, each month from January 2018 to September 2026."
 	}
 ];
