@@ -1,0 +1,53 @@
+# Posts the day's image to Instagram once a day (tools/instagram.js), then refreshes the
+# Instagram token and stores it back in the IG_ACCESS_TOKEN secret so it never expires.
+# Secrets: IG_ACCESS_TOKEN (long-lived Instagram User token) and SECRETS_PAT (a fine-grained
+# GitHub token for this repository with "Secrets: read and write"; without it the token is not
+# refreshed and must be replaced by hand every 60 days).
+name: Instagram
+
+on:
+  schedule:
+    - cron: "17 14 * * *" # 09:17 in New York in winter, 10:17 in summer; GitHub may start it late
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Day to post (YYYY-MM-DD). Empty: today's"
+        required: false
+      mode:
+        description: "post, check (Instagram checks the image, nothing is published) or dry-run"
+        type: choice
+        options: [post, check, dry-run]
+        default: post
+
+permissions:
+  contents: read
+
+concurrency: instagram
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Post
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          DAY: ${{ inputs.date }}
+          MODE: ${{ inputs.mode || 'post' }}
+        run: |
+          flag=""
+          [ "$MODE" != post ] && flag="--$MODE"
+          node tools/instagram.js ${DAY:+"$DAY"} $flag
+      - name: Refresh token
+        if: always() && (inputs.mode || 'post') != 'dry-run'
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.SECRETS_PAT }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then echo "SECRETS_PAT not set; token not refreshed"; exit 0; fi
+          if t=$(node tools/instagram.js --refresh) && [ -n "$t" ]; then
+            echo "::add-mask::$t"
+            printf %s "$t" | gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY"
+          else
+            echo "refresh skipped (a token can be refreshed once it is a day old)"
+          fi
