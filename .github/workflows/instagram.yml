@@ -9,7 +9,8 @@ name: Instagram
 
 on:
   schedule:
-    - cron: "17 14 * * *" # 09:17 in New York in winter, 10:17 in summer; GitHub may start it late
+    - cron: "7 4 * * *" # 04:07 in New York all year; GitHub may start it late
+      timezone: "America/New_York"
   workflow_dispatch:
     inputs:
       date:
