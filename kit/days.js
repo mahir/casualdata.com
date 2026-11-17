@@ -84,5 +84,11 @@ window.CD_DAYS = [
 		path: "/2026-11-16/",
 		title: "Türkiye made less than a third of its electricity from fossil fuels in April, May and June 2026. No other month since 2018 did",
 		dek: "Share of Türkiye’s electricity made from coal, gas and oil, each month from January 2018 to September 2026."
+	},
+	{
+		date: "2026-11-17",
+		path: "/2026-11-17/",
+		title: "France ordered 137,550 people to leave in 2025, more than twice as many as any other EU country. 18,930 people left France after an order",
+		dek: "Each circle is a country: its size is how many people it ordered to leave in 2025, its dark core how many left after an order."
 	}
 ];
