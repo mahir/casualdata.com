@@ -1,8 +1,10 @@
-# Posts the day's image to Instagram once a day (tools/instagram.js), then refreshes the
-# Instagram token and stores it back in the IG_ACCESS_TOKEN secret so it never expires.
-# Secrets: IG_ACCESS_TOKEN (long-lived Instagram User token) and SECRETS_PAT (a fine-grained
-# GitHub token for this repository with "Secrets: read and write"; without it the token is not
-# refreshed and must be replaced by hand every 60 days).
+# Posts the day's image to Instagram once a day (tools/instagram.js). Secret: IG_ACCESS_TOKEN, the
+# token from the Meta app dashboard (tools/instagram.js says which kinds work).
+# A token that starts with EAA can't be refreshed: the Post step says when it expires, and it is
+# replaced by hand. A token that starts with IG lasts 60 days; the Refresh step renews it and stores
+# it back in the secret, which needs SECRETS_PAT (a fine-grained GitHub token for this repository
+# with "Secrets: read and write"). Optional variable IG_USER_ID: the Instagram account's ID, only
+# needed if an EAA token covers several accounts or Meta lists none for it.
 name: Instagram
 
 on:
@@ -32,6 +34,7 @@ jobs:
       - name: Post
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
           DAY: ${{ inputs.date }}
           MODE: ${{ inputs.mode || 'post' }}
         run: |
@@ -49,5 +52,5 @@ jobs:
             echo "::add-mask::$t"
             printf %s "$t" | gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY"
           else
-            echo "refresh skipped (a token can be refreshed once it is a day old)"
+            echo "token not refreshed (an IG token can be refreshed once it is a day old; an EAA token never)"
           fi

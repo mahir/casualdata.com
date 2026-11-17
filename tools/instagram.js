@@ -1,6 +1,6 @@
 // Posts a day to Instagram: its /YYYY-MM-DD/ig.jpg (rendered by tools/cards.js) with a caption made
-// from its title and dek in kit/days.js. Uses the Instagram API with Instagram Login, which fetches
-// the image from casualdata.com, so the day must already be deployed.
+// from its title and dek in kit/days.js. Instagram fetches the image from casualdata.com, so the day
+// must already be deployed.
 //
 //   node tools/instagram.js [YYYY-MM-DD] [--dry-run | --check]
 //   node tools/instagram.js --refresh
@@ -12,21 +12,32 @@
 //   --check    also creates the post container (Instagram checks the image) but does not publish it;
 //              unpublished containers expire after 24 hours and don't count toward the posting limit
 //   --refresh  prints a refreshed long-lived token (valid 60 days) on stdout, for the workflow to
-//              store back in the repository secret
+//              store back in the repository secret; prints nothing for a token that can't be refreshed
 //
-// Needs IG_ACCESS_TOKEN (a long-lived Instagram User token with instagram_business_basic and
-// instagram_business_content_publish) in the environment, except with --dry-run.
+// Needs IG_ACCESS_TOKEN in the environment, except with --dry-run. Meta's app dashboard issues one of
+// two kinds, and the script tells them apart by how the token starts:
+//   EAA…  from "API setup with unified login" (what apps created since late 2026 offer) or "API setup
+//         with Facebook login". Host graph.facebook.com; needs instagram_basic and
+//         instagram_content_publish. Its lifetime is set in the app's login configuration and it
+//         can't be refreshed here, so each run says when it expires.
+//   IG…   from "API setup with Instagram login" (older apps). Host graph.instagram.com; needs
+//         instagram_business_basic and instagram_business_content_publish. Lasts 60 days and is
+//         refreshed by --refresh.
+// With an EAA token the account is the one the token covers; if it covers several, or Meta lists
+// none, set IG_USER_ID to the account's ID (the number under its name in the dashboard's Generate
+// access tokens table).
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const API = "https://graph.instagram.com/v27.0";
 const SITE = "https://casualdata.com";
 const TAGS = ["dataviz", "datavisualization"];
 
 const args = process.argv.slice(2);
 const flag = f => args.includes(f);
-const token = process.env.IG_ACCESS_TOKEN;
+const token = (process.env.IG_ACCESS_TOKEN || "").trim();
+const IG_LOGIN = token.startsWith("IG");   // an Instagram Login token; anything else is a Facebook-host token
+const API = `https://${IG_LOGIN ? "graph.instagram.com" : "graph.facebook.com"}/v27.0`;
 
 function fail(msg) { console.error(msg); process.exit(1); }
 
@@ -46,6 +57,7 @@ async function api(method, url, params = {}) {
 
 async function refresh() {
 	if (!token) fail("IG_ACCESS_TOKEN is not set");
+	if (!IG_LOGIN) { console.error("not an Instagram Login token: nothing to refresh (its lifetime is set in the Meta app's login configuration)"); return; }
 	const res = await fetch(`https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${encodeURIComponent(token)}`);
 	const json = await res.json();
 	if (!json.access_token) fail("refresh failed: " + ((json.error && json.error.message) || res.status));
@@ -58,6 +70,38 @@ function days() {
 	const ctx = { window: {} };
 	vm.runInNewContext(src, ctx);
 	return ctx.window.CD_DAYS;
+}
+
+// The Instagram account to post to: its ID for the request paths and its username for the log.
+async function account() {
+	if (IG_LOGIN) {
+		const me = await api("GET", "/me", { fields: "user_id,username" });
+		return { id: me.user_id, username: me.username };
+	}
+	// with a Facebook-host token /me is the token's system user or person, not the Instagram account
+	const asked = (process.env.IG_USER_ID || "").trim();
+	if (asked) return { id: asked, username: (await api("GET", `/${asked}`, { fields: "username" })).username };
+	const hint = "set IG_USER_ID to the account's ID (the number under its name in the App Dashboard's Generate access tokens table)";
+	let list;
+	try { list = (await api("GET", "/me/assigned_instagram_accounts", { fields: "id,username" })).data || []; }
+	catch (e) { fail(`${e.message}\nIf the token is valid, ${hint}`); }
+	if (list.length !== 1) fail(list.length
+		? `the token covers ${list.length} Instagram accounts (${list.map(a => "@" + a.username).join(", ")}); ${hint}`
+		: `the token lists no Instagram account; ${hint}`);
+	return list[0];
+}
+
+// A Facebook-host token can't be refreshed here, so say when it runs out. Best effort: Meta may not
+// let a token describe itself, and that must not stop a post.
+async function expiry() {
+	if (IG_LOGIN) return;
+	try {
+		const { data } = await api("GET", "/debug_token", { input_token: token });
+		if (!data.expires_at) return console.log("the token does not expire");
+		const days = Math.floor((data.expires_at * 1000 - Date.now()) / 86400000);
+		const on = new Date(data.expires_at * 1000).toISOString().slice(0, 10);
+		console.log(`${days <= 14 ? "::warning::" : ""}the token expires on ${on} (${days} days): before then, generate a new one in the Meta app dashboard and store it as IG_ACCESS_TOKEN`);
+	} catch (e) { console.log("could not read when the token expires: " + e.message); }
 }
 
 function caption(day) {
@@ -85,14 +129,15 @@ async function post() {
 	if (flag("--dry-run")) return;
 	if (!token) fail("IG_ACCESS_TOKEN is not set");
 
-	const me = await api("GET", "/me", { fields: "user_id,username" });
-	const recent = await api("GET", `/${me.user_id}/media`, { fields: "caption", limit: 25 });
+	const me = await account();
+	await expiry();
+	const recent = await api("GET", `/${me.id}/media`, { fields: "caption", limit: 25 });
 	if ((recent.data || []).some(m => (m.caption || "").includes(`casualdata.com/${day.date}`))) {
 		console.log(`already posted on @${me.username}; skipping`);
 		return;
 	}
 
-	const { id: container } = await api("POST", `/${me.user_id}/media`, {
+	const { id: container } = await api("POST", `/${me.id}/media`, {
 		image_url: image,
 		caption: text,
 		alt_text: `${day.title}. ${day.dek}`.slice(0, 1000)
@@ -106,7 +151,7 @@ async function post() {
 	}
 	if (flag("--check")) { console.log(`Instagram accepted the image (container ${container}); not published`); return; }
 
-	const { id: media } = await api("POST", `/${me.user_id}/media_publish`, { creation_id: container });
+	const { id: media } = await api("POST", `/${me.id}/media_publish`, { creation_id: container });
 	const { permalink } = await api("GET", `/${media}`, { fields: "permalink" });
 	console.log(`posted to @${me.username}: ${permalink}`);
 }
