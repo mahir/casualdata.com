@@ -221,9 +221,12 @@ span.cd-arrow { color: var(--ink-3); }
 }
 
 /* ---------- home: every day, as a grid ---------- */
-/* Two shapes only. The newest day takes a full row: its image at the left, its date, title and intro
-   beside it. Every earlier day is the same tile in one even grid, newest first: the day's own
-   preview, its date and its title. A part-filled last row is simply where the collection has got to. */
+/* Pictures first. A tile is the day's chart as it draws itself on a small screen, with its own
+   numbers and labels but no headline, and no frame around it, on the page's own ground; under it
+   the date and the title, each said once. The newest day takes a full row, its chart larger and its
+   date, title and intro beside it; every earlier day is the same tile in one even, roomy grid,
+   newest first. Space separates the days: there are no rules, wells or outlines. A part-filled last
+   row is simply where the collection has got to. */
 body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
 /* What the site is, said once, in the top bar between the logo and the archive link. On phones the
    three do not fit one row, so the sentence takes its own row under the bar's rule. */
@@ -237,38 +240,41 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 	}
 }
 .cd-days {
-	list-style: none; margin: 0; padding: clamp(20px, 3.5vh, 36px) var(--gut) 0;
-	display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start;
-	gap: clamp(32px, 4vw, 56px) clamp(16px, 2vw, 28px);
+	list-style: none; margin: 0; padding: clamp(32px, 6vh, 72px) var(--gut) 0;
+	display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start;
+	gap: clamp(56px, 7vw, 112px) clamp(32px, 5vw, 88px);
 }
-.tile a { display: grid; gap: 8px; align-content: start; text-decoration: none; }
-/* The preview is the day's share image cropped to its chart: the image's foot (logo, date, address)
-   would only repeat the caption under it */
-.tile img {
-	display: block; width: 100%; height: auto; aspect-ratio: 1200 / 548; object-fit: cover; object-position: 50% 0;
-	background: var(--rule); outline: 1px solid var(--rule); outline-offset: -1px; margin-bottom: 4px;
-}
-.tile .t { font-size: 18px; font-weight: 500; letter-spacing: -.012em; line-height: 1.3; text-wrap: balance; }
-.tile .dek { color: var(--ink-2); font-size: 16px; line-height: 1.45; max-width: 44ch; }
-.tile.lead { grid-column: 1 / -1; padding-bottom: clamp(24px, 3vw, 44px); border-bottom: 1px solid var(--rule); }
-.tile.lead a { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-rows: auto auto 1fr; column-gap: clamp(20px, 3vw, 48px); row-gap: 12px; align-items: start; }
-.tile.lead img { grid-row: 1 / span 3; margin-bottom: 0; }
-.tile.lead .cd-meta { margin-top: 2px; }
-.tile.lead .t { font-size: clamp(28px, 3vw, 46px); font-weight: 400; letter-spacing: -.025em; line-height: 1.04; max-width: 16ch; }
+.tile a { display: grid; gap: 6px; align-content: start; text-decoration: none; }
+/* The picture is clear wherever the chart paints nothing, so it needs no well or outline. */
+.tile picture { display: block; margin-bottom: 14px; }
+.tile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; }
+.tile .cd-meta { color: var(--ink-2); }
+.tile .t { font-size: 16px; font-weight: 400; letter-spacing: -.005em; line-height: 1.38; text-wrap: balance; max-width: 34ch; }
+.tile .dek { color: var(--ink-2); font-size: 16px; line-height: 1.45; max-width: 40ch; text-wrap: pretty; }
+/* the newest day: the chart at the left, its caption beside it, standing on the same line */
+.tile.lead { grid-column: 1 / -1; }
+.tile.lead a { grid-template-columns: minmax(0, 5fr) minmax(0, 3fr); grid-template-rows: 1fr auto auto auto; column-gap: clamp(32px, 5vw, 88px); row-gap: 12px; }
+.tile.lead picture { grid-row: 1 / -1; margin-bottom: 0; }
+.tile.lead .cd-meta { grid-row: 2; }
+.tile.lead .t { grid-row: 3; }
+.tile.lead .dek { grid-row: 4; }
+.tile.lead .t { font-size: clamp(23px, 2.1vw, 30px); letter-spacing: -.018em; line-height: 1.18; max-width: 25ch; }
+.tile.lead .dek { margin-top: 4px; }
 .tile .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 7px; vertical-align: 1px; }
 .tile a:hover .t, .tile a:focus-visible .t { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .tile a:focus-visible { outline: none; }
-.tile a:focus-visible img { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (max-width: 1200px) {
-	.cd-days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tile a:focus-visible img { outline: 2px solid var(--ink); outline-offset: 6px; }
+@media (min-width: 1600px) {
+	.cd-days { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 960px) {
 	.cd-days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-	.tile.lead a { grid-template-columns: minmax(0, 1fr); }
-	.tile.lead img { grid-row: auto; margin-bottom: 4px; }
+	.tile.lead a { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 8px; }
+	.tile.lead picture { grid-row: auto; margin-bottom: 12px; }
+	.tile.lead .cd-meta, .tile.lead .t, .tile.lead .dek { grid-row: auto; }
 }
 @media (max-width: 600px) {
-	.cd-days { grid-template-columns: minmax(0, 1fr); }
+	.cd-days { grid-template-columns: minmax(0, 1fr); row-gap: 52px; }
 }
 .cd-textlink { font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); padding: 10px 0; }
 .cd-textlink:hover { text-decoration-color: var(--ink); }

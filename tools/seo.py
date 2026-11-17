@@ -262,20 +262,23 @@ def do_day(info, prev_next):
     write(info["path"], stamp(put_block(page, lines), info["path"], skip=("/kit/days.js",)))
 
 
-def tile(d, i):
-    sizes = "(max-width: 960px) 100vw, 66vw" if i == 0 else \
-        "(max-width: 600px) 100vw, (max-width: 960px) 50vw, (max-width: 1200px) 33vw, 25vw"
+def tile(d, i, year):
+    sizes = "100vw" if i == 0 else \
+        "(max-width: 600px) 100vw, (max-width: 960px) 50vw, (max-width: 1599px) 33vw, 25vw"
     # Lazy on purpose: the page script replaces this grid before layout, so with JavaScript these
     # images are never fetched; crawlers and readers without JavaScript still get them.
     load = 'loading="lazy"'
     p = f"/{d['date']}/"
     when = date.fromisoformat(d["date"])
-    label = f"{when.strftime('%a')} {when.day} {when.strftime('%b')} {when.year}"
+    # the newest day says the year; the others only when theirs differs from it
+    label = f"{when.strftime('%a')} {when.day} {when.strftime('%b')}" + (f" {when.year}" if i == 0 or when.year != year else "")
     lead = '<i class="dot" aria-hidden="true"></i>Latest · ' if i == 0 else ""
+    # the newest day's tile is large: above phone width it shows the picture laid out larger
+    source = f'<source media="(min-width: 601px)" srcset="{p}lead.webp" width="1440" height="960">' if i == 0 else ""
     dek = f'\n      <span class="dek">{esc(d["dek"])}</span>' if i == 0 and d.get("dek") else ""
     return (f'    <li class="tile{" lead" if i == 0 else ""}"><a href="{p}">\n'
-            f'      <img srcset="{p}thumb.webp 720w, {p}thumb-1200.webp 1200w" sizes="{sizes}" src="{p}thumb.webp" '
-            f'width="1200" height="630" alt="" {load}>\n'
+            f'      <picture>{source}<img srcset="{p}thumb.webp 720w, {p}thumb-1200.webp 1200w" sizes="{sizes}" src="{p}thumb.webp" '
+            f'width="1200" height="800" alt="" {load}></picture>\n'
             f'      <span class="cd-meta">{lead}<time datetime="{d["date"]}">{label}</time></span>\n'
             f'      <span class="t">{esc(d["title"])}</span>{dek}\n'
             f'    </a></li>')
@@ -287,7 +290,8 @@ def do_home(pub):
     latest = pub[-1] if pub else None
     newest = list(reversed(pub))
     # Static grid, replaced by the page script when JavaScript runs.
-    grid = "\n".join(tile(d, i) for i, d in enumerate(newest))
+    year = date.fromisoformat(latest["date"]).year if latest else None
+    grid = "\n".join(tile(d, i, year) for i, d in enumerate(newest))
     page = re.sub(r'(<ol class="cd-days" id="days" role="list">).*?(</ol>)', lambda m: m.group(1) + "\n" + grid + "\n  " + m.group(2),
                   page, count=1, flags=re.S)
     page = set_title(page, "casualdata · a new data visualization every day")

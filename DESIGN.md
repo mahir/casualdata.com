@@ -179,9 +179,9 @@ A white or black page, ink, three warm greys, and one red per ground, with a gre
 **Character:** A plain contemporary grotesk set light at large sizes, against a narrow mono used only in capitals for short facts. The grotesk speaks in sentences; the mono speaks in dates and numbers.
 
 ### Hierarchy
-- **Display** (400, fluid to 72px, line-height 1, tracking -0.025em): the day title and the lead tile's title on home (which runs to 46px); balanced, at most about 18–20ch.
+- **Display** (400, fluid to 72px, line-height 1, tracking -0.025em): the day title; balanced, at most about 18–20ch. The lead tile's title on home is a quieter cut of it (400, 23–30px, 1.18, at most 25ch), so the chart beside it stays the largest thing on the page.
 - **Headline** (500, 16px, 1.25, −0.01em): the home sentence ("A new data visualization every day."), the page's `h1`, in the top bar between the logo and the archive link. At 600px and below the three do not fit one row, so it takes its own row under the bar's rule at 18px.
-- **Title** (500, 19px, 1.28): tile titles on home; share-panel rows use 600 at 17px.
+- **Title** (400, 16px, 1.38, at most 34ch): tile titles on home, in body weight so a page of them stays quiet; share-panel rows use 600 at 17px.
 - **Body** (400, 16px, 1.4–1.45): deks, at most 44–60ch; the day dek steps down to 14px on phones.
 - **Label** (Ioskeley Mono 400, 12px, 0.02em, uppercase; buttons and panel headings 0.04em): dates, counts, the top-bar date, buttons, the toast. Source footers use the mono at 12.5px but keep sentence case, because sources are sentences.
 - **Chart label** (Ioskeley Mono 400, 11.5px, uppercase): axes, row tags, counts drawn in canvas.
@@ -200,7 +200,7 @@ The day page is a single-column grid of five rows: top bar, head, stage, foot, a
 
 Horizontal rhythm is one fluid gutter (clamp 16px, 2.4vw, 36px) used for every edge: bar, head, stage margin, foot, home grid and panel. Vertical padding in the head and above the home grid is set in `vh` clamps so the day fits one screen on laptops.
 
-Home is a grid of every day, newest first: three columns above 960px with the newest tile spanning two columns and two rows, two columns from 960px (the lead spans two columns, one row), one column at 600px and below. Column gap clamps 16–28px, row gap 28–48px; the footer sits 56–112px below the grid.
+Home is a grid of every day, newest first: the newest takes a full row, then three columns (four from 1600px), two from 960px, one at 600px and below. It is roomy on purpose (the user found the first, four-across grid dense and overwhelming on 2026-11-16): column gap clamps 32–88px, row gap 56–112px (52px on phones), and space alone separates the days; the footer sits 56–112px below the grid.
 
 Breakpoints: 960px and 600px for the home grid, 720px for the phone frame (bottom bar, icon-only buttons, 44px targets), 400px for swapping the wordmark for the `{•}` symbol.
 
@@ -234,11 +234,12 @@ Quiet, small and outlined: they read as labels until touched.
 The chart's reading, drawn in canvas beside the point it describes (`CD.label`): a square ink block with the value in Host Grotesk 600 over a mono uppercase context line in paper, 8px padding, 12px from the point. It flips left near the right edge, wraps its context at " · " breaks, and is mirrored to screen readers by a polite live region.
 
 ### Day tile (home)
-- **Two shapes only.** The newest day takes a full row: its image across two thirds at the left, and beside it, as one block at the top of the column (12px apart), the date (its label starts with a small red dot and "Latest"), the title in Display and the dek, over a Hairline rule. Every earlier day is the same tile in one even grid, newest first: four across on wide screens, three under 1200px, two under 960px (where the newest day stacks its caption under the image), one under 600px. A part-filled last row is left as it is: it is where the collection has got to.
+- **Two shapes only.** The newest day takes a full row: its picture across five eighths at the left, and beside it, as one block standing on the picture's bottom line (12px apart), the date (its label starts with a small red dot and "Latest"), the title and the dek. Every earlier day is the same tile in one even grid, newest first: three across, four from 1600px, two under 960px (where the newest day stacks its caption under the picture), one under 600px. A part-filled last row is left as it is: it is where the collection has got to.
+- **Each thing once.** A tile says the date and the title once, in its caption; the picture is the chart with its own numbers and labels, and no headline. The first grid used the share card as the picture, so every tile carried a headline, a source line, a logo and a date inside the image and the date and title again under it; the user found that dense and overwhelming, most of all at night (2026-11-16). A first fix took every word out of the pictures, which the user found too abstract (2026-11-17): the chart's own numbers and labels stay.
 - **Corner Style:** square.
-- **Image:** the day's own share render in the reader's theme (`thumb.webp` / `thumb-night.webp`, 720 and 1200px), cropped to its chart at 1200:548 so the image's foot (logo, date, address) does not repeat the caption, on a Hairline well.
-- **Under it:** the date in the mono label, then the title (500, 18px).
-- **Hover / Focus:** the title takes a 2px red underline at a 4px offset; keyboard focus outlines the image in ink.
+- **Picture:** the day's chart as its own page draws it on a small screen, in the reader's theme (`thumb.webp` / `thumb-night.webp`, 720×480 and 1200×800, laid out at 480×320): its marks, numbers and labels and the one red point, with fewer labels than on a wide page and each large enough to read in a tile; no headline, source line, logo or date. It is clear wherever the chart paints nothing and has no well, outline or frame, so the chart sits on the page itself. The newest day's large tile shows, above 600px, a picture laid out larger (`lead.webp` / `lead-night.webp`, 1440×960, laid out at 720×480), so it carries more of the chart's detail at the same reading size.
+- **Under it:** 14px below, the date in the mono label (weekday, day and month; the newest day also says the year, the others only when theirs differs), then the title (400, 16px).
+- **Hover / Focus:** the title takes a 2px red underline at a 4px offset; keyboard focus outlines the picture in ink, 6px out.
 
 ### Navigation
 - **Top bar:** one height on every page, 64px (57px on phones) including its rule, with everything centred in it so no control can stretch it; the logo (20px tall), the date in the mono label (ink weight for the date, Graphite for the subject), and the actions on the right, over a 1px ink rule. On home the right side is a plain mono text link to the archive, never a button, so nothing outranks the days.
