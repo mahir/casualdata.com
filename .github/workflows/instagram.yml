@@ -1,6 +1,6 @@
 # Posts the day's image to Instagram once a day (tools/instagram.js). Secret: IG_ACCESS_TOKEN, the
 # token from the Meta app dashboard (tools/instagram.js says which kinds work).
-# A token that starts with EAA can't be refreshed: the Post step says when it expires, and it is
+# A token that starts with EAA can't be refreshed: when it expires the Post step fails, and it is
 # replaced by hand. A token that starts with IG lasts 60 days; the Refresh step renews it and stores
 # it back in the secret, which needs SECRETS_PAT (a fine-grained GitHub token for this repository
 # with "Secrets: read and write"). Optional variable IG_USER_ID: the Instagram account's ID, only
