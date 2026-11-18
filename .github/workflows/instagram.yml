@@ -9,8 +9,14 @@ name: Instagram
 
 on:
   schedule:
-    - cron: "7 4 * * *" # 04:07 in New York all year; GitHub may start it late
+    # 04:07 in New York all year. GitHub may start a scheduled run late and, under load, not at
+    # all (the first one, on 18 Nov 2026, never ran), so two later runs follow, in plain UTC in case
+    # the time zone is what failed: 05:37 and 08:37 in New York in winter, an hour later in summer.
+    # A day that is already posted is skipped, so on a normal day the later runs do nothing.
+    - cron: "7 4 * * *"
       timezone: "America/New_York"
+    - cron: "37 10 * * *"
+    - cron: "37 13 * * *"
   workflow_dispatch:
     inputs:
       date:
