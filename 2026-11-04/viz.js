@@ -224,6 +224,7 @@
 
 	CD.exporter = {
 		readout,
+		noTitle: true,   // the drawing has no sentence of its own: see CD.render in kit/cd.js
 		draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.8, false, null)
 	};
 })();

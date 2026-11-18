@@ -239,6 +239,6 @@
 		step: (from, dir) => { const k = order.indexOf(from), n = order.length; return order[k < 0 ? (dir > 0 ? 0 : n - 1) : (k + dir + n) % n]; }
 	});
 	// the image is always the finished picture, even if the dots are still moving out on screen
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, null); grow = g; } };
+	CD.exporter = { readout, noTitle: true, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, null); grow = g; } };
 	CD.measures = { pts, GROUPS };
 })();

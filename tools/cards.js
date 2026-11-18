@@ -11,6 +11,8 @@
 // or the page already say (see thumbs() below). With --thumbs it writes only these.
 // And the Instagram image, /YYYY-MM-DD/ig.jpg (1080×1440, 3:4, day theme, JPEG because the
 // Instagram API takes only JPEG; tools/instagram.js posts it). With --ig it writes only ig.jpg.
+// The few days whose drawing carries no sentence (noTitle on their exporter) get the day's title
+// written above the drawing in this image only.
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
@@ -55,11 +57,11 @@ const thumbCss = (w, h) => `
 		const errors = [];
 		page.removeAllListeners("pageerror");
 		page.on("pageerror", e => errors.push(e.message));
-		const shot = async (theme, w = 1200, h = 630, type = "image/png") => {
+		const shot = async (theme, w = 1200, h = 630, type = "image/png", opts = {}) => {
 			await page.goto(`${base}/${d}/?theme=${theme}`, { waitUntil: "networkidle" });
 			await page.waitForFunction(() => window.CD && CD.exporter && CD.render);
-			const b64 = await page.evaluate(async ([w, h, type]) => {
-				let blob = await CD.render(w, h);
+			const b64 = await page.evaluate(async ([w, h, type, opts]) => {
+				let blob = await CD.render(w, h, opts);
 				if (type !== "image/png") {
 					const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
 					cv.getContext("2d").drawImage(await createImageBitmap(blob), 0, 0);
@@ -68,7 +70,7 @@ const thumbCss = (w, h) => `
 				const buf = new Uint8Array(await blob.arrayBuffer());
 				let s = ""; for (const c of buf) s += String.fromCharCode(c);
 				return btoa(s);
-			}, [w, h, type]);
+			}, [w, h, type, opts]);
 			return Buffer.from(b64, "base64");
 		};
 		// the home grid's pictures: the page's own chart at a small size, in each theme
@@ -95,7 +97,8 @@ const thumbCss = (w, h) => `
 		const done = f => console.log(f, errors.length ? "errors: " + errors.join("; ") : "");
 		if (thumbsOnly) { await thumbs(); done(path.join(root, d, "thumb*.webp")); continue; }
 		const ig = path.join(root, d, "ig.jpg");
-		fs.writeFileSync(ig, await shot("light", IG_W, IG_H, "image/jpeg"));
+		// on Instagram the image stands alone, so a day whose drawing has no sentence gets its title
+		fs.writeFileSync(ig, await shot("light", IG_W, IG_H, "image/jpeg", { title: true }));
 		if (igOnly) { done(ig); continue; }
 		const out = path.join(root, d, "card.png");
 		fs.writeFileSync(out, await shot("light"));

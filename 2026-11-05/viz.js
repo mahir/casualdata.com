@@ -180,5 +180,5 @@
 	});
 
 	// the image is always the finished picture, even if the arrows are still growing on screen
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false, null); grow = g; } };
+	CD.exporter = { readout, noTitle: true, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.7, false, null); grow = g; } };
 })();

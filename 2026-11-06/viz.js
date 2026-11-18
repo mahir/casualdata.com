@@ -187,6 +187,6 @@
 	});
 
 	// the image is always the finished picture, even if people are still walking on screen
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const k = walk; walk = 1; draw(c, x, y, w, h, u * 1.6, null); walk = k; } };
+	CD.exporter = { readout, noTitle: true, draw: (c, x, y, w, h, u) => { const k = walk; walk = 1; draw(c, x, y, w, h, u * 1.6, null); walk = k; } };
 	CD.town = { groups, margin, perPerson };
 })();

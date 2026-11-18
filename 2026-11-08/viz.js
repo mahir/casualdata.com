@@ -194,6 +194,7 @@
 	});
 	// the image is always the finished crowds, showing the pinned race if there is one
 	CD.exporter = {
+		noTitle: true,   // the drawing has no sentence of its own: see CD.render in kit/cd.js
 		readout: () => { const s0 = sel; sel = pick.pinned; const r = readout(); sel = s0; return r; },
 		draw: (c, x, y, w, h, u) => { const f = fill, s0 = sel; fill = 1; sel = pick.pinned; draw(c, x, y, w, h, u * 1.6, null); fill = f; sel = s0; }
 	};

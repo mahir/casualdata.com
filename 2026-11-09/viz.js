@@ -246,5 +246,5 @@
 		}
 	});
 	// the image is always the finished picture, even while the squares are still turning green
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
+	CD.exporter = { readout, noTitle: true, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

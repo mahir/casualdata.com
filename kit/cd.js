@@ -2,7 +2,10 @@
 // the share sheet, PNG export.
 // A day page sets <body class="cd-day" data-day="YYYY-MM-DD"> and calls
 //   CD.exporter = { draw(ctx, x, y, w, h, scale) }
-// The exported image is the visualization, the date and casualdata.com.
+// The exported image is the visualization, the date and casualdata.com. A day's drawing writes its
+// own sentence into the image; the few that don't (4 to 9 Nov 2026) set noTitle: true on the
+// exporter, and CD.render(W, H, { title: true }) then writes the day's title above the drawing
+// (tools/cards.js asks for that in the Instagram image, which stands alone).
 (function () {
 	// Days marked draft: true are left out of the home grid and the stepper until the flag
 	// is removed. Add ?drafts to any URL to list them for review.
@@ -241,7 +244,23 @@
 			img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.replace("<svg ", '<svg width="1100" height="200" '));
 		}))
 		.catch(() => null));
-	async function render(W, H) {
+	// the day's title as a headline, for an image whose drawing carries none: lines as even as they
+	// can be, so no word is left alone on the last one
+	function headline(ctx, text, w) {
+		const wrap = max => {
+			const out = [];
+			for (const word of text.split(" ")) {
+				const t = out.length ? out[out.length - 1] + " " + word : word;
+				if (out.length && ctx.measureText(t).width <= max) out[out.length - 1] = t; else out.push(word);
+			}
+			return out;
+		};
+		const n = wrap(w).length;
+		let lo = w * 0.4, hi = w;
+		for (let i = 0; i < 12; i++) { const m = (lo + hi) / 2; wrap(m).length > n ? lo = m : hi = m; }
+		return wrap(hi);
+	}
+	async function render(W, H, opts = {}) {
 		await document.fonts.ready;
 		const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
 		const ctx = cv.getContext("2d");
@@ -263,8 +282,19 @@
 		ctx.fillText(day ? fmtDate(day.date).toUpperCase() : "", W - p, fy);
 		ctx.textAlign = "left";
 
+		// the day's title, where it is asked for and the drawing has no sentence of its own: the size
+		// and leading the other days' sentences take in a portrait image
+		let top = p;
+		if (opts.title && day && CD.exporter && CD.exporter.noTitle) {
+			const fs = 54 * u;
+			ctx.font = `600 ${fs}px ${C.sans}`; ctx.fillStyle = C.ink;
+			const lines = headline(ctx, day.title, W - 2 * p);
+			lines.forEach((l, i) => ctx.fillText(l, p, p + fs * 0.86 + i * fs * 1.12));
+			top = p + lines.length * fs * 1.12 + 30 * u;
+		}
+
 		// everything else is the visualization
-		if (CD.exporter) { ctx.save(); CD.exporter.draw(ctx, p, p, W - 2 * p, fy - 44 * u - p, u); ctx.restore(); }
+		if (CD.exporter) { ctx.save(); CD.exporter.draw(ctx, p, top, W - 2 * p, fy - 44 * u - top, u); ctx.restore(); }
 		return new Promise(r => cv.toBlob(r, "image/png"));
 	}
 	CD.render = render;
