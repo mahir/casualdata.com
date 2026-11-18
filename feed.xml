@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Tue, 17 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 18 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>The US dollar has fallen 7.5% against the Korean won since 2 January 2026. It has risen against 24 of 29 currencies</title>
+    <link>https://casualdata.com/2026-11-18/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-18/</guid>
+    <pubDate>Wed, 18 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Twenty-nine small line charts, one per currency, show how much of each currency a US dollar buys on every day from 2 January to 17 November 2026, as the change since 2 January. On 17 November a dollar bought more than on 2 January in 24 of the 29 currencies, most of all the Turkish lira, up 17.2%, and less in 5, least of all the Korean won, down 7.5%.</description>
+    <enclosure url="https://casualdata.com/2026-11-18/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>France ordered 137,550 people to leave in 2025, more than twice as many as any other EU country. 18,930 people left France after an order</title>
     <link>https://casualdata.com/2026-11-17/</link>

@@ -90,5 +90,11 @@ window.CD_DAYS = [
 		path: "/2026-11-17/",
 		title: "France ordered 137,550 people to leave in 2025, more than twice as many as any other EU country. 18,930 people left France after an order",
 		dek: "Each circle is a country: its size is how many people it ordered to leave in 2025, its dark core how many left after an order."
+	},
+	{
+		date: "2026-11-18",
+		path: "/2026-11-18/",
+		title: "The US dollar has fallen 7.5% against the Korean won since 2 January 2026. It has risen against 24 of 29 currencies",
+		dek: "Each panel is one currency: how much of it a US dollar buys, daily from 2 January to 17 November 2026, as change since 2 January."
 	}
 ];
