@@ -86,9 +86,10 @@ def write(p, s):
 
 
 def stamp(page, p, skip=()):
-    """Version the page's local stylesheet and script addresses by content: /kit/cd.css?v=1a2b3c4d.
-    Pages caches files for ten minutes, so without this a browser can pair a new page with an old
-    file. The address only changes when the file does."""
+    """Version the page's local stylesheet, script and tab-icon addresses by content:
+    /kit/cd.css?v=1a2b3c4d. Pages caches files for ten minutes, so without this a browser can pair
+    a new page with an old file; and browsers keep a tab icon far longer than that, so a changed
+    icon would not show without a new address. The address only changes when the file does."""
     def one(m):
         ref = m.group(2)
         if ref in skip:
@@ -98,7 +99,7 @@ def stamp(page, p, skip=()):
             return m.group(0)
         with open(f, "rb") as fh:
             return f'{m.group(1)}"{ref}?v={hashlib.sha1(fh.read()).hexdigest()[:8]}"'
-    return re.sub(r'(<(?:script|link)\b[^>]*?\b(?:src|href)=)"((?!https?:|//)[^"?]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"', one, page)
+    return re.sub(r'(<(?:script|link)\b[^>]*?\b(?:src|href)=)"((?!https?:|//)[^"?]+\.(?:css|js|svg))(?:\?v=[0-9a-f]+)?"', one, page)
 
 
 def url_of(p):

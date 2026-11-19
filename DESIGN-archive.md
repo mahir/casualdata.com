@@ -116,7 +116,7 @@ Each project is recognized by its photograph and, on pointing or focus, by a 3px
 - White page, ink type, one grey; color comes from the photographs.
 - One 3:2 frame for every work image, cropped with `object-fit: cover`.
 - Name left, year right, on one baseline, under every image and in every text row.
-- Host Grotesk for names and text, Fragment Mono for years, labels and the footer; Archivo only inside the wordmark outlines.
+- Host Grotesk for names and text, Fragment Mono for years, labels and the footer; weight 800 only inside the logo.
 - Project color only as an underline on hover and focus: 3px under names, 2px under links in a project's record.
 - Flat: no borders, shadows, radii or fills beyond the blank image placeholder.
 
@@ -147,12 +147,12 @@ The project accents, each sampled from the project's own logo and bound to it by
 
 ## Typography
 
-**Display Font:** none as live text. The `{casualdata}` wordmark is an SVG of Archivo outlines (name at width 125, weight 800; braces at weight 300). Archivo's license stays in `fonts/OFL-Archivo.txt`.
+**Display Font:** none as live text. The logo is an SVG of outlines: the `{c}` mark (braces around a c with a level slot), then the name in Host Grotesk 800, all at 90% black. It is the daily logo's white-page file (DESIGN.md, "Logo"), written to `img/casualdata.svg` and `favicon.svg` by `python3 .impeccable/brand/build/mark_c.py --install`. It replaced the `{casualdata}` wordmark of Archivo outlines on 2026-11-19 (the user's decision); nothing uses Archivo now, and `fonts/OFL-Archivo.txt` is left from that wordmark.
 **Text Font:** Host Grotesk (Doğukan Karapınar, Element Type; a uniwidth grotesk, so changing weight never changes width), self-hosted variable woff2, weight 300–800, latin and latin-ext files, SIL OFL (`fonts/OFL-HostGrotesk.txt`).
 **Mono Font:** Fragment Mono (Wei Huang; a monospaced Helvetica built from URW's Nimbus Sans), self-hosted woff2, one weight (400), latin and latin-ext files, SIL OFL (`fonts/OFL-FragmentMono.txt`).
 **Fallbacks:** "Host Grotesk fallback" (local Arial) and "Fragment Mono fallback" (local Courier New) are scaled with `size-adjust` and ascent/descent overrides to the web fonts' metrics, so text moves at most 1px when the fonts arrive. Both latin files are preloaded on every page. Together the latin and latin-ext files cover Turkish.
 
-**Character:** A contemporary grotesk with a little warmth for names, against a narrow, Helvetica-derived mono for dates and labels: an index that reads like a well-kept log. The wordmark's wide heavy cut is the only loud moment, and it stays small.
+**Character:** A contemporary grotesk with a little warmth for names, against a narrow, Helvetica-derived mono for dates and labels: an index that reads like a well-kept log. The logo's heavy name is the only loud moment, and it stays small.
 
 ### Hierarchy
 - **Headline** (500, clamp(22px, 2.4vw, 32px), 1.2, max 24ch): the one sentence heading on a notice page such as the 404.
@@ -162,7 +162,7 @@ The project accents, each sampled from the project's own logo and bound to it by
 - **Label** (Fragment Mono 400, 14px, 1.35, grey): years, right-aligned; section labels; on project pages the when-and-where of a dated entry, publisher and e-mail lines, file formats and sizes, and the photo viewer's count and controls; the footer line.
 
 ### Named Rules
-**The Wordmark Stands Alone Rule.** Archivo and its wide heavy cut belong to the wordmark only. All live text is Host Grotesk (weights 400 and 500) or Fragment Mono (400).
+**The Wordmark Stands Alone Rule.** Weight 800 belongs to the logo only. All live text is Host Grotesk (weights 400 and 500) or Fragment Mono (400).
 
 **The Mono Is for the Record Rule.** Fragment Mono sets the record's data and labels: years, section labels, the footer line. Names and prose stay in Host Grotesk. The mono has one weight; `font-synthesis: none` keeps the browser from faking a bold, so never ask it for one.
 
@@ -195,7 +195,7 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 ## Components
 
 ### Wordmark header
-- **Form:** the `{casualdata}` SVG at the top left of the content column, 20–28px tall (clamp(20px, 2vw, 28px)), width automatic.
+- **Form:** the logo SVG (`{c}` then the name) at the top left of the content column, 20–28px tall (clamp(20px, 2vw, 28px)), width automatic.
 - **Home page:** the wordmark is the page's `h1`, not a link.
 - **Every other page:** the wordmark is a link to `/` with alt text "casualdata home". A project page shows its own project logo inside the page content, not in place of this wordmark.
 
@@ -305,7 +305,7 @@ Square corners everywhere (no radius). Images are rectangular 3:2 crops, never m
 
 ### Don't:
 - **Don't** use a project accent as text color, background, border or fill; it is an underline color only.
-- **Don't** set live text in Archivo or in heavy weights; the wide cut belongs to the wordmark.
+- **Don't** set live text in heavy weights; weight 800 belongs to the logo.
 - **Don't** set names or prose in the mono, and never give it a bold or an uppercase.
 - **Don't** add borders, cards, panels, shadows, gradients, rounded corners or background bands.
 - **Don't** add small uppercase labels above headings or decorative icons.
