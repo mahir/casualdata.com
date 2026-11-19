@@ -35,7 +35,7 @@
 	readColors();
 	document.addEventListener("cd-theme", readColors);
 	CD.colors = C;
-	CD.wordmark = `<img class="wm wm-d" src="/kit/wordmark.svg" alt="casualdata"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="casualdata"><img class="sym wm-d" src="/kit/mark.svg" alt="casualdata"><img class="sym wm-l" src="/kit/mark-light.svg" alt="casualdata">`;   // the symbol stands in under 400px, as in the top bar
+	CD.wordmark = `<img class="wm wm-d" src="/kit/wordmark.svg" alt="casualdata"><img class="wm wm-l" src="/kit/wordmark-light.svg" alt="casualdata"><img class="sym wm-d" src="/kit/mark.svg" alt="casualdata"><img class="sym wm-l" src="/kit/mark-light.svg" alt="casualdata">`;   // the mark alone stands in under 400px, as in the top bar
 
 	// The reading sits in the chart, next to the point it describes: an ink chip with
 	// the value on top and the context under it. (px, py) is the point; box = {x, y, w, h}
@@ -234,14 +234,14 @@
 	// ---------- PNG export ----------
 	// The wordmark files carry only a viewBox; they get a pixel size before drawing, since some browsers
 	// draw a size-less SVG into a canvas at the wrong scale.
-	const WORDMARK_RATIO = 5250 / 955;
+	const WORDMARK_RATIO = 5097.6 / 980.7;   // the mark-and-name file's viewBox
 	const marks = {};
 	const wordmarkImage = dark => marks[dark] || (marks[dark] = fetch(dark ? "/kit/wordmark.svg" : "/kit/wordmark-light.svg")
 		.then(r => r.text())
 		.then(svg => new Promise(res => {
 			const img = new Image();
 			img.onload = () => res(img); img.onerror = () => res(null);
-			img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.replace("<svg ", '<svg width="1100" height="200" '));
+			img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.replace("<svg ", '<svg width="1040" height="200" '));
 		}))
 		.catch(() => null));
 	// the day's title as a headline, for an image whose drawing carries none: lines as even as they
@@ -268,11 +268,11 @@
 		const p = Math.round(56 * u);
 		ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H);
 
-		// the foot, the same on every image: the {casualdata} wordmark at the left and the date at the
+		// the foot, the same on every image: the logo (mark, then name) at the left and the date at the
 		// right. Each is said once: the name and the date together are the day's address.
-		const fy = H - p, mh = Math.round(30 * u);
+		const fy = H - p, mh = Math.round(38 * u);
 		const mark = await wordmarkImage(C.dark);
-		if (mark) ctx.drawImage(mark, p, fy - mh * 0.8, mh * WORDMARK_RATIO, mh);
+		if (mark) ctx.drawImage(mark, p, fy - mh * 0.7, mh * WORDMARK_RATIO, mh);   // the name's baseline sits 0.7 down the file
 		ctx.textBaseline = "alphabetic";
 		ctx.font = `400 ${22 * u}px ${C.mono}`;
 		ctx.fillStyle = C.ink;

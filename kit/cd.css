@@ -1,7 +1,7 @@
 /* casualdata daily — the shared frame for one-screen visualizations.
    Brand rule: a white page by day and a black one by night, ink, greys for everything in a
-   chart that is not the point, and one red thing: the single point that matters in each piece
-   (and the dot in the {•} symbol). Red is for marks and large labels, never running text. */
+   chart that is not the point, and one red thing: the single point that matters in each piece.
+   Red is for marks and large labels, never running text. The logo is black and white. */
 
 @font-face {
 	font-family: "Host Grotesk";
@@ -73,10 +73,11 @@ button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ---------- the mark ---------- */
-/* {casualdata} is the logo; {•} is its icon, where the name does not fit (favicon, tight top bars) */
+/* The logo is the mark, braces around a c, followed by the name; the mark alone stands in where the
+   name does not fit (tab icon, tight top bars). */
 .cd-mark { display: inline-flex; align-items: center; text-decoration: none; flex: none; }
-.cd-mark img { height: 20px; width: auto; display: block; }
-/* two wordmark files, one per theme: .wm-d for the black page, .wm-l for the white one */
+.cd-mark img { height: 26px; width: auto; display: block; }
+/* two logo files, one per theme: .wm-d for the black page, .wm-l for the white one */
 .cd-mark .sym { display: none; }
 :root[data-theme="dark"] .wm-l, :root:not([data-theme="dark"]) .wm-d { display: none; }
 @media (max-width: 400px) { .cd-mark .wm { display: none !important; } .cd-mark .sym { display: block; } }

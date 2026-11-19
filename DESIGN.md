@@ -16,7 +16,8 @@ colors:
   rule-night: "#2A2927"
   red-night: "#FF5A3D"
   green-night: "#3DDC97"
-  brace-night: "#77746E"
+  logo: "#1A1A1A"
+  logo-night: "#E6E6E6"
 typography:
   display:
     fontFamily: "Host Grotesk, Arial, sans-serif"
@@ -131,9 +132,9 @@ components:
 
 **Creative North Star: "One Red Dot"**
 
-casualdata daily is a sheet of paper that turns over with the day. By the reader's own clock it is white from 07:00 to 18:59 and black otherwise, and on either ground everything is ink and a short ladder of warm greys, except one thing: the single point in each chart that matters, drawn in red. The home page says it outright ("One screen, one idea, one red dot."), and the `{•}` symbol is the same idea drawn as a mark. The red is rare on purpose, so a reader finds the point in seconds and recognizes casualdata from a shared image alone.
+casualdata daily is a sheet of paper that turns over with the day. By the reader's own clock it is white from 07:00 to 18:59 and black otherwise, and on either ground everything is ink and a short ladder of warm greys, except one thing: the single point in each chart that matters, drawn in red. The home page says it outright ("One screen, one idea, one red dot."). The logo stays out of it: it is black and white, so the red belongs to the charts alone. The red is rare on purpose, so a reader finds the point in seconds and recognizes casualdata from a shared image alone.
 
-The frame is flat, ruled and quiet: a 1px ink rule under the top bar, a grotesk title set light and large, a two-sentence dek saying how to read the chart, and then the chart takes the rest of the screen. Short labels are uppercase mono, so dates, counts, axes and buttons read as one register of small facts. Charts carry their own words: the reading sits inside the drawing in an ink chip beside the point, and every exported image carries the `{casualdata}` wordmark and the date at its foot.
+The frame is flat, ruled and quiet: a 1px ink rule under the top bar, a grotesk title set light and large, a two-sentence dek saying how to read the chart, and then the chart takes the rest of the screen. Short labels are uppercase mono, so dates, counts, axes and buttons read as one register of small facts. Charts carry their own words: the reading sits inside the drawing in an ink chip beside the point, and every exported image carries the logo and the date at its foot.
 
 This file documents the daily frame (`kit/`). The 2007–2011 archive pages (`/work/` and the project folders, on `css/casualdata.css`) follow [DESIGN-archive.md](DESIGN-archive.md), not this file.
 
@@ -149,7 +150,7 @@ This file documents the daily frame (`kit/`). The 2007–2011 archive pages (`/w
 A white or black page, ink, three warm greys, and one red per ground, with a green that stands in for it on charts about political parties. The two theme sets swap in full on `:root[data-theme="dark"]`; canvas drawings read the same tokens through `CD.colors` and redraw when the theme turns.
 
 ### Primary
-- **Signal Red** (red, day): the one point that matters in each chart (the red line, the red dot, the red arrow, the red people), the dot in the `{•}` symbol, and large labels. At 4.3:1 on white it is below body-text contrast, so it is never used for running text.
+- **Signal Red** (red, day): the one point that matters in each chart (the red line, the red dot, the red arrow, the red people), and large labels. At 4.3:1 on white it is below body-text contrast, so it is never used for running text.
 - **Night Signal Red** (red-night): the same role on the black page, lifted to stay as loud there (6.2:1).
 - **Party-Day Green / Night Party-Day Green** (green, green-night): takes Signal Red's place as the one accent on any chart whose data is about political parties, where red would read as Republican (and blue as Democratic). 3.4:1 on white and 10.9:1 on black: marks and large labels only, like the red. It is never used on other charts, and never beside red.
 
@@ -159,7 +160,7 @@ A white or black page, ink, three warm greys, and one red per ground, with a gre
 - **Graphite** (ink-2, ink-2-night): secondary text (deks, labels, sources) and unselected chart marks; 7.2:1 by day and 8.1:1 by night.
 - **Stone** (ink-3, ink-3-night): axis ticks, quiet chart marks, link underlines in the foot and the disabled stepper arrow. About 3.3:1 on either page: enough for marks, not for text.
 - **Hairline** (rule, rule-night): row dividers in lists, the highlight band behind a hovered chart row, the arrow hover disc and the empty image well of a tile.
-- **Brace Grey, night** (brace-night): the braces of the wordmark and symbol on the black page only. On white the braces use Stone.
+- **Logo Ink / Night Logo Ink** (logo, logo-night): the logo only, 90% black on the white page and 90% white on the black one (the user's choice on 2026-11-19). Nothing else in the frame uses them.
 
 ### Named Rules
 **The One Red Rule.** Each chart has exactly one red idea: one line, one arrow, one row, one group of people, one "you". Everything else in the drawing is ink, Graphite, Stone or Hairline. If a second thing wants to be red, it is not the point.
@@ -202,7 +203,7 @@ Horizontal rhythm is one fluid gutter (clamp 16px, 2.4vw, 36px) used for every e
 
 Home is a grid of every day, newest first: the newest takes a full row, then three columns (four from 1600px), two from 960px, one at 600px and below. It is roomy on purpose (the user found the first, four-across grid dense and overwhelming on 2026-11-16): column gap clamps 32–88px, row gap 56–112px (52px on phones), and space alone separates the days; the footer sits 56–112px below the grid.
 
-Breakpoints: 960px and 600px for the home grid, 720px for the phone frame (bottom bar, icon-only buttons, 44px targets), 400px for swapping the wordmark for the `{•}` symbol.
+Breakpoints: 960px and 600px for the home grid, 720px for the phone frame (bottom bar, icon-only buttons, 44px targets), 400px for showing the mark alone, without the name.
 
 **The One Column Head Rule.** Under 1024px the head is one column: the dek goes under the title at up to 60ch, never into a narrow column beside it.
 
@@ -242,7 +243,7 @@ The chart's reading, drawn in canvas beside the point it describes (`CD.label`):
 - **Hover / Focus:** the title takes a 2px red underline at a 4px offset; keyboard focus outlines the picture in ink, 6px out.
 
 ### Navigation
-- **Top bar:** one height on every page, 64px (57px on phones) including its rule, with everything centred in it so no control can stretch it; the logo (20px tall), the date in the mono label (ink weight for the date, Graphite for the subject), and the actions on the right, over a 1px ink rule. On home the right side is a plain mono text link to the archive, never a button, so nothing outranks the days.
+- **Top bar:** one height on every page, 64px (57px on phones) including its rule, with everything centred in it so no control can stretch it; the logo (26px tall), the date in the mono label (ink weight for the date, Graphite for the subject), and the actions on the right, over a 1px ink rule. On home the right side is a plain mono text link to the archive, never a button, so nothing outranks the days.
 - **Day stepper (desktop):** typographic ‹ and › in Host Grotesk 22px either side of the date, each in a 34px circular target that takes a Hairline disc on hover; a missing neighbour shows as a Stone arrow that is not a link; on the newest published day the missing › is announced as "The next day comes tomorrow".
 - **Phone bottom bar (≤720px):** previous day · All days · Share · next day, cells at least 52px tall, mono 13px uppercase, a Hairline divider before All days, sticky to the bottom over the paper with the safe-area inset. Share moves here from the top bar as the one solid pill (44px). On the newest day the next cell reads "Tomorrow" in Graphite.
 
@@ -250,10 +251,10 @@ The chart's reading, drawn in canvas beside the point it describes (`CD.label`):
 Every day handles its reading the same way, through `CD.selection` and `CD.bindSelection` in `kit/cd.js`: pointing previews a reading, a click, tap or key pins it, and only the pinned reading goes into the link (`CD.state`, which keeps `?theme` and `?drafts`); leaving the chart returns to the pinned reading. Keys are the same on every day: arrows step, Escape and Home return to the overview. The chosen mark gets an ink ring. The reading chip (`CD.label`) takes an `avoid` list (headings, other marks) and sits in the first clear place right of, left of, above or below the point.
 
 ### Share panel
-A full-height dialog sliding from the right edge (up to 420px) over a 35% black backdrop, so the view being shared stays visible; paper ground with an ink left rule, the logo and a Close button at top, a mono heading in Graphite, a line naming the reading the link and image carry, then a ruled list: each row a short mono key (link, send, 4:5, 16:9) and a 600 17px action, red underline on hover. It opens with focus on Copy link. Exported images are the drawing plus one foot line, the same on every image: the `{casualdata}` wordmark (30 units tall) at left and the date in Graphite mono at right, in the reader's theme. The name and the date are each said once.
+A full-height dialog sliding from the right edge (up to 420px) over a 35% black backdrop, so the view being shared stays visible; paper ground with an ink left rule, the logo and a Close button at top, a mono heading in Graphite, a line naming the reading the link and image carry, then a ruled list: each row a short mono key (link, send, 4:5, 16:9) and a 600 17px action, red underline on hover. It opens with focus on Copy link. Exported images are the drawing plus one foot line, the same on every image: the logo (38 units tall, the name's baseline level with the date's) at left and the date in Graphite mono at right, in the reader's theme. The name and the date are each said once.
 
 ### Logo
-`{casualdata}`: Host Grotesk 800 letters at -0.05em between weight-300 braces in grey; `{•}`: weight-600 grey braces around one red dot. Two files per mark, one per ground, built from the font by `.impeccable/brand/build/build.py`. The logo never changes and never carries the date; the date sits beside it in the top bar.
+The mark is `{c}`: braces around a c, all in Logo Ink, on the page ground. The braces are Host Grotesk 600 outlines. The c is drawn to match them: a ring as heavy as the braces' stems on its upright sides and as heavy as their hooks at top and bottom, opened on the right by a level slot, its ends cut flat like the hooks. It replaced the `{•}` symbol and the `{casualdata}` wordmark on 2026-11-19 (the user's choice, after three rounds of other marks were turned down). The logo is the mark followed by the name, `{c} casualdata`: the name in Host Grotesk 800 at -0.05em, at 0.8 of the mark's size, its x-height centred on the c. The mark stands alone where the name does not fit: the top bar under 400px, the tab icon and profile pictures. Under 32px a second drawing is used, with a wider slot and a heavier c, because the main slot closes up; the tab icon is that drawing on a white square. Files in `kit/`: `wordmark-light.svg` and `wordmark.svg` (the logo, for the white and the black page), `mark-light.svg` and `mark.svg` (the mark alone), `favicon.svg`. They are written by `python3 .impeccable/brand/build/mark_c.py --install`, where the proportions live. The logo never changes and never carries the date; the date sits beside it in the top bar.
 
 ### Toast
 An ink pill with paper mono label text, centred 24px from the bottom, rising 20px and fading in over 0.2s; still under reduced motion.
@@ -272,7 +273,8 @@ An ink pill with paper mono label text, centred 24px from the bottom, rising 20p
 
 ### Don't:
 - **Don't** set running text, sources or small labels in red; red is for marks, dots, underlines and large labels.
-- **Don't** use weight 800 or -0.05em tracking anywhere but the wordmark.
+- **Don't** use weight 800 or -0.05em tracking anywhere but the name in the logo.
+- **Don't** color the logo: it is Logo Ink on the page ground, with no red.
 - **Don't** put the date or any daily variation inside the logo.
 - **Don't** add shadows, gradients or rounded cards; surfaces are flat and square, and only buttons are pills.
 - **Don't** hard-code a hex or rgba for chrome, accent or grey in a day's `viz.js`; a literal color will not turn with the page (subject tones that must stay fixed, like the daylight map's night and day, are the exception).
