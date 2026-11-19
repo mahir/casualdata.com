@@ -1,6 +1,6 @@
 // 2026-11-19 — World Toilet Day: the share of people with no toilet to use (open defecation) in 2000
 // and in 2024. One row per country where it is still 10 in every 100 or more, highest first, and one
-// grey row for India: a hollow dot for 2000 joined to a solid dot for 2024, on one axis from 0 to 100.
+// grey row for India, under a hairline: a hollow dot for 2000 joined to a solid dot for 2024, on one axis from 0 to 100.
 // The one red thing: Niger, the highest. Picking a row reads its countryside and its towns and cities.
 (function () {
 	const C = CD.colors, D = window.TOILETS;
@@ -102,6 +102,10 @@
 		}
 		ctx.textAlign = "left"; ctx.fillStyle = C.ink2;
 		ctx.fillText(nameW >= ctx.measureText("OF EVERY 100 PEOPLE").width ? "OF EVERY 100 PEOPLE" : "OF EVERY 100", left, plotBottom + 18 * s);
+		// a hairline in the gap above India: it is the comparison, not the next row of the ranking
+		const refY = Math.round(rowY(shown.length - 1) - gapRef / 2) + 0.5;
+		ctx.strokeStyle = C.rule; ctx.lineWidth = px1;
+		ctx.beginPath(); ctx.moveTo(left, refY); ctx.lineTo(right, refY); ctx.stroke();
 
 		// the rows
 		const geo = [];
