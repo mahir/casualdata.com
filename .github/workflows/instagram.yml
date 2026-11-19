@@ -1,4 +1,5 @@
-# Posts the day's image to Instagram once a day (tools/instagram.js). Secret: IG_ACCESS_TOKEN, the
+# Posts a day's image to Instagram (tools/instagram.js). It is started for the day's date when the
+# day is published (NEXT.md, "Instagram"); the schedule below is only a fallback. Secret: IG_ACCESS_TOKEN, the
 # token from the Meta app dashboard (tools/instagram.js says which kinds work).
 # A token that starts with EAA can't be refreshed: when it expires the Post step fails, and it is
 # replaced by hand. A token that starts with IG lasts 60 days; the Refresh step renews it and stores
@@ -9,10 +10,10 @@ name: Instagram
 
 on:
   schedule:
-    # 04:07 in New York all year. GitHub may start a scheduled run late and, under load, not at
-    # all (the first one, on 18 Nov 2026, never ran), so two later runs follow, in plain UTC in case
-    # the time zone is what failed: 05:37 and 08:37 in New York in winter, an hour later in summer.
-    # A day that is already posted is skipped, so on a normal day the later runs do nothing.
+    # A fallback for a day that was not posted when it was published. 04:07 in New York all year,
+    # then two runs in plain UTC (05:37 and 08:37 in New York in winter, an hour later in summer).
+    # GitHub starts these hours late or not at all (on 18 Nov 2026 one of three ran, at 17:56 UTC),
+    # so don't count on them. A day that is already posted is skipped.
     - cron: "7 4 * * *"
       timezone: "America/New_York"
     - cron: "37 10 * * *"
