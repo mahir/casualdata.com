@@ -96,5 +96,11 @@ window.CD_DAYS = [
 		path: "/2026-11-18/",
 		title: "The US dollar has fallen 7.5% against the Korean won since 2 January 2026. It has risen against 24 of 29 currencies",
 		dek: "Each panel is one currency: how much of it a US dollar buys, daily from 2 January to 17 November 2026, as change since 2 January."
+	},
+	{
+		date: "2026-11-19",
+		path: "/2026-11-19/",
+		title: "In Niger, 66 of every 100 people have no toilet to use. No country has a higher share",
+		dek: "Share of people with no toilet to use in 2000 and in 2024, in the 27 countries where it is still 10 in 100 or more, and in India."
 	}
 ];

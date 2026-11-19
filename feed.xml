@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Wed, 18 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 19 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>In Niger, 66 of every 100 people have no toilet to use. No country has a higher share</title>
+    <link>https://casualdata.com/2026-11-19/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-19/</guid>
+    <pubDate>Thu, 19 Nov 2026 07:00:00 +0000</pubDate>
+    <description>A dumbbell chart of the share of people with no toilet to use (open defecation) in 2000 and in 2024, in the 27 countries where it is still 10 in every 100 or more, and in India. Niger is highest of 195 countries: 66 in every 100 people in 2024, down from 81 in 2000. India went from 73 to 7.</description>
+    <enclosure url="https://casualdata.com/2026-11-19/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>The US dollar has fallen 7.5% against the Korean won since 2 January 2026. It has risen against 24 of 29 currencies</title>
     <link>https://casualdata.com/2026-11-18/</link>
