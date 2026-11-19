@@ -1,6 +1,6 @@
 // Posts a day to Instagram: its /YYYY-MM-DD/ig.jpg (rendered by tools/cards.js) with a caption made
-// from its title and dek in kit/days.js. Instagram fetches the image from casualdata.com, so the day
-// must already be deployed.
+// from its title, dek and tags in kit/days.js: #dataviz and the day's own topic hashtags, five at
+// most in all. Instagram fetches the image from casualdata.com, so the day must already be deployed.
 //
 //   node tools/instagram.js [YYYY-MM-DD] [--dry-run | --check]
 //   node tools/instagram.js --refresh
@@ -32,7 +32,8 @@ const path = require("path");
 const vm = require("vm");
 
 const SITE = "https://casualdata.com";
-const TAGS = ["dataviz", "datavisualization"];
+const TAG = "dataviz";   // on every post
+const MAX_TAGS = 5;      // Instagram allows five hashtags in a caption (since December 2025)
 
 const args = process.argv.slice(2);
 const flag = f => args.includes(f);
@@ -92,8 +93,24 @@ async function account() {
 	return list[0];
 }
 
+// The hashtag line: #dataviz, then the day's own topic tags (`tags` in kit/days.js), as many as fit
+// under Instagram's limit. A day that lists none gets #datavisualization as well, as before.
+function hashtags(day) {
+	const own = [];
+	for (const raw of day.tags || []) {
+		const t = String(raw).replace(/^#/, "");
+		// a hashtag is letters, digits and underscores, and not digits alone
+		if (!/^[\p{L}\p{N}_]+$/u.test(t) || /^\d+$/.test(t)) console.error(`tag "${raw}" left out: a hashtag is letters, digits and underscores only`);
+		else if (t.toLowerCase() !== TAG && !own.some(o => o.toLowerCase() === t.toLowerCase())) own.push(t);
+	}
+	if (!own.length) console.error(`${day.date} lists no tags in kit/days.js; using the general ones`);
+	if (own.length > MAX_TAGS - 1) console.error(`${day.date} lists ${own.length} tags; only the first ${MAX_TAGS - 1} are used`);
+	const list = own.length ? [TAG, ...own.slice(0, MAX_TAGS - 1)] : [TAG, "datavisualization"];
+	return list.map(t => "#" + t).join(" ");
+}
+
 function caption(day) {
-	const tags = TAGS.concat(day.tags || []).map(t => "#" + t).join(" ");
+	const tags = hashtags(day);
 	return `${day.title}\n\n${day.dek}\n\nExplore it, change the view and see the sources: casualdata.com/${day.date}\n(link in bio)\n\n${tags}`;
 }
 
