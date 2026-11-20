@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Thu, 19 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 20 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Russia, the United States and China hold 91 of every 100 nuclear warheads in the world. Their three leaders met together for the first time on 19 November 2026</title>
+    <link>https://casualdata.com/2026-11-20/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-20/</guid>
+    <pubDate>Fri, 20 Nov 2026 07:00:00 +0000</pubDate>
+    <description>A square of 12,187 dots, one for each nuclear warhead in the world at the start of 2026, cut into nine blocks by country. Russia holds an estimated 5,420, the United States 5,042 and China 620: together 11,082, or 91 of every 100. Six other countries hold the rest.</description>
+    <enclosure url="https://casualdata.com/2026-11-20/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>In Niger, 66 of every 100 people have no toilet to use. No country has a higher share</title>
     <link>https://casualdata.com/2026-11-19/</link>

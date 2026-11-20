@@ -121,5 +121,12 @@ window.CD_DAYS = [
 		title: "In Niger, 66 of every 100 people have no toilet to use. No country has a higher share",
 		dek: "Share of people with no toilet to use in 2000 and in 2024, in the 27 countries where it is still 10 in 100 or more, and in India.",
 		tags: ["worldtoiletday", "sanitation", "niger", "health"]
+	},
+	{
+		date: "2026-11-20",
+		path: "/2026-11-20/",
+		title: "Russia, the United States and China hold 91 of every 100 nuclear warheads in the world. Their three leaders met together for the first time on 19 November 2026",
+		dek: "Each dot is one of an estimated 12,187 nuclear warheads at the start of 2026, grouped by the country that holds it.",
+		tags: ["nuclearweapons", "trumpxiputin", "armscontrol", "shenzhen"]
 	}
 ];
