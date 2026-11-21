@@ -21,6 +21,8 @@
 	const pct = v => `${v.toFixed(1)}%`;
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 	function readout() {
 		if (sel < 0) return [S1, "Each square is a month, darker for a larger share from fossil fuels"];
 		const r = rows[sel];
@@ -131,9 +133,10 @@
 		// ---- the cells: a value inside when there is room for it
 		const nfs = Math.min(15 * s, Math.max(11.5 * s, G.ch * 0.27));
 		const showN = Math.min(G.cw, G.ch) >= 26 * s;
+		const upTo = grow >= 1 ? N : Math.floor(grow * N);   // on load the months fill in, in date order
 		for (let i = 0; i < NY * 12; i++) {
 			const b = cell(i);
-			if (i >= N) {   // months to come: an outline, no fill
+			if (i >= upTo) {   // months to come: an outline, no fill
 				ctx.strokeStyle = C.rule; ctx.lineWidth = px1;
 				ctx.strokeRect(b.x + px1 / 2, b.y + px1 / 2, b.w - px1, b.h - px1);
 				continue;
@@ -149,7 +152,7 @@
 			}
 		}
 		// the one red thing: outlines on the months under a third, the lowest the heaviest
-		for (const i of UNDER) {
+		for (const i of UNDER) if (i < upTo) {
 			const b = cell(i), lw = (i === LOW ? 3.5 : 2.25) * s;
 			ctx.strokeStyle = C.red; ctx.lineWidth = lw;
 			ctx.strokeRect(b.x + lw / 2, b.y + lw / 2, b.w - lw, b.h - lw);
@@ -268,5 +271,12 @@
 		// left and right step a month; the first key starts at the first month, or going back at the last
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : N - 1) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1400)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

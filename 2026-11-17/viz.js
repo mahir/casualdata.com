@@ -14,6 +14,11 @@
 	const isRed = p => p === FR;
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	function readout() {
 		if (sel < 0) return [S1, "Each circle is a country: its size is how many people it ordered to leave in 2025, its dark core how many left"];
@@ -118,18 +123,19 @@
 		const marks = P0.map((p, i) => { const q = P(p.lon, p.lat); return { i, p, x: q[0], y: q[1], r: F.rad(p), core: Math.max(p.r25 ? 1.2 * s : 0, rMax * Math.sqrt(p.r25 / OMAX)) }; });
 		const order = marks.slice().sort((a, b) => b.r - a.r);
 		const fade = m => sel >= 0 && m.i !== sel ? 0.35 : 1;
-		for (const m of order) {
-			const red = isRed(m.p);
+		const mv = moved(), la = faded();   // on load the circles grow to their sizes, then the names appear
+		for (const m of mv ? order : []) {
+			const red = isRed(m.p), r = m.r * mv, core = m.core * mv;
 			ctx.globalAlpha = fade(m);
-			ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(m.x, m.y, m.r + 1.5 * s, 0, 7); ctx.fill();
+			ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(m.x, m.y, r + 1.5 * s, 0, 7); ctx.fill();
 			ctx.fillStyle = red ? C.red : C.ink3;
-			ctx.globalAlpha = fade(m) * (C.dark ? 0.32 : 0.2); ctx.beginPath(); ctx.arc(m.x, m.y, m.r, 0, 7); ctx.fill();
+			ctx.globalAlpha = fade(m) * (C.dark ? 0.32 : 0.2); ctx.beginPath(); ctx.arc(m.x, m.y, r, 0, 7); ctx.fill();
 			ctx.globalAlpha = fade(m);
 			ctx.strokeStyle = red ? C.red : C.ink3; ctx.lineWidth = (m.i === sel ? 2 : 1) * px1;
 			if (m.i === sel && !red) ctx.strokeStyle = C.ink;
-			ctx.beginPath(); ctx.arc(m.x, m.y, Math.max(0.5, m.r - ctx.lineWidth / 2), 0, 7); ctx.stroke();
+			ctx.beginPath(); ctx.arc(m.x, m.y, Math.max(0.5, r - ctx.lineWidth / 2), 0, 7); ctx.stroke();
 			ctx.fillStyle = red ? C.red : m.i === sel ? C.ink : C.ink2;
-			ctx.beginPath(); ctx.arc(m.x, m.y, m.core, 0, 7); ctx.fill();
+			ctx.beginPath(); ctx.arc(m.x, m.y, core, 0, 7); ctx.fill();
 		}
 		ctx.globalAlpha = 1;
 
@@ -162,7 +168,7 @@
 			const free = c => inside(c) && !hits(c, placed) && !(keyRect && hits(c, [keyRect]));
 			const b = cands.find(c => free(c) && !circ(c, true)) || cands.find(c => free(c) && !circ(c, false)) || cands.find(free) || cands[0];
 			placed.push(b); m.lab = b;
-			ctx.globalAlpha = sel >= 0 && m.i !== sel ? 0.45 : 1;
+			ctx.globalAlpha = (sel >= 0 && m.i !== sel ? 0.45 : 1) * la;
 			ctx.lineWidth = 3 * s; ctx.strokeStyle = C.paper; ctx.strokeText(t, b.x, b.y + lh / 2);
 			ctx.fillStyle = red ? C.red : m.i === sel ? C.ink : C.ink2;
 			ctx.fillText(t, b.x, b.y + lh / 2);
@@ -258,5 +264,12 @@
 		},
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : N - 1) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1300)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

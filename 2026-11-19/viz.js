@@ -12,6 +12,8 @@
 
 	// the reading: sel = a row, or -1 for the overview
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 	const context = r => r.t[0] === null
 		? `countryside ${r.rural[1]} in 2024 · towns and cities ${r.urban[1]} · no figures for 2000`
 		: `countryside ${pair(r.rural)} · towns and cities ${pair(r.urban)}`;
@@ -112,6 +114,9 @@
 		shown.forEach((o, k) => {
 			const r = o.r, y0 = rowY(k), cy = y0 + rowH / 2, isRed = o.i === RED, isRef = o.i === REF;
 			const col = isRed ? C.red : isRef ? C.ink2 : C.ink;
+			// on load each solid dot slides from the 2000 figure to the 2024 one, the top rows first
+			const e = 1 - Math.pow(1 - Math.min(1, Math.max(0, grow * 1.5 - (k / shown.length) * 0.5)), 3);
+			const now = r.t[0] === null ? r.t[1] : r.t[0] + (r.t[1] - r.t[0]) * e;
 			geo.push({ i: o.i, y0, y1: y0 + rowH, cy, px: X(r.t[1]) });
 			if (o.i === sel) { ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = C.rule; ctx.fillRect(left - 4 * s, y0, right - left + 8 * s, rowH); ctx.restore(); }
 			ctx.textBaseline = "middle";
@@ -123,12 +128,12 @@
 			ctx.textAlign = "left";
 			if (r.t[0] !== null) {
 				ctx.strokeStyle = col; ctx.lineWidth = (isRed ? 2.2 : 1.5) * s;
-				ctx.beginPath(); ctx.moveTo(X(r.t[0]), cy); ctx.lineTo(X(r.t[1]), cy); ctx.stroke();
+				ctx.beginPath(); ctx.moveTo(X(r.t[0]), cy); ctx.lineTo(X(now), cy); ctx.stroke();
 				ctx.beginPath(); ctx.arc(X(r.t[0]), cy, rad, 0, 7); ctx.fillStyle = C.paper; ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.5 * s; ctx.stroke();
 			}
-			ctx.beginPath(); ctx.arc(X(r.t[1]), cy, rad, 0, 7); ctx.fillStyle = col; ctx.fill();
+			ctx.beginPath(); ctx.arc(X(now), cy, rad, 0, 7); ctx.fillStyle = col; ctx.fill();
 			// the red mark carries its own number, in every image
-			if (isRed) { ctx.font = `700 ${13 * s}px ${C.mono}`; ctx.fillStyle = C.red; ctx.textAlign = "right"; ctx.fillText(String(r.t[1]), X(r.t[1]) - rad - 6 * s, cy + 0.5 * s); }
+			if (isRed) { ctx.font = `700 ${13 * s}px ${C.mono}`; ctx.fillStyle = C.red; ctx.textAlign = "right"; ctx.fillText(String(r.t[1]), X(now) - rad - 6 * s, cy + 0.5 * s); }
 			ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		});
 
@@ -181,5 +186,12 @@
 			return at < 0 ? ids[dir > 0 ? 0 : ids.length - 1] : ids[(at + dir + ids.length) % ids.length];
 		}
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * (w > h * 1.3 ? 2 : 1.6), true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1400)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * (w > h * 1.3 ? 2 : 1.6), true, null); grow = g; } };
 })();

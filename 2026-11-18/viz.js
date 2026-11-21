@@ -28,6 +28,11 @@
 
 	// the reading: sel = panel * ND + day, or -1 for the overview
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 	function readout() {
 		if (sel < 0) return [S1, "Each panel is one currency, from the largest rise to the largest fall"];
 		const c = cur[Math.floor(sel / ND)], d = sel % ND;
@@ -140,8 +145,11 @@
 			return { b, px, pw, py, ph, xs: d => px + d / LAST * (pw - 3.5 * s), ys: v => py + ph - (v - Y0) / (Y1 - Y0) * ph };
 		});
 
+		// on load every line is drawn from the first day to the last, its point riding the end; the figures follow
+		const upD = moved() * LAST, dN = Math.floor(upD), la = faded();
 		geo.forEach((g, i) => {
 			const c = cur[i], isRed = i === RED, picked = sel >= 0 && Math.floor(sel / ND) === i;
+			const tx = g.xs(upD), tv = dN >= LAST ? c.chg[LAST] : c.chg[dN] + (c.chg[dN + 1] - c.chg[dN]) * (upD - dN);
 			const col = isRed ? C.red : C.ink;
 			// the zero line: 2 January's level
 			const zy = Math.round(g.ys(0)) + 0.5;
@@ -149,14 +157,15 @@
 			ctx.beginPath(); ctx.moveTo(g.px, zy); ctx.lineTo(g.px + g.pw, zy); ctx.stroke();
 			// a faint fill between the line and zero
 			ctx.beginPath(); ctx.moveTo(g.xs(0), g.ys(0));
-			for (let d = 0; d < ND; d++) ctx.lineTo(g.xs(d), g.ys(c.chg[d]));
-			ctx.lineTo(g.xs(LAST), g.ys(0)); ctx.closePath();
+			for (let d = 0; d <= dN; d++) ctx.lineTo(g.xs(d), g.ys(c.chg[d]));
+			ctx.lineTo(tx, g.ys(tv)); ctx.lineTo(tx, g.ys(0)); ctx.closePath();
 			ctx.globalAlpha = isRed ? 0.16 : 0.09; ctx.fillStyle = col; ctx.fill(); ctx.globalAlpha = 1;
 			// the line and its last point
 			ctx.beginPath();
-			for (let d = 0; d < ND; d++) { const X = g.xs(d), Y = g.ys(c.chg[d]); d ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+			for (let d = 0; d <= dN; d++) { const X = g.xs(d), Y = g.ys(c.chg[d]); d ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+			ctx.lineTo(tx, g.ys(tv));
 			ctx.strokeStyle = col; ctx.lineWidth = (isRed ? 2 : 1.4) * s; ctx.stroke();
-			ctx.fillStyle = col; ctx.beginPath(); ctx.arc(g.xs(LAST), g.ys(c.chg[LAST]), (isRed ? 3.4 : 2.6) * s, 0, 7); ctx.fill();
+			ctx.fillStyle = col; ctx.beginPath(); ctx.arc(tx, g.ys(tv), (isRed ? 3.4 : 2.6) * s, 0, 7); ctx.fill();
 			// the label: the currency, and the change on the last day
 			if (mode === "none" && !(i === 0 || isRed)) return;
 			const fig = pct(c.chg[LAST]), ly = g.b.y + (big ? 14 : 12) * s;
@@ -167,9 +176,10 @@
 				return;
 			}
 			ctx.fillText(mode === "code" ? c.code : c.name.toUpperCase(), g.px, ly);
-			ctx.font = figF; ctx.fillStyle = col;
+			ctx.font = figF; ctx.fillStyle = col; ctx.globalAlpha = la;
 			if (mode === "stack") ctx.fillText(fig, g.px, ly + 18 * s);
 			else { ctx.textAlign = "right"; ctx.fillText(fig, g.px + g.pw, ly); ctx.textAlign = "left"; }
+			ctx.globalAlpha = 1;
 		});
 
 		// ---- the key: what the zero line is and which way is which
@@ -269,5 +279,12 @@
 		// left and right step a day inside the currency; the first key opens the first panel on its last day
 		step: (from, dir) => from < 0 ? LAST : Math.floor(from / ND) * ND + Math.min(LAST, Math.max(0, from % ND + dir))
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1500)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

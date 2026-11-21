@@ -21,6 +21,11 @@
 	const SUB = `EACH DOT IS A YEAR FROM ${rows[0].year} TO ${last.year}: THE WORLD’S POPULATION AGAINST THE YEARS LEFT UNTIL THAT DATE`;
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	function readout() {
 		if (sel < 0) return [S1, `Each dot is a year from ${rows[0].year} to ${last.year}: the world’s population against the years left until that date`];
@@ -182,26 +187,29 @@
 		// ---- the count: one dot per year
 		const r0 = Math.min(2.6, Math.max(1.7, (pr - pl) / 420 / s)) * s;
 		const pts = rows.map((r, i) => ({ i, x: X(r.tau), y: Y(r.pop) }));
+		// on load the dots arrive year by year, and 2026 last
+		const upTo = grow >= 1 ? N : Math.floor(Math.min(1, grow / 0.8) * (N - 1)), la = faded();
 		ctx.fillStyle = C.ink;
-		ctx.beginPath(); pts.forEach(p => { if (rows[p.i] !== last) { ctx.moveTo(p.x + r0, p.y); ctx.arc(p.x, p.y, r0, 0, 7); } }); ctx.fill();
+		ctx.beginPath(); pts.forEach(p => { if (rows[p.i] !== last && p.i < upTo) { ctx.moveTo(p.x + r0, p.y); ctx.arc(p.x, p.y, r0, 0, 7); } }); ctx.fill();
 		{
 			// "the world", above the band where it has room at its left
 			ctx.font = monoB; const t = "THE WORLD", tw = ctx.measureText(t).width;
 			const p = pts.find(q => rows[q.i].year >= 1900 && q.x - 10 * s - tw >= x + gut) || pts[idx(1950)];
 			soft.push({ x: p.x - 10 * s - tw, y: p.y - 17 * s, w: tw, h: 14 * s, k: 8,
-				draw: () => { ctx.font = monoB; ctx.textAlign = "right"; ctx.fillStyle = C.ink; ctx.fillText(t, p.x - 10 * s, p.y - 5 * s); } });
+				draw: () => { if (p.i >= upTo) return; ctx.font = monoB; ctx.textAlign = "right"; ctx.fillStyle = C.ink; ctx.fillText(t, p.x - 10 * s, p.y - 5 * s); } });
 		}
 		{
 			// the crossing: a short leader down into the empty side, and the year
 			const p = pts[idx(cross.year)], ty = Math.max(p.y + 30 * s, Y(5e9) + 17 * s);
-			ctx.strokeStyle = C.ink2; ctx.lineWidth = px1; ctx.beginPath(); ctx.moveTo(p.x, p.y + 6 * s); ctx.lineTo(p.x, ty - 3 * s); ctx.stroke();
+			if (p.i < upTo) { ctx.strokeStyle = C.ink2; ctx.lineWidth = px1; ctx.beginPath(); ctx.moveTo(p.x, p.y + 6 * s); ctx.lineTo(p.x, ty - 3 * s); ctx.stroke(); }
 			ctx.font = mono;
 			const t = `${cross.year}: THE EQUATION OVERTAKES`;
 			soft.push({ x: p.x + 4 * s, y: ty - 12 * s, w: ctx.measureText(t).width + 4 * s, h: 15 * s, k: 8,
-				draw: () => { ctx.font = mono; ctx.textAlign = "left"; ctx.fillStyle = C.ink2; ctx.fillText(t, p.x + 6 * s, ty); } });
+				draw: () => { if (p.i >= upTo) return; ctx.font = mono; ctx.textAlign = "left"; ctx.fillStyle = C.ink2; ctx.fillText(t, p.x + 6 * s, ty); } });
 		}
 		// ---- the one red thing: 2026
 		const pl26 = pts[N - 1], rr = 5.5 * s;
+		ctx.globalAlpha = la;
 		ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(pl26.x, pl26.y, rr + 1.5 * s, 0, 7); ctx.fill();
 		ctx.fillStyle = C.red; ctx.beginPath(); ctx.arc(pl26.x, pl26.y, rr, 0, 7); ctx.fill();
 		{
@@ -210,7 +218,7 @@
 			ctx.fillText(t, pr + 4 * s, pl26.y + 20 * s);
 			avoid.push({ x: pr + 4 * s - tw, y: pl26.y + 7 * s, w: tw, h: 16 * s, k: 300 });
 		}
-		ctx.textAlign = "left";
+		ctx.globalAlpha = 1; ctx.textAlign = "left";
 
 		// ---- the reader's year: a line from its dot to the equation, so the gap is seen, and the reading
 		// beside the dot, in the clearest place near it
@@ -313,5 +321,12 @@
 		// the first arrow key starts at 1960, the year of the paper (or at 2026 going left)
 		step: (from, dir) => from < 0 ? (dir > 0 ? rows.findIndex(r => r.year === 1960) : N - 1) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1500)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

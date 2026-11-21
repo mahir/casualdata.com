@@ -22,6 +22,11 @@
 	const RUNLABEL = [`${RUN} DEFEATS IN A ROW, ${rows[RUN0].year}–${rows[RUN1].year}`, `${RUN} DEFEATS IN A ROW`];
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	const parts = r => {
 		const p = [longDate(r.date), r.venue, r.occasion];
@@ -102,9 +107,12 @@
 		});
 
 		// ---- the bars
+		// on load the bars grow from the line in date order, the red one last; the labels follow
+		const g8 = Math.min(1, grow / 0.8), la = faded();
+		const rise = i => 1 - Math.pow(1 - Math.min(1, Math.max(0, g8 * 1.6 - (i / N) * 0.6)), 3);
 		for (let i = 0; i < N; i++) {
 			ctx.fillStyle = i === LAST ? C.red : i === sel ? C.ink : C.ink3;
-			const a = zeroY, b = endOf(i);
+			const a = zeroY, b = zeroY + (endOf(i) - zeroY) * rise(i);
 			ctx.fillRect(bx(i), Math.min(a, b), bar, Math.max(px1, Math.abs(b - a)));
 		}
 		ctx.strokeStyle = C.ink; ctx.lineWidth = px1;
@@ -119,7 +127,7 @@
 			const t = score(rows[LAST]); ctx.font = big; const tw = ctx.measureText(t).width;
 			const xl = Math.min(bx(LAST) + bar / 2 - tw / 2, edgeR - tw), base = endOf(LAST) - 7 * s;
 			const b = { x: xl, y: base - 13 * s, w: tw, h: 17 * s, k: 300 };
-			hard.push(b); text(t, big, C.red, xl, base)();
+			hard.push(b); ctx.globalAlpha = la; text(t, big, C.red, xl, base)(); ctx.globalAlpha = 1;
 		}
 		// the last win before the run, and the first match
 		{
@@ -170,12 +178,12 @@
 		// the claim: a bracket under the run of defeats, along the bottom
 		{
 			const by = Math.round(pb + 21 * s) + 0.5, x0 = bx(RUN0), x1 = bx(RUN1) + bar;
-			ctx.strokeStyle = C.ink; ctx.lineWidth = px1;
+			ctx.strokeStyle = C.ink; ctx.lineWidth = px1; ctx.globalAlpha = la;
 			ctx.beginPath(); ctx.moveTo(x0 + px1 / 2, by - 5 * s); ctx.lineTo(x0 + px1 / 2, by); ctx.lineTo(x1 - px1 / 2, by); ctx.lineTo(x1 - px1 / 2, by - 5 * s); ctx.stroke();
 			ctx.font = monoB;
 			const t = RUNLABEL.find(l => ctx.measureText(l).width <= x1 - x0) || RUNLABEL[1], tw = ctx.measureText(t).width;
 			const xc = (x0 + x1) / 2, base = by + 15 * s;
-			text(t, monoB, C.ink, xc, base, "center")();
+			text(t, monoB, C.ink, xc, base, "center")(); ctx.globalAlpha = 1;
 			hard.push({ x: xc - tw / 2, y: by, w: tw, h: 18 * s, k: 300 });
 		}
 
@@ -238,7 +246,7 @@
 			ctx.font = `600 ${17 * s}px ${C.sans}`; ctx.fillText(value, best.x + pad, best.y + pad + 14 * s);
 			ctx.font = `400 ${11 * s}px ${C.mono}`;
 			ls.forEach((l, i) => ctx.fillText(l, best.x + pad, best.y + pad + 17 * s + 5 * s + 11 * s + i * 15 * s - 1 * s));
-		} else soft.forEach(o => o.draw());
+		} else { ctx.globalAlpha = la; soft.forEach(o => o.draw()); ctx.globalAlpha = 1; }
 		ctx.textAlign = "left";
 		return { back, pl, sw, plot: { x: pl, y: block ? Math.min(blockB, top0) : top0, w, h: y + h - top0 }, block: block ? { r: blockR, b: blockB } : null };
 	}
@@ -283,5 +291,12 @@
 		// the first arrow key starts at the first match (or, going left, at the newest, the red bar)
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : LAST) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1500)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

@@ -32,6 +32,11 @@
 
 	// the reading: vi = the view, sel = a country, or -1 for the overview
 	let vi = Math.max(0, VIEWS.findIndex(v => v.id === CD.state.get("v"))), sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 	const key = v => v.f === "total" ? "total" : v.f;
 	const sentence = () => `Russia, the United States and China hold ${D.per100[key(VIEWS[vi])]} of every 100 ${VIEWS[vi].tail}`;
 	const small = () => (vi === 0 ? `Each dot is one of an estimated ${fmt(D.totals.total)} warheads at the start of 2026, including retired ones waiting to be dismantled`
@@ -140,10 +145,14 @@
 		const ox = snap(rx + Math.max(0, (rw - COLS * p - bw) / 2)), oy = snap(ry + Math.max(0, (rh - ROWS * p - tiersH) / 2));
 		const gap = Math.max(q, Math.round(p * 0.24 / q) * q), d = p - gap, round = d >= 4;
 
+		// on load the dots are counted in, block after block; the bracket and its number follow
+		const la = faded();
+		let toCome = grow >= 1 ? Infinity : Math.floor(Math.min(1, grow / 0.8) * blocks.reduce((a, b) => a + b.n, 0));
 		blocks.forEach((b, i) => {
-			const n = rows[i][f];
+			const n = rows[i][f], lim = Math.min(b.n, toCome); toCome -= lim;
 			ctx.fillStyle = i < 3 ? C.red : C.ink;
-			for (const [from, to, a] of [[0, n, 1], [n, b.n, 0.2]]) {
+			for (const [from, to0, a] of [[0, n, 1], [n, b.n, 0.2]]) {
+				const to = Math.min(to0, lim);
 				if (to <= from) continue;
 				ctx.globalAlpha = a; ctx.beginPath();
 				for (let k = from; k < to; k++) {
@@ -174,7 +183,7 @@
 
 		// the red number: a bracket down the three red bands, and their share of this view's total
 		const b2 = blocks[2], bx0 = snap(ox + COLS * p - gap + 6 * s), by0 = oy, by1 = oy + (b2.gy + b2.gh) * p - gap, mid = (by0 + by1) / 2;
-		ctx.strokeStyle = C.red; ctx.lineWidth = 1.5 * s; ctx.lineJoin = "miter";
+		ctx.strokeStyle = C.red; ctx.lineWidth = 1.5 * s; ctx.lineJoin = "miter"; ctx.globalAlpha = la;
 		ctx.beginPath(); ctx.moveTo(bx0, by0 + 0.75 * s); ctx.lineTo(bx0 + 6 * s, by0 + 0.75 * s); ctx.lineTo(bx0 + 6 * s, by1 - 0.75 * s); ctx.lineTo(bx0, by1 - 0.75 * s); ctx.stroke();
 		const per = D.per100[key(view)];
 		ctx.fillStyle = C.red;
@@ -187,6 +196,7 @@
 			ctx.font = `600 ${big}px ${C.sans}`; ctx.fillText(String(per), bx0 + 17 * s, mid + big * 0.1);
 			ctx.font = `600 ${15 * s}px ${C.sans}`; ctx.fillText("of every 100", bx0 + 18 * s, mid + big * 0.1 + 21 * s);
 		}
+		ctx.globalAlpha = 1;
 
 		// the six small blocks: name and number under each, a short tick down to a second line where
 		// neighbours would collide; where even that cannot be done cleanly (a phone), one run of
@@ -296,5 +306,12 @@
 		if (e.key >= "1" && e.key <= "3") setView(+e.key - 1);
 		else if (e.key === "v" || e.key === "V") setView((vi + 1) % VIEWS.length);
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * (w > h * 1.3 ? 2 : 1.6), true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1700)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * (w > h * 1.3 ? 2 : 1.6), true, null); grow = g; } };
 })();

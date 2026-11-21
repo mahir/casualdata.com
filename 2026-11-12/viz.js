@@ -16,6 +16,11 @@
 	const role = r => r.iso === "NGA" ? 2 : r.iso === "IND" ? 1 : 0;
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	function readout() {
 		if (sel < 0) return [`${S1} ${S2}`, `Estimated deaths of children under five, ${D.years[0]} and ${D.years[1]}`];
@@ -128,15 +133,17 @@
 			for (const [X, d] of [[xL, r.a], [xR, r.b]]) ctx.fillRect(X - 5 * s, yOf(d[2]), 10 * s, yOf(d[1]) - yOf(d[2]));
 			ctx.globalAlpha = 1;
 		}
+		// on load each line is drawn from its 2015 end to its 2025 end; the 2025 labels follow
+		const mv = moved(), la = faded(), xT = xL + (xR - xL) * mv;
 		order.forEach(i => {
-			const r = rows[i], on = i === sel, k = role(r);
+			const r = rows[i], on = i === sel, k = role(r), vT = r.a[0] + (r.b[0] - r.a[0]) * mv;
 			ctx.globalAlpha = sel >= 0 && !on ? 0.28 : 1;
 			const col = on && !k ? C.ink : color(r);
 			ctx.strokeStyle = col; ctx.fillStyle = col;
 			ctx.lineWidth = ((k === 2 ? 3 : k === 1 ? 2.4 : 1.5) + (on ? 0.8 : 0)) * s;
-			ctx.beginPath(); ctx.moveTo(xL, yOf(r.a[0])); ctx.lineTo(xR, yOf(r.b[0])); ctx.stroke();
+			ctx.beginPath(); ctx.moveTo(xL, yOf(r.a[0])); ctx.lineTo(xT, yOf(vT)); ctx.stroke();
 			const rad = (k ? 4.5 : 3.2) * s + (on ? s : 0);
-			for (const [X, v] of [[xL, r.a[0]], [xR, r.b[0]]]) { ctx.beginPath(); ctx.arc(X, yOf(v), rad, 0, 7); ctx.fill(); }
+			for (const [X, v] of [[xL, r.a[0]], [xT, vT]]) { ctx.beginPath(); ctx.arc(X, yOf(v), rad, 0, 7); ctx.fill(); }
 		});
 		ctx.globalAlpha = 1;
 
@@ -147,6 +154,7 @@
 			items.forEach(it => {
 				const r = it.r, on = it.i === sel, k = role(r);
 				const X = side ? xR : xL, dir = side ? 1 : -1;
+				ctx.globalAlpha = side ? la : 1;
 				if (Math.abs(it.ly - it.y) > 2.5 * s) {
 					ctx.strokeStyle = C.ink3; ctx.lineWidth = px1;
 					ctx.beginPath(); ctx.moveTo(X + dir * 7 * s, it.y); ctx.lineTo(X + dir * (GAP - 3 * s), it.ly); ctx.stroke();
@@ -155,7 +163,7 @@
 				ctx.fillStyle = k === 2 ? C.red : k === 1 || on ? C.ink : C.ink2;
 				ctx.fillText(text(r, side), X + dir * GAP, it.ly + (k ? 0.5 * s : s));
 			});
-			ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
+			ctx.textBaseline = "alphabetic"; ctx.textAlign = "left"; ctx.globalAlpha = 1;
 			return items;
 		});
 
@@ -221,5 +229,12 @@
 		},
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : N - 1) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1300)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

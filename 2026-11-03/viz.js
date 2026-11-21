@@ -14,6 +14,11 @@
 	const role = e => e === last ? 2 : e === first ? 1 : 0;
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	function readout() {
 		if (sel < 0) return [S1, `Where each of the ${N} winners would be after ${dur(last)}, at their own average speed`];
@@ -166,7 +171,10 @@
 		// are pushed apart along it until none touches the next
 		const ux = (Z[0] - A[0]), uy = (Z[1] - A[1]), ul = Math.hypot(ux, uy), dx = ux / ul, dy = uy / ul;
 		const nx = -dy, ny = dx;
-		const marks = eds.map((e, i) => { const q = P(...along(e.frac)); return { i, e, x: q[0], y: q[1], t: (q[0] - A[0]) * dx + (q[1] - A[1]) * dy }; });
+		// on load every boat sails from Saint-Malo to its mark in the same time, so the fast ones pull ahead:
+		// ax, ay is where a boat is drawn now; x, y is its mark, which the years and the pointer use
+		const mv = moved(), la = faded();
+		const marks = eds.map((e, i) => { const q = P(...along(e.frac)), a = mv < 1 ? P(...along(e.frac * mv)) : q; return { i, e, x: q[0], y: q[1], ax: a[0], ay: a[1], t: (q[0] - A[0]) * dx + (q[1] - A[1]) * dy }; });
 		const others = marks.filter(m => role(m.e) !== 2).sort((p, q) => p.t - q.t);
 		const GAPL = 23 * ms, OFF = 22 * ms;
 		[0, 1].forEach(side => {
@@ -183,18 +191,22 @@
 
 		marks.slice().sort((p, q) => (p.i === sel) - (q.i === sel) || role(p.e) - role(q.e)).forEach(m => {
 			const r = role(m.e), on = m.i === sel;
-			ctx.globalAlpha = sel >= 0 && !on ? 0.3 : 1;
+			const dim = sel >= 0 && !on ? 0.3 : 1;
 			const col = r === 2 ? C.red : r === 1 || on ? C.ink : C.ink2;
+			ctx.globalAlpha = dim * la;
 			if (m.side < 2) {
 				ctx.strokeStyle = C.ink3; ctx.lineWidth = px1;
 				ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.lx - (m.lx - m.x) * 0.36, m.ly - (m.ly - m.y) * 0.36); ctx.stroke();
 			}
-			ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(m.x, m.y, (r === 2 ? 7.5 : r || on ? 5.5 : 4.5) * ms, 0, 7); ctx.fill();
-			ctx.fillStyle = col; ctx.beginPath(); ctx.arc(m.x, m.y, (r === 2 ? 6 : r || on ? 4.2 : 3.2) * ms, 0, 7); ctx.fill();
+			ctx.globalAlpha = dim;
+			ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(m.ax, m.ay, (r === 2 ? 7.5 : r || on ? 5.5 : 4.5) * ms, 0, 7); ctx.fill();
+			ctx.fillStyle = col; ctx.beginPath(); ctx.arc(m.ax, m.ay, (r === 2 ? 6 : r || on ? 4.2 : 3.2) * ms, 0, 7); ctx.fill();
+			ctx.globalAlpha = dim * la;
 			ctx.font = r || on ? mmonoB : mmono; ctx.textBaseline = "middle";
 			if (r === 2) {
 				ctx.textAlign = "left";
 				ctx.fillText(`${m.e.year} FINISHED`, m.lx, m.ly); ctx.fillStyle = C.ink2; ctx.font = mmono;
+				ctx.globalAlpha = dim;   // the port's name is there from the start
 				ctx.fillText("POINTE-À-PITRE", m.lx, m.ly + 15 * ms);
 			} else {
 				ctx.textAlign = m.side ? "left" : "right";
@@ -278,5 +290,12 @@
 		},
 		step: (from, dir) => from < 0 ? (dir > 0 ? 0 : N - 1) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1700)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

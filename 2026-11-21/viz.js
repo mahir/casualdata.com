@@ -23,6 +23,11 @@
 	const v1Au = i => i < 0 ? V1.today.au : (K0 + i >= V1.k0 ? V1.au[K0 + i - V1.k0] : null);
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	function readout() {
 		if (sel < 0) return [S1, `On ${TODAY}: ` + crafts.map(c => `${c.name} ${hm(c.today.minutes / 60)}`).join(" · ")];
@@ -138,10 +143,27 @@
 		ctx.textAlign = "left";
 
 		// ---- the five lines, grey first, the red one last
+		// on load the lines are drawn through the years, each from its launch, as far as today; the
+		// labels at the ends follow. trail: a craft's line as far as the motion has come, as [month, hours]
+		const mv = moved(), la = faded(), kNow = K0 + (KT - K0) * mv;
+		const trail = c => {
+			const all = c.hours.map((v, j) => [c.k0 + j, v]); all.push([KT, c.today.hours]);
+			if (mv >= 1) return all;
+			const cut = [];
+			for (const p of all) {
+				if (p[0] <= kNow) { cut.push(p); continue; }
+				const a = cut[cut.length - 1];
+				if (a) cut.push([kNow, a[1] + (p[1] - a[1]) * (kNow - a[0]) / (p[0] - a[0])]);
+				break;
+			}
+			return cut;
+		};
+		const trails = new Map(crafts.map(c => [c, trail(c)]));
 		const path = c => {
+			const t = trails.get(c); if (t.length < 2) return;
 			ctx.beginPath();
-			c.hours.forEach((v, j) => { const qx = X(c.k0 + j), qy = Y(v); j ? ctx.lineTo(qx, qy) : ctx.moveTo(qx, qy); });
-			ctx.lineTo(X(KT), Y(c.today.hours)); ctx.stroke();
+			t.forEach((p, j) => { const qx = X(p[0]), qy = Y(p[1]); j ? ctx.lineTo(qx, qy) : ctx.moveTo(qx, qy); });
+			ctx.stroke();
 		};
 		crafts.filter(c => c !== V1).forEach(c => { ctx.strokeStyle = C.ink2; ctx.lineWidth = 1.5 * s; path(c); });
 		ctx.strokeStyle = C.paper; ctx.lineWidth = 5 * s; path(V1);
@@ -159,15 +181,23 @@
 		ctx.font = mono; ctx.textBaseline = "middle";
 		const bodies = D.bodies.map(b => ({ b, y: Y(b.hours), ly: Y(b.hours) })).sort((p, q) => p.y - q.y);
 		if (bodies.length === 2 && bodies[1].ly - bodies[0].ly < 14 * s) { const d = 14 * s - (bodies[1].ly - bodies[0].ly); bodies[0].ly -= d / 2; bodies[1].ly += d / 2; }
+		ctx.globalAlpha = la;
 		bodies.forEach(t => {
 			ctx.strokeStyle = C.ink3; ctx.lineWidth = px1;
 			ctx.beginPath(); ctx.moveTo(xe - 5 * s, t.y); ctx.lineTo(xe + 5 * s, t.y); ctx.lineTo(xe + gapL - 4 * s, t.ly); ctx.stroke();
 			ctx.fillStyle = C.ink2; ctx.fillText(bodyText(t.b), xe + gapL, t.ly);
 		});
 		ends.forEach(t => {
+			const tr = trails.get(t.c), tip = tr[tr.length - 1];   // the dot rides the end of its line
+			ctx.globalAlpha = la;
 			if (Math.abs(t.ly - t.y) > 1) { ctx.strokeStyle = C.ink3; ctx.lineWidth = px1; ctx.beginPath(); ctx.moveTo(xe + 5 * s, t.y); ctx.lineTo(xe + gapL - 4 * s, t.ly); ctx.stroke(); }
-			ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(xe, t.y, (t.red ? 8 : 4.6) * s, 0, 7); ctx.fill();
-			ctx.fillStyle = t.red ? C.red : C.ink2; ctx.beginPath(); ctx.arc(xe, t.y, (t.red ? 6.5 : 3.2) * s, 0, 7); ctx.fill();
+			if (tip) {
+				const qx = X(tip[0]), qy = Y(tip[1]);
+				ctx.globalAlpha = 1;
+				ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(qx, qy, (t.red ? 8 : 4.6) * s, 0, 7); ctx.fill();
+				ctx.fillStyle = t.red ? C.red : C.ink2; ctx.beginPath(); ctx.arc(qx, qy, (t.red ? 6.5 : 3.2) * s, 0, 7); ctx.fill();
+				ctx.globalAlpha = la;
+			}
 			const tx = xe + gapL;
 			if (single) {
 				ctx.font = t.red ? nameB : name; ctx.fillStyle = t.red ? C.red : C.ink;
@@ -183,7 +213,7 @@
 				if (t.red && exporting) { ctx.font = mono; ctx.fillStyle = C.ink; ctx.fillText(CROSSED.toUpperCase(), tx, t.ly + 24 * s); }
 			}
 		});
-		ctx.textBaseline = "alphabetic";
+		ctx.globalAlpha = 1; ctx.textBaseline = "alphabetic";
 
 		// ---- the reader's month: a hairline up to the farthest craft, and a dot on each line
 		if (sel >= 0) {
@@ -284,5 +314,12 @@
 		e.preventDefault();
 		pick.pin(pick.shown < 0 ? (dir > 0 ? 0 : N - 12) : Math.min(N - 1, Math.max(0, pick.shown + dir * 12)));
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1800)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();

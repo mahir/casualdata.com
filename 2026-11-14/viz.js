@@ -19,6 +19,11 @@
 	const SUB = `EACH COLUMN IS ONE OF ${N} US AIRPORTS: THE SHARE OF ITS DEPARTURES CANCELLED · FLIGHTAWARE, AS OF ${D.asOf.toUpperCase()}`;
 
 	let sel = -1;
+	// the opening motion, once on load (NEXT.md, "Opening motion"): grow runs 0 to 1; the marks arrive
+	// over its first four fifths, then their labels fade in. Still under reduced motion.
+	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
+	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 3);
+	const faded = () => Math.min(1, Math.max(0, (grow - 0.8) / 0.2));
 
 	function readout() {
 		if (sel < 0) return [S1, `Each column is one of ${N} US airports: the share of its departures cancelled`];
@@ -129,10 +134,13 @@
 		});
 
 		// ---- the columns
+		// on load the columns rise, the left ones first; the labels follow
+		const g8 = Math.min(1, grow / 0.8), la = faded();
+		const rise = i => 1 - Math.pow(1 - Math.min(1, Math.max(0, g8 * 1.6 - (i / N) * 0.6)), 3);
 		const colorOf = i => i === DAL ? C.red : i === DFW || i === sel ? C.ink : C.ink3;
 		for (let i = 0; i < N; i++) {
 			ctx.fillStyle = colorOf(i);
-			const ty = topOf(i);
+			const ty = pb - (pb - topOf(i)) * rise(i);
 			ctx.fillRect(cx(i), ty, bar, pb - ty);
 		}
 		ctx.strokeStyle = C.ink3; ctx.beginPath(); ctx.moveTo(x, Math.round(pb) + 0.5); ctx.lineTo(x + w, Math.round(pb) + 0.5); ctx.stroke();
@@ -175,7 +183,7 @@
 				if (strong) { ctx.fillStyle = C.paper; ctx.fillRect(xl - 3 * s, base - 11 * s, tw + 5 * s, 14 * s); }
 				ctx.font = font; ctx.textAlign = "left"; ctx.fillStyle = i === DAL ? C.red : strong || i === sel ? C.ink : C.ink2; ctx.fillText(t, xl, base);
 			};
-			if (strong) { paint(); hard.push(box); } else soft.push(Object.assign(box, { draw: paint, of: i }));
+			if (strong) { ctx.globalAlpha = la; paint(); ctx.globalAlpha = 1; hard.push(box); } else soft.push(Object.assign(box, { draw: paint, of: i }));
 		});
 		// the scale's labels, above each hairline at its start; the first says what the scale is
 		ctx.font = mono;
@@ -262,7 +270,7 @@
 			}
 			ctx.textAlign = "left";
 			CD.label(ctx, best.x - 12 * s, best.y + chh / 2, value, context, s, { x: best.x, y: best.y, w: chw, h: chh });
-		} else { soft.forEach(o => o.draw()); ctx.textAlign = "left"; }
+		} else { ctx.globalAlpha = la; soft.forEach(o => o.draw()); ctx.globalAlpha = 1; ctx.textAlign = "left"; }
 		return { back, list: listGeo, plot: { x: pl, y: top0, w: pr - pl, h: y + h - top0 }, cw, pl, block: block ? { r: blockR, b: blockB } : null };
 	}
 
@@ -309,5 +317,12 @@
 		// the first arrow key starts at Love Field, the red column (or at the highest going left)
 		step: (from, dir) => from < 0 ? (dir > 0 ? DAL : TOP) : (from + dir + N) % N
 	});
-	CD.exporter = { readout, draw: (c, x, y, w, h, u) => draw(c, x, y, w, h, u * 1.6, true, null) };
+	// the opening motion ends at once when the reader picks something
+	if (grow < 1) {
+		const t0 = performance.now() + 300;
+		const step = t => { grow = sel >= 0 ? 1 : Math.min(1, Math.max(0, (t - t0) / 1400)); paint(); if (grow < 1) requestAnimationFrame(step); };
+		requestAnimationFrame(step);
+	}
+	// the image is always the finished picture, even while the opening motion is still running
+	CD.exporter = { readout, draw: (c, x, y, w, h, u) => { const g = grow; grow = 1; draw(c, x, y, w, h, u * 1.6, true, null); grow = g; } };
 })();
