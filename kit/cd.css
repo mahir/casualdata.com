@@ -274,8 +274,16 @@ body.cd-home { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr a
 	.tile.lead picture { grid-row: auto; margin-bottom: 12px; }
 	.tile.lead .cd-meta, .tile.lead .t, .tile.lead .dek { grid-row: auto; }
 }
+/* On a phone the days are one column, so each caption runs straight into the next chart: the days
+   stand further apart than a caption is tall, the newest day stands further still from the ones
+   before it, and it says only its date and title (its intro is on its own page). Each chart sits
+   in a hairline frame with room inside it, which marks where one day's picture begins and ends. */
 @media (max-width: 600px) {
-	.cd-days { grid-template-columns: minmax(0, 1fr); row-gap: 52px; }
+	.cd-days { grid-template-columns: minmax(0, 1fr); row-gap: 80px; }
+	.tile picture, .tile.lead picture { border: 1px solid var(--rule); padding: 20px; margin-bottom: 18px; }
+	.tile.lead { margin-bottom: 40px; }
+	.tile.lead .t { max-width: none; }
+	.tile.lead .dek { display: none; }
 }
 .cd-textlink { font: 400 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--ink); text-underline-offset: 4px; text-decoration-color: var(--ink-3); padding: 10px 0; }
 .cd-textlink:hover { text-decoration-color: var(--ink); }
