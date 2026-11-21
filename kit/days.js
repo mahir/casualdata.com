@@ -128,5 +128,12 @@ window.CD_DAYS = [
 		title: "Russia, the United States and China hold 91 of every 100 nuclear warheads in the world. Their three leaders met together for the first time on 19 November 2026",
 		dek: "Each dot is one of an estimated 12,187 nuclear warheads at the start of 2026, grouped by the country that holds it.",
 		tags: ["nuclearweapons", "trumpxiputin", "armscontrol", "shenzhen"]
+	},
+	{
+		date: "2026-11-21",
+		path: "/2026-11-21/",
+		title: "Voyager 1 is now so far from Earth that a radio signal takes 24 hours to reach it. It passed that mark on 18 November 2026, 49 years after its launch",
+		dek: "How long a radio signal takes to travel from Earth to each of the five spacecraft leaving the solar system, every month since launch.",
+		tags: ["voyager1", "nasa", "lightday", "space"]
 	}
 ];

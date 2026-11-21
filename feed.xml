@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Fri, 20 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 21 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Voyager 1 is now so far from Earth that a radio signal takes 24 hours to reach it. It passed that mark on 18 November 2026, 49 years after its launch</title>
+    <link>https://casualdata.com/2026-11-21/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-21/</guid>
+    <pubDate>Sat, 21 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Five lines, one for each spacecraft leaving the solar system, show how many hours a radio signal from Earth takes to reach it, every month since launch. On 21 November 2026 the answer is 24 hours for Voyager 1, 20.1 for Voyager 2, 19.6 for Pioneer 10, 16.5 for Pioneer 11 and 9.3 for New Horizons.</description>
+    <enclosure url="https://casualdata.com/2026-11-21/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Russia, the United States and China hold 91 of every 100 nuclear warheads in the world. Their three leaders met together for the first time on 19 November 2026</title>
     <link>https://casualdata.com/2026-11-20/</link>
