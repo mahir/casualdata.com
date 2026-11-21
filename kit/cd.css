@@ -130,6 +130,8 @@ body.cd-day {
 .cd-dek { margin: 0; max-width: 42ch; justify-self: end; color: var(--ink-2); font-size: clamp(14px, 1.15vw, 16.5px); line-height: 1.5; text-wrap: pretty; }
 
 .cd-stage { position: relative; min-height: 0; margin: 0 var(--gut); }
+/* touch-action: every drag on the chart reads it; CD.bindSelection (kit/cd.js) switches to pan-y where the
+   page is taller than the screen, so an up-or-down drag scrolls the page. */
 .cd-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
 
 .cd-foot {

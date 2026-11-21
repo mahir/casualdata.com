@@ -108,9 +108,34 @@
 	};
 	// Wires a chart's pointer and keys to a selection. at(e) returns the index under the pointer (or -1);
 	// step(from, dir) returns the next index for an arrow key (dir is +1 or -1).
+	// A finger: a tap pins what is under it and a drag reads along the chart. When the page is taller
+	// than the screen, an up-or-down drag scrolls the page instead (touch-action: pan-y; the stylesheet's
+	// default is none), so a chart that fills the screen never traps the reader, and a scroll pins nothing.
 	CD.bindSelection = (cv, sel, { at, step }) => {
-		cv.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") cv.setPointerCapture(e.pointerId); sel.pin(at(e)); });
-		cv.addEventListener("pointermove", e => { const i = at(e); if (e.buttons) { if (i >= 0) sel.pin(i); } else if (e.pointerType === "mouse") sel.show(i); });
+		const root = document.documentElement;
+		const pan = () => { cv.style.touchAction = root.scrollHeight > root.clientHeight + 1 ? "pan-y" : "none"; };
+		pan(); new ResizeObserver(pan).observe(root); new ResizeObserver(pan).observe(document.body); addEventListener("resize", pan);
+		let down = null, moved = false, drag = false;       // the finger's pointerdown; whether it has left that spot; whether it is reading along the chart
+		cv.addEventListener("pointerdown", e => {
+			if (e.pointerType === "mouse") { sel.pin(at(e)); return; }
+			down = e; moved = drag = false; cv.setPointerCapture(e.pointerId);
+		});
+		cv.addEventListener("pointermove", e => {
+			if (e.pointerType === "mouse") { const i = at(e); if (e.buttons) { if (i >= 0) sel.pin(i); } else sel.show(i); return; }
+			if (!down || e.pointerId !== down.pointerId) return;
+			if (!drag) {
+				const dx = e.clientX - down.clientX, dy = e.clientY - down.clientY;
+				if (Math.hypot(dx, dy) < 8) return;
+				moved = true;
+				// where the page scrolls, an up-or-down move is the start of a scroll: the browser cancels the pointer next
+				if (cv.style.touchAction === "pan-y" && Math.abs(dy) >= Math.abs(dx)) return;
+				drag = true;
+			}
+			const i = at(e); if (i >= 0) sel.pin(i);
+		});
+		// a tap is read where the finger went down, as a pointerdown, which is what at() expects of a press
+		cv.addEventListener("pointerup", e => { if (down && e.pointerId === down.pointerId) { if (!moved) sel.pin(at(down)); down = null; } });
+		cv.addEventListener("pointercancel", () => { down = null; });       // the browser took the gesture: a scroll
 		cv.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") sel.leave(); });
 		cv.addEventListener("keydown", e => {
 			const dir = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
