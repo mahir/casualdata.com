@@ -369,23 +369,45 @@ def do_sitemap(pub):
 
 
 def do_robots():
-    write("robots.txt", f"""# casualdata.com: one data visualization a day. Every page is open to search and answer engines.
-User-agent: *
-Allow: /
-Disallow: /next/
+    """Who may read the site. One rule, the same as on mahiryavuz.com: anything that answers a person's question is
+    welcome, anything that only collects the pages is not. A crawler that is named stops reading the first group, so
+    name one only to turn it away. Each name was read on its owner's own documentation on 22 Nov 2026; read it there
+    again before adding or removing one. robots.txt is a request: GitHub Pages cannot stop a crawler that ignores it."""
+    write("robots.txt", f"""# casualdata.com: one data visualization a day.
+#
+# Anything that answers a person's question is welcome: search engines, the search indexes of AI assistants, and the
+# fetchers an assistant sends when someone asks it something. They are not named below, so they follow the first
+# group: Googlebot, Bingbot, Applebot, DuckDuckBot, DuckAssistBot, OAI-SearchBot, ChatGPT-User, Claude-SearchBot,
+# Claude-User, PerplexityBot, Perplexity-User, Amzn-SearchBot, Amzn-User, meta-webindexer, meta-externalfetcher,
+# MistralAI-Index, MistralAI-User, YouBot. Each day's sources and data are on its page.
+#
+# Crawlers that only collect the pages, to train models or to build bulk copies of the web, are not welcome.
+# Each name was checked against its owner's own documentation on 22 Nov 2026.
 
-# AI search and answer engines are welcome; each day's sources and data are on its page.
+User-agent: *
+# Content Signals (contentsignals.org): yes to search and to answering with these pages, no to training on them.
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Disallow: /next/
+Allow: /
+
+# Training and bulk collection. Each company answers questions through a different crawler, which stays welcome.
 User-agent: GPTBot
-User-agent: OAI-SearchBot
-User-agent: ChatGPT-User
 User-agent: ClaudeBot
-User-agent: Claude-SearchBot
-User-agent: Claude-User
-User-agent: PerplexityBot
-User-agent: Perplexity-User
-User-agent: Google-Extended
+User-agent: meta-externalagent
+User-agent: Amazonbot
+User-agent: MistralAI-Training
 User-agent: Applebot-Extended
 User-agent: CCBot
+User-agent: Bytespider
+Disallow: /
+
+# The shared signal for "do not train on this" (IETF draft-kelley-aipref-training-preference-signal).
+User-agent: __usage_ai-training
+Disallow: /
+
+# Google-Extended is one switch for training Gemini and for letting the Gemini app answer from these pages. It stays
+# on so that Gemini can answer, and it is named so that Google does not read the group above as turning it off.
+User-agent: Google-Extended
 Allow: /
 
 Sitemap: {SITE}/sitemap.xml
