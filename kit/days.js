@@ -135,5 +135,12 @@ window.CD_DAYS = [
 		title: "Voyager 1 is now so far from Earth that a radio signal takes 24 hours to reach it. It passed that mark on 18 November 2026, 49 years after its launch",
 		dek: "How long a radio signal takes to travel from Earth to each of the five spacecraft leaving the solar system, every month since launch.",
 		tags: ["voyager1", "nasa", "lightday", "space"]
+	},
+	{
+		date: "2026-11-22",
+		path: "/2026-11-22/",
+		title: "Grand Theft Auto VI took in $3.79 billion by the end of its first day. No film has made that much in cinemas",
+		dek: "$3.79 billion: sales of Grand Theft Auto VI by the end of its first day, 19 November 2026, beside the cinema earnings of the 200 biggest films.",
+		tags: ["gta6", "grandtheftautovi", "boxoffice", "videogames"]
 	}
 ];

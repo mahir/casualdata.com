@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Sat, 21 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 22 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Grand Theft Auto VI took in $3.79 billion by the end of its first day. No film has made that much in cinemas</title>
+    <link>https://casualdata.com/2026-11-22/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-22/</guid>
+    <pubDate>Sun, 22 Nov 2026 07:00:00 +0000</pubDate>
+    <description>One axis of money from $0 to $4 billion. 200 dots, one for each of the 200 biggest films by worldwide cinema gross, stop at Avengers: Endgame, $2.94 billion. One red mark stands past them: Grand Theft Auto VI, $3.79 billion in sales by the end of its first day, 19 November 2026, by Take-Two’s own estimate.</description>
+    <enclosure url="https://casualdata.com/2026-11-22/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Voyager 1 is now so far from Earth that a radio signal takes 24 hours to reach it. It passed that mark on 18 November 2026, 49 years after its launch</title>
     <link>https://casualdata.com/2026-11-21/</link>
