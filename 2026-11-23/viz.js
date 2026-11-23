@@ -1,7 +1,7 @@
 // 2026-11-23 — one circle for each of 2,361 counties in the 36 states that had a Senate or governor's
 // race in both 2022 and 2026: across, how the county voted for president in 2024 (Harris to the left,
 // Trump to the right); up, the change in the votes it cast from the 2022 midterms to the 2026
-// midterms; its size, the votes it cast for president in 2024. Hairlines cut the plot into seven
+// midterms; its size, the votes it cast in the 2022 midterms. Hairlines cut the plot into seven
 // bands by the 2024 margin, and a stepped line gives each band's counties added together. That line
 // is the one accent idea: orange on the white page, the kit's green on the black one (a chart about
 // parties never uses red; the owner chose orange for this day, where green sank into the grey
@@ -9,10 +9,10 @@
 // the states are listed under the title and can be picked there.
 (function () {
 	const C = CD.colors, D = window.COUNTIES;
-	// b0 = the votes cast in the 2022 midterms, t = in 2026; v0 = the 2024 presidential votes, the circle's size
+	// b0 = the votes cast in the 2022 midterms, the circle's size; t = in 2026; v0 = the 2024 presidential votes
 	const rows = D.rows.map(r => ({ fips: r[0], name: r[1], st: r[2], m: r[3], v0: r[4], b0: r[5], t: r[6], open: !!r[7], p: r[6] / r[5] * 100 }));
-	const N = rows.length, VMAX = Math.max(...rows.map(r => r.v0));
-	const big = rows.map((_, i) => i).sort((a, b) => rows[b].v0 - rows[a].v0);       // drawn largest first, so small circles stay on top
+	const N = rows.length, VMAX = Math.max(...rows.map(r => r.b0));
+	const big = rows.map((_, i) => i).sort((a, b) => rows[b].b0 - rows[a].b0);       // drawn largest first, so small circles stay on top
 	const firsts = []; rows.forEach((r, i) => { if (!i || rows[i - 1].st !== r.st) firsts.push(i); });       // each state's largest county; the rows come by state, A to Z, largest first
 	const ranked = Object.keys(D.states).sort((a, b) => D.states[b] - D.states[a]);
 	const X0 = -80, X1 = 96, EDGES = [-40, -20, 0, 20, 40, 60];
@@ -133,7 +133,7 @@
 		const pos = new Float32Array(N * 3);
 		ctx.fillStyle = C.ink; ctx.strokeStyle = C.ink; ctx.lineWidth = 0.6 * s;
 		for (const i of big) {
-			const r = rows[i], cx = px(r.m), cy = py(r.p), rr = rad(r.v0) * arrived((r.m - X0) / (X1 - X0));
+			const r = rows[i], cx = px(r.m), cy = py(r.p), rr = rad(r.b0) * arrived((r.m - X0) / (X1 - X0));
 			pos[i * 3] = cx; pos[i * 3 + 1] = cy; pos[i * 3 + 2] = rr;
 			if (rr <= 0) continue;
 			const mine = cur && r.st === cur;
@@ -173,7 +173,7 @@
 		ctx.strokeStyle = C.ink2; ctx.lineWidth = px1; ctx.globalAlpha = la;
 		for (const kr of [k1, k2]) { ctx.beginPath(); ctx.arc(kx, kb - kr, kr, 0, 6.2832); ctx.stroke(); }
 		ctx.font = mono; ctx.fillStyle = C.ink2;
-		ctx.fillText(PW >= 300 * s ? "1 MILLION VOTES IN 2024" : "1 MILLION VOTES", kx + k1 + 8 * s, kb - 1 * s - Math.max(15 * s, k1 * 2 - 10 * s));
+		ctx.fillText(PW >= 300 * s ? "1 MILLION VOTES IN 2022" : "1 MILLION VOTES", kx + k1 + 8 * s, kb - 1 * s - Math.max(15 * s, k1 * 2 - 10 * s));
 		ctx.fillText("100,000", kx + k1 + 8 * s, kb - 1 * s);
 		ctx.globalAlpha = 1;
 

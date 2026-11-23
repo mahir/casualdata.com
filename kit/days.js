@@ -147,7 +147,7 @@ window.CD_DAYS = [
 		date: "2026-11-23",
 		path: "/2026-11-23/",
 		title: "Turnout rose from the 2022 midterms to 2026, most in counties Harris won and least where Trump had done best",
-		dek: "Each circle is a county: how it voted for president in 2024, and the change in votes cast from the 2022 midterms to 2026. The line adds counties up.",
+		dek: "Each circle is a county, sized by its 2022 vote: how it voted for president in 2024, and the change in votes cast from the 2022 midterms to 2026. The line adds counties up.",
 		tags: ["midterms", "voterturnout", "election2026", "counties"]
 	}
 ];
