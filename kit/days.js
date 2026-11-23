@@ -142,5 +142,12 @@ window.CD_DAYS = [
 		title: "Grand Theft Auto VI took in $3.79 billion by the end of its first day. No film has made that much in cinemas",
 		dek: "$3.79 billion: sales of Grand Theft Auto VI by the end of its first day, 19 November 2026, beside the cinema earnings of the 200 biggest films.",
 		tags: ["gta6", "grandtheftautovi", "boxoffice", "videogames"]
+	},
+	{
+		date: "2026-11-23",
+		path: "/2026-11-23/",
+		title: "Turnout rose from the 2022 midterms to 2026, most in counties Harris won and least where Trump had done best",
+		dek: "Each circle is a county: how it voted for president in 2024, and the change in votes cast from the 2022 midterms to 2026. The line adds counties up.",
+		tags: ["midterms", "voterturnout", "election2026", "counties"]
 	}
 ];

@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Sun, 22 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 23 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Turnout rose from the 2022 midterms to 2026, most in counties Harris won and least where Trump had done best</title>
+    <link>https://casualdata.com/2026-11-23/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-23/</guid>
+    <pubDate>Mon, 23 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Each of 2,361 counties in 36 states is a circle: how it voted for president in 2024, and the change in the votes it cast between the 2022 and 2026 midterms. Counties Harris won cast 13% more votes than in 2022; counties Trump won by 60 points or more cast 2% more.</description>
+    <enclosure url="https://casualdata.com/2026-11-23/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Grand Theft Auto VI took in $3.79 billion by the end of its first day. No film has made that much in cinemas</title>
     <link>https://casualdata.com/2026-11-22/</link>
