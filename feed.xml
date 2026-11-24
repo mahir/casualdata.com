@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Mon, 23 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 24 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Gukesh and Sindarov, both 20, began their world chess title match on 24 November 2026. No earlier title match had two players so young</title>
+    <link>https://casualdata.com/2026-11-24/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-24/</guid>
+    <pubDate>Tue, 24 Nov 2026 07:00:00 +0000</pubDate>
+    <description>A lifeline diagram of every two-player world chess title match from 1886 to 2026: each match is a link between its two players’ ages when it began, and each repeat player’s matches are joined by a diagonal line. Gukesh and Sindarov are both 20; in every earlier match at least one player was 26 or older.</description>
+    <enclosure url="https://casualdata.com/2026-11-24/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Turnout rose from the 2022 midterms to 2026, most in counties Harris won and least where Trump had done best</title>
     <link>https://casualdata.com/2026-11-23/</link>

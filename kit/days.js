@@ -149,5 +149,12 @@ window.CD_DAYS = [
 		title: "Turnout rose from the 2022 midterms to 2026, most in counties Harris won and least where Trump had done best",
 		dek: "Each circle is a county, sized by its 2022 vote: how it voted for president in 2024, and the change in votes cast from the 2022 midterms to 2026. The line adds counties up.",
 		tags: ["midterms", "voterturnout", "election2026", "counties"]
+	},
+	{
+		date: "2026-11-24",
+		path: "/2026-11-24/",
+		title: "Gukesh and Sindarov, both 20, began their world chess title match on 24 November 2026. No earlier title match had two players so young",
+		dek: "The ages of both players in every world chess title match since 1886. A line joins the matches of each player who played more than one.",
+		tags: ["worldchesschampionship", "chess", "gukesh", "sindarov"]
 	}
 ];
