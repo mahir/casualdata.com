@@ -17,7 +17,11 @@
 //   allWomen = women and girls intentionally killed worldwide in 2025; perDay = count / 365 (p. 1).
 //   menOfAll / womenOfAll = per cent of all homicide victims in 2025 who were men / women (p. 13).
 // Second check: UN News, https://news.un.org/en/story/2026/11/1168863 (47,000; 60 per cent of 78,000).
-// Made by make_data.py.
+// Per region (derived here, not printed in the brief): allWomen = women and girls murdered = count / women%,
+//   rounded to the hundred; others = allWomen - count, those killed by anyone but a partner or a relative.
+//   The regions' allWomen sum to 77,500 against the brief's world 78,000; the World row's own is 78,300 by the
+//   same sum (47,000 / 60%), so the World row has neither; the world's own total is allWomen above.
+// Made by make_data.py; allWomen and others per row added by hand on 25 Nov 2026 (see above).
 window.FEMICIDE = {
  "year": 2025,
  "allWomen": 78000,
@@ -43,7 +47,9 @@ window.FEMICIDE = {
    "count": 22100,
    "low": 15200,
    "high": 29000,
-   "rate": 2.9
+   "rate": 2.9,
+   "allWomen": 29500,
+   "others": 7400
   },
   {
    "slug": "oceania",
@@ -53,7 +59,9 @@ window.FEMICIDE = {
    "count": 300,
    "low": 200,
    "high": 400,
-   "rate": 1.1
+   "rate": 1.1,
+   "allWomen": 500,
+   "others": 200
   },
   {
    "slug": "asia",
@@ -63,7 +71,9 @@ window.FEMICIDE = {
    "count": 15100,
    "low": 12500,
    "high": 17600,
-   "rate": 0.6
+   "rate": 0.6,
+   "allWomen": 28000,
+   "others": 12900
   },
   {
    "slug": "europe",
@@ -74,7 +84,9 @@ window.FEMICIDE = {
    "low": 2000,
    "high": 2200,
    "rate": 0.5,
-   "partner": 63
+   "partner": 63,
+   "allWomen": 4100,
+   "others": 2000
   },
   {
    "slug": "americas",
@@ -85,7 +97,9 @@ window.FEMICIDE = {
    "low": 7300,
    "high": 7600,
    "rate": 1.4,
-   "partner": 70
+   "partner": 70,
+   "allWomen": 15400,
+   "others": 8000
   }
  ]
 };

@@ -1,20 +1,23 @@
-// 2026-11-25 — women and girls murdered in 2025, one dot for every 100 of them. Red: killed by a
-// partner or a relative, in one block per region, largest first. Grey: killed by anyone else (the
-// brief gives that part only for the world). Picking a block reads it in plain words: its count and
+// 2026-11-25 — women and girls murdered in 2025, one dot for every 100 of them, one block per region,
+// largest first. In each block the red dots come first: killed by a partner or a relative; then the
+// grey: killed by anyone else (derived per region in data.js: count / share). Picking a block reads it in plain words: its count and
 // one sentence, nothing in small print. The page's dek is the key; a shared image draws its own.
 (function () {
 	const C = CD.colors, D = window.FEMICIDE, world = D.rows[0];
 	const fmt = n => n.toLocaleString("en-US");
 	const PER = 100;
-	const others = { slug: "others", name: "Someone else", count: D.allWomen - world.count, other: true };
-	const blocks = [...D.rows.slice(1).sort((a, b) => b.count - a.count), others].map(b => ({ ...b, n: Math.round(b.count / PER) }));
-	const TOTAL = blocks.reduce((a, b) => a + b.n, 0), NB = blocks.length;
+	// n red dots, then m grey ones
+	const blocks = D.rows.slice(1).sort((a, b) => b.count - a.count).map(b => {
+		const n = Math.round(b.count / PER), m = Math.round(b.others / PER);
+		return { ...b, n, m, all: n + m };
+	});
+	const RED = blocks.reduce((a, b) => a + b.n, 0), GREY = blocks.reduce((a, b) => a + b.m, 0), NB = blocks.length;
 	const SENTENCE = `In ${D.year}, partners and relatives killed about ${fmt(world.count)} women and girls, ${D.perDay} a day`;
 	const UNIT = `Each dot: ${PER} women and girls murdered in ${D.year}`;
 
 	let sel = -1;
-	// the opening motion, once on load: the dots are counted in, Africa's first and the grey last, over
-	// the first four fifths; the labels fade in after. Still under reduced motion and once the reader picks.
+	// the opening motion, once on load: the red dots are counted in, Africa's first, then the grey ones,
+	// over the first four fifths; the labels fade in after. Still under reduced motion and once the reader picks.
 	let grow = matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0;
 	const moved = () => 1 - Math.pow(1 - Math.min(1, grow / 0.8), 2);
 	const faded = () => Math.min(1, Math.max(0, (grow - 0.7) / 0.3));
@@ -24,8 +27,7 @@
 	const share = v => v >= 72 ? "Three in four women" : v > 52 ? "More than half of the women" : "About half of the women";
 	function reading(i) {
 		const b = blocks[i];
-		if (b.other) return [`Someone else: ${fmt(b.count)}`, `Four in ten women and girls murdered in ${D.year} were killed by someone other than a partner or a relative.`];
-		return [`${b.name}: ${fmt(b.count)}`, `${share(b.women)} murdered in ${place(b)} were killed by a partner or a relative.`];
+		return [`${b.name}: ${fmt(b.count)} of about ${fmt(b.allWomen)}`, `${share(b.women)} murdered in ${place(b)} were killed by a partner or a relative.`];
 	}
 	const readout = () => sel < 0 ? [SENTENCE] : reading(sel);
 
@@ -58,8 +60,8 @@
 	function heightOf(cols, c, s, side, unit) {
 		const g = gapOf(c, s), lh = side ? 0 : 24 * s, minH = side ? 18 * s : 0;
 		let H = unit ? 30 * s : 0;                               // the unit line, shared images only
-		blocks.forEach((b, k) => { H += lh + Math.max(Math.ceil(b.n / cols) * c, minH) + (k < NB - 1 ? g : 0); });
-		return H + 16 * s;                                       // the extra gap before the grey block
+		blocks.forEach((b, k) => { H += lh + Math.max(Math.ceil(b.all / cols) * c, minH) + (k < NB - 1 ? g : 0); });
+		return H;
 	}
 	function fit(ctx, aw, ah, s, cmax, unit = false) {
 		const L = labelW(ctx, s);
@@ -82,37 +84,40 @@
 	function field(ctx, X, Y, F, s, q, pick) {
 		const { cols, c, side, lw, L } = F, d = c * 0.76, round = d >= 4, g = gapOf(c, s);
 		const snap = v => Math.round(v / q) * q;
-		const arrived = grow >= 1 ? TOTAL : Math.round(TOTAL * moved()), fa = faded();
+		const t = grow >= 1 ? 1 : moved(), redIn = Math.round(RED * Math.min(1, t * 2)), greyIn = Math.round(GREY * Math.max(0, t * 2 - 1)), fa = faded();
 		const hits = [];
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 		ctx.font = `400 ${11.5 * s}px ${C.mono}`; ctx.fillStyle = C.ink2;
 		const unit = [UNIT, `Each dot: ${PER} women and girls`, `1 dot = ${PER}`].map(t => t.toUpperCase()).find(t => ctx.measureText(t).width <= F.w - lw) || `1 DOT = ${PER}`;
 		if (F.unit) { ctx.globalAlpha = fa; ctx.fillText(unit, X + lw, Y + 12 * s); ctx.globalAlpha = 1; }
-		let y = Y + (F.unit ? 30 * s : 0), done = 0;
+		let y = Y + (F.unit ? 30 * s : 0), redDone = 0, greyDone = 0;
 		blocks.forEach((b, i) => {
-			if (b.other) y += 16 * s;
-			const dim = pick >= 0 && pick !== i ? 0.2 : 1, col = b.other ? C.ink3 : C.red;
+			const dim = pick >= 0 && pick !== i ? 0.2 : 1;
 			const top = y;
 			// the label: the name in ink, the count in the block's color
 			ctx.globalAlpha = fa * dim; ctx.font = `600 ${nameFs(s)}px ${C.sans}`; ctx.textBaseline = "middle";
 			const ly = side ? y + Math.min(c, 18 * s) / 2 : y + 9 * s;
 			ctx.fillStyle = C.ink; ctx.textAlign = "left"; ctx.fillText(b.name, X, ly);
-			ctx.fillStyle = b.other ? C.ink2 : C.red;
+			ctx.fillStyle = C.red;
 			if (side) { ctx.textAlign = "right"; ctx.fillText(fmt(b.count), X + lw - 22 * s, ly); }
 			else ctx.fillText(fmt(b.count), X + ctx.measureText(b.name + "  ").width + 4 * s, ly);
 			ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 			if (!side) y += 24 * s;
-			// the dots, row by row from the top left
-			const n = Math.max(0, Math.min(b.n, arrived - done));
-			ctx.globalAlpha = dim; ctx.fillStyle = col; ctx.beginPath();
-			for (let k = 0; k < n; k++) {
-				const cx = snap(X + lw + (k % cols) * c), cy = snap(y + Math.floor(k / cols) * c);
-				if (round) { ctx.moveTo(cx + d, cy + d / 2); ctx.arc(cx + d / 2, cy + d / 2, d / 2, 0, 6.2832); }
-				else ctx.rect(cx, cy, Math.max(q, snap(d)), Math.max(q, snap(d)));
+			// the dots, row by row from the top left: the red ones, then the grey ones
+			const n = Math.max(0, Math.min(b.n, redIn - redDone)), m = Math.max(0, Math.min(b.m, greyIn - greyDone));
+			ctx.globalAlpha = dim;
+			for (const [from, to, col] of [[0, n, C.red], [b.n, b.n + m, C.ink3]]) {
+				ctx.fillStyle = col; ctx.beginPath();
+				for (let k = from; k < to; k++) {
+					const cx = snap(X + lw + (k % cols) * c), cy = snap(y + Math.floor(k / cols) * c);
+					if (round) { ctx.moveTo(cx + d, cy + d / 2); ctx.arc(cx + d / 2, cy + d / 2, d / 2, 0, 6.2832); }
+					else ctx.rect(cx, cy, Math.max(q, snap(d)), Math.max(q, snap(d)));
+				}
+				ctx.fill();
 			}
-			ctx.fill(); ctx.globalAlpha = 1;
-			done += b.n;
-			const bh = Math.max(Math.ceil(b.n / cols) * c, side ? 18 * s : 0);
+			ctx.globalAlpha = 1;
+			redDone += b.n; greyDone += b.m;
+			const bh = Math.max(Math.ceil(b.all / cols) * c, side ? 18 * s : 0);
 			hits.push({ i, x0: X, y0: top - g / 2, x1: X + F.w, y1: y + bh + g / 2 });
 			y += bh + g;
 		});
