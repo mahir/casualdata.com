@@ -160,8 +160,8 @@ window.CD_DAYS = [
 	{
 		date: "2026-11-25",
 		path: "/2026-11-25/",
-		title: "Worldwide, 60 of every 100 women murdered in 2025 were killed by a partner or a relative. For men, it was 11",
-		dek: "The share of people murdered in 2025 who were killed by a partner or a family member, women and men, worldwide and in five regions.",
+		title: "In 2025, partners and relatives killed about 47,000 women and girls, 129 a day",
+		dek: "Each dot is 100 women and girls murdered in 2025. Red: killed by a partner or a relative. Grey: killed by someone else.",
 		tags: ["endviolenceagainstwomen", "femicide", "orangetheworld", "unodc"]
 	}
 ];

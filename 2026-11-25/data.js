@@ -1,4 +1,7 @@
-// 2026-11-25 — women and men murdered in 2025: the share killed by a partner or a relative.
+// 2026-11-25 — women and girls murdered in 2025, one dot for every 100: the 47,000 killed by a partner
+// or a relative, by region (count / 100: 221 + 151 + 74 + 21 + 3 = 470 dots), and the 31,000 killed by
+// someone else (allWomen - World count = 78,000 - 47,000, both rounded in the brief; 310 dots), 780 in
+// all. Redrawn on 25 Nov 2026 from shares to counts (the first version was two 100-dot squares).
 // Source: UNODC and UN Women, "Femicides in 2025: Global estimates of intimate partner/family member
 //   femicides" (research brief, published 24 Nov 2026),
 //   https://www.unodc.org/documents/data-and-analysis/briefs/Femicide_Brief_2026.pdf
