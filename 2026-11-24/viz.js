@@ -155,14 +155,17 @@
 			const [ax, ay] = P(l.t0, l.a0), [bx, by] = P(l.t0 + f * (l.t1 - l.t0), l.a0 + f * (l.a1 - l.a0));
 			ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
 		});
-		// links: a grey bar between the two ages, a dot at each end
+		// links: a grey bar between the two ages, a dot at each end. Where a match was won, the winner's end is a
+		// larger ink dot and the loser's a hollow ring; drawn and abandoned matches (and 2026, still playing) keep two plain dots
 		const r = (tall ? 2.6 : 3) * s;
+		const winnerDot = (qx, qy, rr, col) => { ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(qx, qy, rr * 1.35 + 1.2 * s, 0, 7); ctx.fill(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(qx, qy, rr * 1.35, 0, 7); ctx.fill(); };
+		const loserDot = (qx, qy, rr, col) => { ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(qx, qy, rr, 0, 7); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.4 * s; ctx.beginPath(); ctx.arc(qx, qy, rr - 0.3 * s, 0, 7); ctx.stroke(); };
 		MS.forEach((m, i) => {
 			if (i === NOW || !shown(m)) return;
 			const [ax, ay] = P(m.t, m.xw), [bx, by] = P(m.t, m.xl);
 			ctx.strokeStyle = C.ink2; ctx.lineWidth = 1.6 * s; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
-			ctx.fillStyle = C.ink2;
-			[[ax, ay], [bx, by]].forEach(([qx, qy]) => { ctx.beginPath(); ctx.arc(qx, qy, r, 0, 7); ctx.fill(); });
+			if (m.res === "won") { loserDot(bx, by, r, C.ink2); winnerDot(ax, ay, r, C.ink); }
+			else { ctx.fillStyle = C.ink2; [[ax, ay], [bx, by]].forEach(([qx, qy]) => { ctx.beginPath(); ctx.arc(qx, qy, r, 0, 7); ctx.fill(); }); }
 		});
 
 		// player names, light, at the end of six long lines
@@ -179,6 +182,18 @@
 			ctx.strokeStyle = C.paper; ctx.lineWidth = 4 * s; ctx.strokeText(l.p.short, bx, by);
 			ctx.fillText(l.p.short, bx, by);
 		});
+		// the key: one winner mark and one loser mark. Wide: top right, above the old ages of recent years; tall: bottom right
+		{
+			ctx.font = mono; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+			const t1 = "WON", t2 = "LOST", gap = 14 * s, rr = r;
+			const w1 = ctx.measureText(t1).width, w2 = ctx.measureText(t2).width;
+			const kw = 2 * (rr * 1.35 * 2 + 6 * s) + w1 + w2 + gap;
+			const kx = box.x1 - kw, ky = tall ? box.y1 - 8 * s : box.y0 + 8 * s;
+			let cx = kx + rr * 1.35;
+			winnerDot(cx, ky, rr, C.ink); ctx.fillStyle = C.ink2; ctx.fillText(t1, cx + rr * 1.35 + 6 * s, ky);
+			cx += rr * 1.35 + 6 * s + w1 + gap + rr * 1.35;
+			loserDot(cx, ky, rr, C.ink2); ctx.fillStyle = C.ink2; ctx.fillText(t2, cx + rr * 1.35 + 6 * s, ky);
+		}
 		ctx.globalAlpha = 1; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 
 		// ---- the reader's match: the link in ink, its year, both names and ages, and the result beside it
@@ -187,7 +202,8 @@
 			const m = MS[pick], [ax, ay] = P(m.t, m.xw), [bx, by] = P(m.t, m.xl);
 			ctx.strokeStyle = C.paper; ctx.lineWidth = 6 * s; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
 			ctx.strokeStyle = C.ink; ctx.lineWidth = 2.4 * s; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
-			[[ax, ay], [bx, by]].forEach(([qx, qy]) => { ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(qx, qy, 6 * s, 0, 7); ctx.fill(); ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(qx, qy, 4.4 * s, 0, 7); ctx.fill(); });
+			if (m.res === "won") { loserDot(bx, by, 4.4 * s, C.ink); winnerDot(ax, ay, 4.4 * s, C.ink); }
+			else [[ax, ay], [bx, by]].forEach(([qx, qy]) => { ctx.fillStyle = C.paper; ctx.beginPath(); ctx.arc(qx, qy, 6 * s, 0, 7); ctx.fill(); ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(qx, qy, 4.4 * s, 0, 7); ctx.fill(); });
 			const l1 = String(m.year) + (m.title === "classical" ? " · CLASSICAL TITLE" : m.title === "fide" ? " · FIDE TITLE" : ""), l2 = pair(m), l3 = resText(m);
 			ctx.font = monoB; const w1 = ctx.measureText(l1).width; ctx.font = nameB; const w2 = ctx.measureText(l2).width; ctx.font = name; const w3 = ctx.measureText(l3).width;
 			const bw = Math.max(w1, w2, w3), bh = 52 * s;
