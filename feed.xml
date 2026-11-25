@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Tue, 24 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 25 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Worldwide, 60 of every 100 women murdered in 2025 were killed by a partner or a relative. For men, it was 11</title>
+    <link>https://casualdata.com/2026-11-25/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-25/</guid>
+    <pubDate>Wed, 25 Nov 2026 07:00:00 +0000</pubDate>
+    <description>Six pairs of 100-dot squares, for the world and five regions: of every 100 women and girls murdered in 2025, how many were killed by a current or former partner or another family member, and of every 100 men and boys. Worldwide it was 60 women and 11 men; about 47,000 women and girls in all, 129 a day.</description>
+    <enclosure url="https://casualdata.com/2026-11-25/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>Gukesh and Sindarov, both 20, began their world chess title match on 24 November 2026. No earlier title match had two players so young</title>
     <link>https://casualdata.com/2026-11-24/</link>

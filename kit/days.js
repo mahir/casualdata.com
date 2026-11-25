@@ -156,5 +156,12 @@ window.CD_DAYS = [
 		title: "Gukesh and Sindarov, both 20, began their world chess title match on 24 November 2026. No earlier title match had two players so young",
 		dek: "The ages of both players in every world chess title match since 1886. A line joins the matches of each player who played more than one.",
 		tags: ["worldchesschampionship", "chess", "gukesh", "sindarov"]
+	},
+	{
+		date: "2026-11-25",
+		path: "/2026-11-25/",
+		title: "Worldwide, 60 of every 100 women murdered in 2025 were killed by a partner or a relative. For men, it was 11",
+		dek: "The share of people murdered in 2025 who were killed by a partner or a family member, women and men, worldwide and in five regions.",
+		tags: ["endviolenceagainstwomen", "femicide", "orangetheworld", "unodc"]
 	}
 ];
