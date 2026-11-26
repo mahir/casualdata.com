@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Wed, 25 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 26 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>The water at San Francisco rose higher on 24 November 2026 than in any November since 1897. Only four months on record went higher</title>
+    <link>https://casualdata.com/2026-11-26/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-26/</guid>
+    <pubDate>Thu, 26 Nov 2026 07:00:00 +0000</pubDate>
+    <description>One dot for each month since August 1897: the highest water at San Francisco’s tide gauge that month, in feet above mean higher high water, in twelve columns from January to December. In red, 2.39 feet at 10:06 on 24 November 2026, above every November on record (the old record was 2.13 feet in November 1982). Only January 1983 (2.82), December 1983 (2.81), February 1998 (2.54) and January 2026 (2.54) went higher.</description>
+    <enclosure url="https://casualdata.com/2026-11-26/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>In 2025, partners and relatives killed about 47,000 women and girls, 129 a day</title>
     <link>https://casualdata.com/2026-11-25/</link>

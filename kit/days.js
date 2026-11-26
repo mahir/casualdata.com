@@ -163,5 +163,12 @@ window.CD_DAYS = [
 		title: "In 2025, partners and relatives killed about 47,000 women and girls, 129 a day",
 		dek: "Each dot is 100 women and girls murdered in 2025. Red: killed by a partner or a relative. Grey: killed by someone else.",
 		tags: ["endviolenceagainstwomen", "femicide", "orangetheworld", "unodc"]
+	},
+	{
+		date: "2026-11-26",
+		path: "/2026-11-26/",
+		title: "The water at San Francisco rose higher on 24 November 2026 than in any November since 1897. Only four months on record went higher",
+		dek: "The highest water each month at San Francisco’s tide gauge since 1897, in feet above the usual high tide.",
+		tags: ["sanfrancisco", "tides", "bayarea", "noaa"]
 	}
 ];
