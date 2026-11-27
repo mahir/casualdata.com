@@ -194,7 +194,7 @@
 	function key(ctx, X, Y, w, s, short) {
 		ctx.globalAlpha = faded(); ctx.font = `400 ${13 * s}px ${C.sans}`; ctx.fillStyle = C.ink2;
 		ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-		const lines = wrap(ctx, short ? "The number: ships a day in 2025. The tick: 1 March 2026." : "Each strip: ships a day, week by week, 2019 to 2026, on its own scale. The number: its 2025 daily average. The tick: 1 March 2026.", w);
+		const lines = wrap(ctx, "The number by each name: ships a day in 2025. The tick under each strip: 1 March 2026.", w);
 		lines.forEach((l, k) => ctx.fillText(l, X, Y + 13 * s + k * 18 * s));
 		ctx.globalAlpha = 1;
 		return lines.length * 18 * s;
