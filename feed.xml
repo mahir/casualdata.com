@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Thu, 26 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 27 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>About 3 ships a day were tracked through the Strait of Hormuz in November 2026, down from 86 a day in 2025. The fall began on 1 March 2026</title>
+    <link>https://casualdata.com/2026-11-27/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-27/</guid>
+    <pubDate>Fri, 27 Nov 2026 07:00:00 +0000</pubDate>
+    <description>28 strips on a world map, one for each sea passage IMF PortWatch tracks, each the ships tracked a day week by week since January 2019 on its own scale. In red, the Strait of Hormuz: 85.5 ships a day in 2025, 3.8 in October 2026 and 2.9 in 1–22 November 2026, after falling from 57 on 28 February to 20 on 1 March and 4 on 2 March. From October 2025 to October 2026 it lost more ships a day than any other passage (89.4 to 3.8; next the Bosporus, down 49 a day).</description>
+    <enclosure url="https://casualdata.com/2026-11-27/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>The water at San Francisco rose higher on 24 November 2026 than in any November since 1897. Only four months on record went higher</title>
     <link>https://casualdata.com/2026-11-26/</link>

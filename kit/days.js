@@ -170,5 +170,12 @@ window.CD_DAYS = [
 		title: "The water at San Francisco rose higher on 24 November 2026 than in any November since 1897. Only four months on record went higher",
 		dek: "The highest water each month at San Francisco’s tide gauge since 1897, in feet above the usual high tide.",
 		tags: ["sanfrancisco", "tides", "bayarea", "noaa"]
+	},
+	{
+		date: "2026-11-27",
+		path: "/2026-11-27/",
+		title: "About 3 ships a day were tracked through the Strait of Hormuz in November 2026, down from 86 a day in 2025. The fall began on 1 March 2026",
+		dek: "Ships tracked a day through 28 of the world’s sea passages, week by week since January 2019, each strip on its own scale.",
+		tags: ["straitofhormuz", "shipping", "chokepoints", "imfportwatch"]
 	}
 ];
