@@ -5,7 +5,8 @@ Run from the repo root after adding or changing a day:  python3 tools/seo.py
 
 It is idempotent. For every published page it rewrites one block in <head>, between
 <!-- seo --> and <!-- /seo -->: the canonical link, Open Graph and Twitter tags the page
-does not already set by hand, the feed link and JSON-LD structured data. It also writes
+does not already set by hand, the feed link, JSON-LD structured data and, once COUNTER_TOKEN
+is set, the reader counter. It also writes
 the home grid as static HTML (so crawlers that run no JavaScript still find every day),
 and the site files sitemap.xml, robots.txt, feed.xml and llms.txt. On the daily pages it
 also stamps each stylesheet and script address with a hash of the file (?v=...), so a
@@ -33,6 +34,25 @@ SITE_DESC = ("casualdata publishes one new interactive data visualization every 
 ORG_ID = SITE + "/#org"
 SITE_ID = SITE + "/#website"
 LOGO = SITE + "/img/og/logo.png"
+
+# Reader counter: Cloudflare Web Analytics, set up by hand because the domain is DNS-only. It counts
+# page views and where they came from, with no cookies; it cannot tell a returning reader from a new
+# one, and ad blockers stop it. The token is public (it is in every page). The loader only runs on
+# casualdata.com and not in automated browsers, so local previews and the nightly checks count
+# nothing and log no error. An empty token puts no counter on any page.
+COUNTER_TOKEN = "5fb2a28cde40414ba6337abb10453747"
+
+
+def counter_tag():
+    # Cloudflare's own snippet (a module script with the token in data-cf-beacon), added from script
+    # so it only loads on the real domain and not in automated browsers (navigator.webdriver: the
+    # nightly check-day.js run on the live site, Playwright, Lighthouse), which would otherwise be
+    # counted as readers and fail the check's "loads nothing from another site". A module beacon
+    # ignores a ?token= in its address.
+    beacon = json.dumps({"token": COUNTER_TOKEN})
+    return ('<script>if (location.hostname === "casualdata.com" && !navigator.webdriver) { const s = document.createElement("script"); '
+            's.type = "module"; s.src = "https://static.cloudflareinsights.com/beacon.min.js"; '
+            f"s.dataset.cfBeacon = '{beacon}'; document.head.append(s); }}</script>")
 
 # Archive pages: path -> name, year, share image, parent page, language.
 ARCHIVE = {
@@ -203,6 +223,8 @@ def tags(page, url, title, desc, image, alt, otype, lang="en", extra_ld=(), robo
 
 def put_block(page, lines):
     page = strip_block(page)
+    if COUNTER_TOKEN:
+        lines = list(lines) + [counter_tag()]
     indent = "  "
     block = "\n".join([indent + "<!-- seo -->"] + [indent + l for l in lines] + [indent + "<!-- /seo -->"])
     return page.replace("</head>", block + "\n</head>", 1)
