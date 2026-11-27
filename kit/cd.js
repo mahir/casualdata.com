@@ -238,6 +238,38 @@
 			}
 		});
 
+		// ---------- the heart ----------
+		// A private like. A tap fills the heart and tells heart.casualdata.com (tools/heart), which adds
+		// it to the day's count; a second tap takes it back. Readers never see a number: the owner reads
+		// the counts with tools/heart/hearts.sh. Like the reader counter, only the real site sends, never
+		// a local preview or an automated browser. This browser remembers the days it liked, so the
+		// heart is still filled on a return visit.
+		if (!day.draft) {
+			const KEY = "cd-hearts", LIKE = "https://heart.casualdata.com/like";
+			let mem = [];
+			const liked = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return mem; } };
+			const keep = list => { mem = list; try { localStorage.setItem(KEY, JSON.stringify(list)); } catch {} };
+			const send = delta => {
+				if (location.hostname !== "casualdata.com" || navigator.webdriver) return;
+				const body = JSON.stringify({ day: id, delta });
+				try { if (navigator.sendBeacon && navigator.sendBeacon(LIKE, body)) return; } catch {}
+				fetch(LIKE, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
+			};
+			const heart = document.createElement("button");
+			heart.type = "button"; heart.className = "cd-btn cd-heart"; heart.setAttribute("aria-label", "Like this day");
+			heart.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10.4C3.2 8.3 1 6.6 1 4.4 1 2.9 2.1 1.8 3.5 1.8c1.1 0 1.9.6 2.5 1.5.6-.9 1.4-1.5 2.5-1.5C9.9 1.8 11 2.9 11 4.4c0 2.2-2.2 3.9-5 6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="label">Like</span>`;
+			const show = on => heart.setAttribute("aria-pressed", on ? "true" : "false");
+			show(liked().includes(id));
+			heart.addEventListener("click", () => {
+				const list = liked(), on = !list.includes(id);
+				keep(on ? [...list, id] : list.filter(d => d !== id));
+				show(on); send(on ? 1 : -1);
+				heart.classList.remove("pop");
+				if (on) { void heart.offsetWidth; heart.classList.add("pop"); }
+			});
+			const actions = document.querySelector(".cd-bar .cd-actions");
+			if (actions) actions.insertBefore(heart, actions.querySelector("[data-open='cd-share']"));
+		}
 	}
 
 	document.addEventListener("click", e => {

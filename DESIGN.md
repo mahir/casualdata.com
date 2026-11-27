@@ -230,6 +230,7 @@ Quiet, small and outlined: they read as labels until touched.
 - **Hover:** fills ink with paper text. **Solid** (Share) is the inverse: ink fill at rest, outline on hover.
 - **Focus:** 2px ink outline, 3px offset (site-wide).
 - **Phone (≤720px):** the text label hides, leaving the icon in a 44px minimum target.
+- **Like (the heart, from 27 Nov 2026):** on every published day, between All days and Share: a 12px line heart and "Like", a toggle (`aria-pressed`). Liked, the heart fills with ink and beats once (scale 1.4, 0.32s, none with reduced motion); no number is ever shown and there is no red. On phones it is the one button left in the top bar, its heart 16px; touch screens drop the hover fill, so a tapped heart does not read as a second, solid state. It is a private signal for the owner (`tools/heart`), not social proof.
 
 ### Reading chip (signature)
 The chart's reading, drawn in canvas beside the point it describes (`CD.label`): a square ink block with the value in Host Grotesk 600 over a mono uppercase context line in paper, 8px padding, 12px from the point. It flips left near the right edge, wraps its context at " · " breaks, and is mirrored to screen readers by a polite live region.

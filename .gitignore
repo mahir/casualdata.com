@@ -29,3 +29,6 @@
 # The product notes (audiences, decisions and the reasoning behind them).
 # Kept local: Pages would publish anything committed here next to the site.
 /PRODUCT.md
+
+# wrangler's local cache for the heart Worker (tools/heart).
+.wrangler/

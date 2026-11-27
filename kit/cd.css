@@ -111,6 +111,15 @@ body.cd-day {
 .cd-btn:hover { background: var(--ink); color: var(--paper); }
 .cd-btn.solid { background: var(--ink); color: var(--paper); }
 .cd-btn.solid:hover { background: transparent; color: var(--ink); }
+/* The heart: a private like, an outline at rest and filled in ink once liked, with one small beat.
+   No count is shown. */
+.cd-heart[aria-pressed="true"] svg path { fill: currentColor; }
+.cd-heart.pop svg { animation: cd-beat .32s ease-out; }
+@keyframes cd-beat { 40% { transform: scale(1.4); } }
+@media (prefers-reduced-motion: reduce) { .cd-heart.pop svg { animation: none; } }
+/* touch screens keep :hover after a tap, which would read as a second, solid state */
+@media (hover: none) { .cd-heart:hover { background: transparent; color: var(--ink); } }
+@media (max-width: 720px) { .cd-heart svg { width: 16px; height: 16px; } }
 
 /* The head is two things: the title, and one or two sentences that say how to
    read the chart. The reading itself lives in the chart (CD.label). */
