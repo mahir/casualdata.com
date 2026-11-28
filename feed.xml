@@ -6,8 +6,16 @@
   <atom:link href="https://casualdata.com/feed.xml" rel="self" type="application/rss+xml"/>
   <description>casualdata publishes one new interactive data visualization every day: a chart, map or picture of the day's news and data, each on its own dated page with its sources. It also keeps casualdata's data visualization art projects from 2007 to 2011.</description>
   <language>en</language>
-  <lastBuildDate>Fri, 27 Nov 2026 07:00:00 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 28 Nov 2026 07:00:00 +0000</lastBuildDate>
   <image><url>https://casualdata.com/img/og/logo.png</url><title>casualdata daily</title><link>https://casualdata.com/</link></image>
+  <item>
+    <title>Only Valentino Rossi has won more races in motorcycling’s top class than Marc Márquez. Márquez said on 27 November 2026 that he is retiring</title>
+    <link>https://casualdata.com/2026-11-28/</link>
+    <guid isPermaLink="true">https://casualdata.com/2026-11-28/</guid>
+    <pubDate>Sat, 28 Nov 2026 07:00:00 +0000</pubDate>
+    <description>One bar for each of the 126 riders who have won a race in motorcycling’s top class, 500cc from 1949 and MotoGP from 2002, by number of wins up to 27 November 2026. Valentino Rossi has 89, Marc Márquez 80, Giacomo Agostini 68, Mick Doohan 54 and Jorge Lorenzo 47; 51 riders won one race. Márquez said on 27 November 2026 that he is retiring; the season’s last race is on 29 November. Sprint races are not counted.</description>
+    <enclosure url="https://casualdata.com/2026-11-28/card.png" type="image/png" length="0"/>
+  </item>
   <item>
     <title>About 3 ships a day were tracked through the Strait of Hormuz in November 2026, down from 86 a day in 2025. The fall began on 1 March 2026</title>
     <link>https://casualdata.com/2026-11-27/</link>

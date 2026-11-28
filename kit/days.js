@@ -177,5 +177,12 @@ window.CD_DAYS = [
 		title: "About 3 ships a day were tracked through the Strait of Hormuz in November 2026, down from 86 a day in 2025. The fall began on 1 March 2026",
 		dek: "Ships tracked a day through 28 of the world’s sea passages, week by week since January 2019, each strip on its own scale.",
 		tags: ["straitofhormuz", "shipping", "chokepoints", "imfportwatch"]
+	},
+	{
+		date: "2026-11-28",
+		path: "/2026-11-28/",
+		title: "Only Valentino Rossi has won more races in motorcycling’s top class than Marc Márquez. Márquez said on 27 November 2026 that he is retiring",
+		dek: "Each bar is a rider who has won a race in the top class, 500cc and then MotoGP, since 1949, by number of wins: 126 riders.",
+		tags: ["marcmarquez", "motogp", "valentinorossi", "motorcycling"]
 	}
 ];
